@@ -1,3 +1,0 @@
-INDEX VERSION 1.126+C:\stx\github\AndroidShopClient\workspace\.metadata\.plugins\org.eclipse.jdt.core
-4164268260.index
-3405483633.index
