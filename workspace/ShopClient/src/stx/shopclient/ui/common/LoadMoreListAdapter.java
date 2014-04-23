@@ -1,33 +1,30 @@
 package stx.shopclient.ui.common;
 
+import android.util.Log;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 
-public abstract class LoadMoreListAdapter extends BaseAdapter implements OnScrollListener {
+public abstract class LoadMoreListAdapter extends BaseAdapter implements
+		OnScrollListener {
 	// The minimum amount of items to have below your current scroll position
 	// before loading more.
 	private int visibleThreshold = 0;
-	// The current offset index of data you have loaded
-	private int currentPage = 0;
 	// The total number of items in the dataset after the last load
 	private int previousTotalItemCount = 0;
 	// True if we are still waiting for the last set of data to load.
 	private boolean loading = true;
-	// Sets the starting page index
-	private int startingPageIndex = 0;
 
-	public LoadMoreListAdapter() {
+	private ListView listView;
+
+	public LoadMoreListAdapter(ListView listView) {
+		this.listView = listView;
 	}
 
-	public LoadMoreListAdapter(int visibleThreshold) {
+	public LoadMoreListAdapter(int visibleThreshold, ListView listView) {
+		this(listView);
 		this.visibleThreshold = visibleThreshold;
-	}
-
-	public LoadMoreListAdapter(int visibleThreshold, int startPage) {
-		this.visibleThreshold = visibleThreshold;
-		this.startingPageIndex = startPage;
-		this.currentPage = startPage;
 	}
 
 	public void setLoading(boolean value) {
@@ -47,24 +44,11 @@ public abstract class LoadMoreListAdapter extends BaseAdapter implements OnScrol
 		// If there are no items in the list, assume that initial items are
 		// loading
 		if (!loading && (totalItemCount < previousTotalItemCount)) {
-			this.currentPage = this.startingPageIndex;
 			this.previousTotalItemCount = totalItemCount;
 			if (totalItemCount == 0) {
 				this.loading = true;
 			}
 		}
-
-		// If it’s still loading, we check to see if the dataset count has
-		// changed, if so we conclude it has finished loading and update the
-		// current page
-		// number and total item count.
-//		if (loading) {
-//			if (totalItemCount > previousTotalItemCount) {
-//				loading = false;
-//				previousTotalItemCount = totalItemCount;
-//				currentPage++;
-//			}
-//		}
 
 		// If it isn’t currently loading, we check to see if we have breached
 		// the visibleThreshold and need to reload more data.
@@ -72,13 +56,51 @@ public abstract class LoadMoreListAdapter extends BaseAdapter implements OnScrol
 		// fetch the data.
 		if (!loading
 				&& (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-			onLoadMore(currentPage + 1, totalItemCount);
+			startLoadingData();
 			loading = true;
 		}
 	}
 
+	public void startLoadingData() {
+		
+		onBeforeLoadData();
+
+		Thread thread = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					onLoadMore();
+				} catch (Throwable e) {
+					Log.e("LoadMoreListAdapter.LoadingThread", e.getMessage(),
+							e);
+				} finally {
+					loading = false;
+					
+					listView.post(new Runnable() {
+						@Override
+						public void run() {			
+							onAfterLoadData();
+							notifyDataSetChanged();							
+						}
+					});
+				}
+			}
+		});
+
+		thread.start();
+	}
+
 	// Defines the process for actually loading more data based on page
-	public abstract void onLoadMore(int page, int totalItemsCount);
+	public abstract void onLoadMore();
+	
+	public void onBeforeLoadData(){
+		
+	}
+	
+	public void onAfterLoadData(){
+		
+	}
 
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
