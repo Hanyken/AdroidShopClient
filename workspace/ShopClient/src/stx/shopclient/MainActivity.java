@@ -1,17 +1,13 @@
 package stx.shopclient;
 
-import android.app.Activity;
-import android.content.pm.ActivityInfo;
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import stx.shopclient.ui.common.BaseActivity;
+import android.view.View;
 
-public class MainActivity extends FragmentActivity  {
+public class MainActivity extends BaseActivity {
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		setContentView(R.layout.activity_main);			
+	public View createMainView() {
+		View view = getLayoutInflater().inflate(R.layout.test_list_activity, null);
+		return view;
 	}
 }
