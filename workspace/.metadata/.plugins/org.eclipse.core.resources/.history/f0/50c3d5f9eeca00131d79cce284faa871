@@ -1,7 +1,0 @@
-package stx.shopclient.ui.common;
-
-import android.widget.ListView;
-
-public class EndlessListView extends ListView {
-
-}

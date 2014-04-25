@@ -1,7 +1,0 @@
-package stx.shopclient;
-
-import android.app.ListFragment;
-
-public class TestListFragment extends ListFragment {
-
-}

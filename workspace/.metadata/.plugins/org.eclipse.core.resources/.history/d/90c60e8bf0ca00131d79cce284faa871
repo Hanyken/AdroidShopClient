@@ -1,5 +1,0 @@
-package stx.shopclient.ui.common;
-
-public class EndlessScrollListener {
-
-}
