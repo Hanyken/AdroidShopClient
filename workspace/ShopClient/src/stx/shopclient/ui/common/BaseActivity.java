@@ -5,7 +5,6 @@ import java.util.List;
 
 import stx.shopclient.R;
 import android.app.ActionBar;
-import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -37,7 +36,7 @@ public class BaseActivity extends FragmentActivity {
 		_drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		ListView _menuList = (ListView) findViewById(R.id.leftMenuList);
 
-		LeftMenuAdapter leftMenuAdapter = new LeftMenuAdapter(this);
+		LeftMenuAdapter leftMenuAdapter = new LeftMenuAdapter();
 		_menuList.setAdapter(leftMenuAdapter);
 
 		_mainViewContainer = (FrameLayout) findViewById(R.id.mainViewContainer);
@@ -53,14 +52,18 @@ public class BaseActivity extends FragmentActivity {
 		return null;
 	}
 
+	public void onHomeButtonClick() {
+		if (_drawerLayout.isDrawerOpen(Gravity.LEFT))
+			_drawerLayout.closeDrawer(Gravity.LEFT);
+		else
+			_drawerLayout.openDrawer(Gravity.LEFT);
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			if (_drawerLayout.isDrawerOpen(Gravity.LEFT))
-				_drawerLayout.closeDrawer(Gravity.LEFT);
-			else
-				_drawerLayout.openDrawer(Gravity.LEFT);
+			onHomeButtonClick();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -69,11 +72,9 @@ public class BaseActivity extends FragmentActivity {
 
 	class LeftMenuAdapter extends BaseAdapter {
 
-		Context _context;
 		List<String> _menuItems = new ArrayList<String>();
 
-		public LeftMenuAdapter(Context context) {
-			_context = context;
+		public LeftMenuAdapter() {
 
 			_menuItems.add("Главная");
 			_menuItems.add("Корзина");
@@ -100,7 +101,7 @@ public class BaseActivity extends FragmentActivity {
 
 		@Override
 		public View getView(int index, View arg1, ViewGroup arg2) {
-			TextView textView = new TextView(_context);
+			TextView textView = new TextView(BaseActivity.this);
 			textView.setTextSize(20);
 			textView.setTextColor(Color.WHITE);
 			textView.setPadding(20, 20, 20, 20);
