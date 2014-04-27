@@ -8,7 +8,8 @@ public class MainActivity extends BaseActivity {
 
 	@Override
 	public View createMainView() {
-		View view = getLayoutInflater().inflate(R.layout.test_list_activity, null);
+		View view = getLayoutInflater().inflate(R.layout.screen_main, null);
+		
 		return view;
 	}
 	

@@ -13,11 +13,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 public class BaseActivity extends FragmentActivity {
 	DrawerLayout _drawerLayout;
-	FrameLayout _mainViewContainer;
+	LinearLayout _mainViewContainer;
 	MainMenuListAdapter _mainMenuListAdapter;
 
 	@Override
@@ -37,7 +38,7 @@ public class BaseActivity extends FragmentActivity {
 		_menuList.setAdapter(_mainMenuListAdapter);
 		_menuList.setOnItemClickListener(new MainMenuOnClickListener());
 
-		_mainViewContainer = (FrameLayout) findViewById(R.id.mainViewContainer);
+		_mainViewContainer = (LinearLayout) findViewById(R.id.mainViewContainer);
 
 		View mainView = createMainView();
 
