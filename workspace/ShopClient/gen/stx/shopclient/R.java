@@ -359,10 +359,10 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int vpi__tab_unselected_pressed_holo=0x7f020007;
     }
     public static final class id {
-        public static final int action_settings=0x7f04000f;
+        public static final int action_settings=0x7f040010;
         public static final int bottom=0x7f040003;
         public static final int drawer_layout=0x7f040005;
-        public static final int imageView=0x7f04000e;
+        public static final int imageView=0x7f04000d;
         public static final int itemsViewPager=0x7f04000c;
         public static final int mainMenuItemImage=0x7f04000a;
         public static final int mainMenuItemTextView=0x7f04000b;
@@ -371,7 +371,8 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int none=0x7f040000;
         public static final int page_indicator=0x7f040009;
         public static final int product_viewpager=0x7f040008;
-        public static final int textView=0x7f04000d;
+        public static final int ratingBar=0x7f04000e;
+        public static final int textView=0x7f04000f;
         public static final int top=0x7f040004;
         public static final int triangle=0x7f040001;
         public static final int underline=0x7f040002;

@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 public class CatalogItemViewPagerFragment extends Fragment{
@@ -68,6 +69,10 @@ public class CatalogItemViewPagerFragment extends Fragment{
 			
 			TextView textView = (TextView)view.findViewById(R.id.textView);
 			textView.setText(item);
+			
+			RatingBar ratingBar = (RatingBar)view.findViewById(R.id.ratingBar);
+			ratingBar.setRating(3.5f);
+			
 			return view;
 		}
 
