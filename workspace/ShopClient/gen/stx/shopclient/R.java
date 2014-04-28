@@ -388,9 +388,10 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int base_activity=0x7f030000;
         public static final int fragment_catalogitems_viewpager=0x7f030001;
         public static final int main_menu_item=0x7f030002;
-        public static final int screen_main=0x7f030003;
-        public static final int test_layout=0x7f030004;
-        public static final int view_catalog_item_image_text=0x7f030005;
+        public static final int screen_item=0x7f030003;
+        public static final int screen_main=0x7f030004;
+        public static final int test_layout=0x7f030005;
+        public static final int view_catalog_item_image_text=0x7f030006;
     }
     public static final class menu {
         public static final int main=0x7f0b0000;
