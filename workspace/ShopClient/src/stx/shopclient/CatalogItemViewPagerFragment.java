@@ -66,7 +66,7 @@ public class CatalogItemViewPagerFragment extends Fragment{
         @Override
         protected void onItemClick(String item) {
         	//Toast.makeText(_context, item, 1).show();
-        	 Intent intent = new Intent(_context, ItemActivity.class);
+        	 Intent intent = new Intent(_context, ItemActivity.class);        	 
         	 startActivity(intent);
         }
 

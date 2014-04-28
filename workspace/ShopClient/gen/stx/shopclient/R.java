@@ -359,20 +359,27 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int vpi__tab_unselected_pressed_holo=0x7f020007;
     }
     public static final class id {
-        public static final int action_settings=0x7f040010;
+        public static final int action_settings=0x7f040017;
         public static final int bottom=0x7f040003;
         public static final int drawer_layout=0x7f040005;
-        public static final int imageView=0x7f04000d;
-        public static final int itemsViewPager=0x7f04000c;
-        public static final int mainMenuItemImage=0x7f04000a;
-        public static final int mainMenuItemTextView=0x7f04000b;
+        public static final int favoritesLayout=0x7f04000d;
+        public static final int favoritesViewPager=0x7f04000e;
+        public static final int imageView=0x7f040014;
+        public static final int mainItemsTabs=0x7f040013;
+        public static final int mainMenuItemImage=0x7f040011;
+        public static final int mainMenuItemTextView=0x7f040012;
         public static final int mainMenuList=0x7f040007;
         public static final int mainViewContainer=0x7f040006;
         public static final int none=0x7f040000;
         public static final int page_indicator=0x7f040009;
+        public static final int popularLayout=0x7f04000b;
+        public static final int popularViewPager=0x7f04000c;
         public static final int product_viewpager=0x7f040008;
-        public static final int ratingBar=0x7f04000e;
-        public static final int textView=0x7f04000f;
+        public static final int ratingBar=0x7f040015;
+        public static final int recentLayout=0x7f04000f;
+        public static final int recentViewPager=0x7f040010;
+        public static final int tabhost=0x7f04000a;
+        public static final int textView=0x7f040016;
         public static final int top=0x7f040004;
         public static final int triangle=0x7f040001;
         public static final int underline=0x7f040002;
@@ -387,11 +394,12 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
     public static final class layout {
         public static final int base_activity=0x7f030000;
         public static final int fragment_catalogitems_viewpager=0x7f030001;
-        public static final int main_menu_item=0x7f030002;
-        public static final int screen_item=0x7f030003;
-        public static final int screen_main=0x7f030004;
-        public static final int test_layout=0x7f030005;
-        public static final int view_catalog_item_image_text=0x7f030006;
+        public static final int fragment_main_items_tabs=0x7f030002;
+        public static final int main_menu_item=0x7f030003;
+        public static final int screen_item=0x7f030004;
+        public static final int screen_main=0x7f030005;
+        public static final int test_layout=0x7f030006;
+        public static final int view_catalog_item_image_text=0x7f030007;
     }
     public static final class menu {
         public static final int main=0x7f0b0000;
