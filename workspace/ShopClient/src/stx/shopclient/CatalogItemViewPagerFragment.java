@@ -15,11 +15,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 public class CatalogItemViewPagerFragment extends Fragment{
 	@Override
@@ -31,9 +29,9 @@ public class CatalogItemViewPagerFragment extends Fragment{
 		CirclePageIndicator pageIndicator = (CirclePageIndicator)view.findViewById(R.id.page_indicator);
 		
 		List<String> list = new ArrayList<String>();
-		list.add("Торты");
-		list.add("Шляпы");
-		list.add("Одежда");
+		list.add("test1");
+		list.add("test2");
+		list.add("test3");
 		list.add("test4");
 		list.add("test5");
 		list.add("test6");
@@ -47,7 +45,7 @@ public class CatalogItemViewPagerFragment extends Fragment{
 		list.add("test1");
 		
 		
-		TestGridAdapter adapter = new TestGridAdapter(this.getActivity(), list, LocationEnum.HORISONTAL);
+		TestGridAdapter adapter = new TestGridAdapter(this.getActivity(), list);
 		
 		viewPager.setAdapter(adapter);
 		pageIndicator.setViewPager(viewPager);
@@ -58,10 +56,15 @@ public class CatalogItemViewPagerFragment extends Fragment{
 	private class TestGridAdapter extends GridPagerAdapter<String> {
 		Context _context;
 		
-        public TestGridAdapter(Context context, List<String> list,LocationEnum location) {
+        public TestGridAdapter(Context context, List<String> list) {
             super(list, context);
             
             _context = context;
+        }
+        
+        @Override
+        protected void onItemClick(String item) {
+        	Toast.makeText(_context, item, 1).show();        	
         }
 
 		@Override
@@ -73,8 +76,6 @@ public class CatalogItemViewPagerFragment extends Fragment{
 			TextView textView = (TextView)view.findViewById(R.id.textView);
 			textView.setText(item);
 			
-			
-			
 			RatingBar ratingBar = (RatingBar)view.findViewById(R.id.ratingBar);
 			ratingBar.setRating(3.5f);
 			
@@ -84,6 +85,3 @@ public class CatalogItemViewPagerFragment extends Fragment{
         
     }
 }
-
-
-enum LocationEnum { HORISONTAL,VERTICAL }
