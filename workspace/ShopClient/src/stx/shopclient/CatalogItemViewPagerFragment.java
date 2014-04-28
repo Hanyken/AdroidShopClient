@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class CatalogItemViewPagerFragment extends Fragment{
 	@Override
@@ -59,6 +60,11 @@ public class CatalogItemViewPagerFragment extends Fragment{
             super(list, context);
             
             _context = context;
+        }
+        
+        @Override
+        protected void onItemClick(String item) {
+        	Toast.makeText(_context, item, 1).show();        	
         }
 
 		@Override

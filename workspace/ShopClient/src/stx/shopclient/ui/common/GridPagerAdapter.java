@@ -9,13 +9,15 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
-public abstract class GridPagerAdapter<TItemModel> extends PagerAdapter {
+public abstract class GridPagerAdapter<TItemModel> extends PagerAdapter implements OnItemClickListener {
 
 	List<TItemModel> _items;
 	Context _context;
@@ -27,6 +29,18 @@ public abstract class GridPagerAdapter<TItemModel> extends PagerAdapter {
 	}
 
 	protected abstract View createItemView(TItemModel item);
+	
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+		int startIndex = (Integer)parent.getTag();
+		
+		TItemModel item = _items.get(startIndex + position);
+		
+		onItemClick(item);		
+	}
+	
+	protected void onItemClick(TItemModel item){
+		
+	}
 
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
@@ -36,6 +50,7 @@ public abstract class GridPagerAdapter<TItemModel> extends PagerAdapter {
 //		container.addView(button);
 //		return button;
 		GridView grid = new GridView(_context);
+		grid.setOnItemClickListener(this);
 		grid.setNumColumns(_gridColumnCount);
 		ViewPager.LayoutParams layoutParams = new ViewPager.LayoutParams();
 		layoutParams.gravity = Gravity.CENTER;
@@ -53,6 +68,7 @@ public abstract class GridPagerAdapter<TItemModel> extends PagerAdapter {
 		GridAdapter<TItemModel> gridAdapter = new GridAdapter<TItemModel>(this,
 				startIndex, count, _items);
 
+		grid.setTag(Integer.valueOf(startIndex));
 		grid.setAdapter(gridAdapter);
 
 		container.addView(grid);
