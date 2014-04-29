@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res/stx.shopclient">
+
+    <style name="ViewPageIndicator">
+        <item name="android:padding">5dp</item>
+        <item name="fillColor">#000000</item>
+        <item name="pageColor">#A29BAB</item>
+        <item name="radius">3dp</item>
+        <item name="strokeWidth">0dp</item>
+    </style>
+
+</resources>
