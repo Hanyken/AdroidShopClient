@@ -5,12 +5,25 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <!--
-    <fragment
-        android:id="@+id/itemsViewPager"
-        android:name="stx.shopclient.CatalogItemViewPagerFragment"
-        android:layout_width="fill_parent"
-        android:layout_height="110dp" />
-        -->
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:includeFontPadding="false"
+        android:text="Название товара"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        <LinearLayout
+            android:id="@+id/imageGallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            />
+    </HorizontalScrollView>
 
 </LinearLayout>

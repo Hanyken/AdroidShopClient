@@ -359,13 +359,14 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int vpi__tab_unselected_pressed_holo=0x7f020007;
     }
     public static final class id {
-        public static final int action_settings=0x7f040017;
+        public static final int action_settings=0x7f040019;
         public static final int bottom=0x7f040003;
         public static final int drawer_layout=0x7f040005;
         public static final int favoritesLayout=0x7f04000d;
         public static final int favoritesViewPager=0x7f04000e;
-        public static final int imageView=0x7f040014;
-        public static final int mainItemsTabs=0x7f040013;
+        public static final int imageGallery=0x7f040014;
+        public static final int imageView=0x7f040016;
+        public static final int mainItemsTabs=0x7f040015;
         public static final int mainMenuItemImage=0x7f040011;
         public static final int mainMenuItemTextView=0x7f040012;
         public static final int mainMenuList=0x7f040007;
@@ -375,11 +376,12 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int popularLayout=0x7f04000b;
         public static final int popularViewPager=0x7f04000c;
         public static final int product_viewpager=0x7f040008;
-        public static final int ratingBar=0x7f040015;
+        public static final int ratingBar=0x7f040017;
         public static final int recentLayout=0x7f04000f;
         public static final int recentViewPager=0x7f040010;
         public static final int tabhost=0x7f04000a;
-        public static final int textView=0x7f040016;
+        public static final int textView=0x7f040018;
+        public static final int textViewTitle=0x7f040013;
         public static final int top=0x7f040004;
         public static final int triangle=0x7f040001;
         public static final int underline=0x7f040002;
