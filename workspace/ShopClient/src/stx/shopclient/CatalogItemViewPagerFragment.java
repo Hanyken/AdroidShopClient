@@ -24,7 +24,7 @@ public class CatalogItemViewPagerFragment extends Fragment{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_catalogitems_viewpager, null);
+		View view = inflater.inflate(R.layout.fragment_catalogitems_viewpager, container, false);
 		
 		ViewPager viewPager = (ViewPager)view.findViewById(R.id.product_viewpager);
 		CirclePageIndicator pageIndicator = (CirclePageIndicator)view.findViewById(R.id.page_indicator);

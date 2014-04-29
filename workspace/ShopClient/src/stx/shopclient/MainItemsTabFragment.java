@@ -13,7 +13,7 @@ public class MainItemsTabFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
-		View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_main_items_tabs, null);
+		View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_main_items_tabs, container, false);
 		
 		TabHost tabHost = (TabHost)view.findViewById(R.id.tabhost);
 

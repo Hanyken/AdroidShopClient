@@ -26,31 +26,19 @@
                 android:layout_height="match_parent" >
 
                 <LinearLayout
-                    android:id="@+id/tab1"
+                    android:id="@+id/linearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical" >
-
-                    <GridView
-                        android:id="@+id/grid"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:numColumns="3" >
-                    </GridView>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/tab2"
+                <GridLayout
+                    android:id="@+id/gridLayout"
+                    style="@style/MainRootNodesBrowserGrid"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical" >
-
-                    <ListView
-                        android:id="@+id/list"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" >
-                    </ListView>
-                </LinearLayout>
+                    android:columnCount="3" >
+                </GridLayout>
             </FrameLayout>
         </LinearLayout>
     </TabHost>

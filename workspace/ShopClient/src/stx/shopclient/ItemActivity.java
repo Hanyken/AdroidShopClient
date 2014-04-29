@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,7 +22,7 @@ public class ItemActivity extends BaseActivity {
 	
 	LinearLayout myGallery;
 	@Override
-	public View createMainView() {
+	public View createMainView(ViewGroup parent) {
 		
 		 Intent intent = getIntent();
 		 
@@ -29,7 +30,7 @@ public class ItemActivity extends BaseActivity {
 		 String itemTitle = intent.getStringExtra("ItemTitle");
 		 String ItemID = intent.getStringExtra("ItemID");
 		
-		View view = getLayoutInflater().inflate(R.layout.screen_item, null);
+		View view = getLayoutInflater().inflate(R.layout.screen_item, parent, false);
 		
 		TextView textView = (TextView)view.findViewById(R.id.textViewTitle);
 		 textView.setText(itemTitle);

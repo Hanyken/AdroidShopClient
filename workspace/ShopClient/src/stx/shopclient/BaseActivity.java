@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
@@ -40,7 +41,7 @@ public class BaseActivity extends FragmentActivity {
 
 		_mainViewContainer = (LinearLayout) findViewById(R.id.mainViewContainer);
 
-		View mainView = createMainView();
+		View mainView = createMainView(_mainViewContainer);
 
 		if (mainView != null) {
 			_mainViewContainer.addView(mainView);
@@ -51,7 +52,7 @@ public class BaseActivity extends FragmentActivity {
 		_drawerLayout.closeDrawer(Gravity.LEFT);
 	}
 
-	protected View createMainView() {
+	protected View createMainView(ViewGroup parent) {
 		return null;
 	}
 

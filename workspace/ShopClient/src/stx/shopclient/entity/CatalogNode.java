@@ -12,64 +12,64 @@ public class CatalogNode {
 	private double _minPrice;
 	private double _maxPrice;
 	
-	long getId() {
+	public long getId() {
 		return _id;
 	}	
-	void setId(long id) {
+	public void setId(long id) {
 		_id = id;
 	}	
-	long getParentId() {
+	public long getParentId() {
 		return _parentId;
 	}	
-	void setParentId(long parentId) {
+	public void setParentId(long parentId) {
 		_parentId = parentId;
 	}	
-	long getCatalogId() {
+	public long getCatalogId() {
 		return _catalogId;
 	}	
-	void setCatalogId(long catalogId) {
+	public void setCatalogId(long catalogId) {
 		_catalogId = catalogId;
 	}	
-	String getName() {
+	public String getName() {
 		return _name;
 	}	
-	void setName(String name) {
+	public void setName(String name) {
 		_name = name;
 	}	
-	int getCount() {
+	public int getCount() {
 		return _count;
 	}	
-	void setCount(int count) {
+	public void setCount(int count) {
 		_count = count;
 	}	
-	boolean isMajor() {
+	public boolean isMajor() {
 		return _isMajor;
 	}	
-	void setMajor(boolean isMajor) {
+	public void setMajor(boolean isMajor) {
 		_isMajor = isMajor;
 	}	
-	String getIcon() {
+	public String getIcon() {
 		return _icon;
 	}	
-	void setIcon(String icon) {
+	public void setIcon(String icon) {
 		_icon = icon;
 	}	
-	String getDescription() {
+	public String getDescription() {
 		return _description;
 	}	
-	void setDescription(String description) {
+	public void setDescription(String description) {
 		_description = description;
 	}	
-	double getMinPrice() {
+	public double getMinPrice() {
 		return _minPrice;
 	}	
-	void setMinPrice(double minPrice) {
+	public void setMinPrice(double minPrice) {
 		_minPrice = minPrice;
 	}	
-	double getMaxPrice() {
+	public double getMaxPrice() {
 		return _maxPrice;
 	}	
-	void setMaxPrice(double maxPrice) {
+	public void setMaxPrice(double maxPrice) {
 		_maxPrice = maxPrice;
 	}
 	
