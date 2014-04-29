@@ -48,7 +48,7 @@ public class ItemActivity extends BaseActivity {
           .getExternalStorageDirectory()
           .getAbsolutePath();
         
-        String targetPath = ExternalStorageDirectoryPath + "/DCIM/Camera1";
+        String targetPath = ExternalStorageDirectoryPath + "/DCIM/Camera";
         
         Toast.makeText(getApplicationContext(), targetPath, Toast.LENGTH_LONG).show();
         File targetDirector = new File(targetPath);
