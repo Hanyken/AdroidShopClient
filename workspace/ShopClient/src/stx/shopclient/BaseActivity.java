@@ -11,11 +11,13 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView.FindListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 
 public class BaseActivity extends FragmentActivity {
 	DrawerLayout _drawerLayout;
@@ -31,6 +33,8 @@ public class BaseActivity extends FragmentActivity {
 
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setContentView(R.layout.base_activity);
+		
+		ScrollView scrollView = (ScrollView)findViewById(R.id.scrollView);
 
 		_drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		ListView _menuList = (ListView) findViewById(R.id.mainMenuList);
@@ -46,6 +50,8 @@ public class BaseActivity extends FragmentActivity {
 		if (mainView != null) {
 			_mainViewContainer.addView(mainView);
 		}
+		
+		scrollView.fullScroll(ScrollView.FOCUS_UP);
 	}
 
 	protected void onMainMenuItemClick(MainMenuItem item) {
