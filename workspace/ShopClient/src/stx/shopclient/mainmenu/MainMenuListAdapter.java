@@ -69,7 +69,7 @@ public class MainMenuListAdapter extends BaseAdapter {
 		LayoutInflater inflater = (LayoutInflater) _context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		View itemView = inflater.inflate(R.layout.main_menu_item, null);
+		View itemView = inflater.inflate(R.layout.base_activity_main_menu_item, null);
 
 		ImageView image = (ImageView) itemView
 				.findViewById(R.id.mainMenuItemImage);

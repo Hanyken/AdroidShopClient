@@ -34,7 +34,7 @@
 
                     <fragment
                         android:id="@+id/popularViewPager"
-                        android:name="stx.shopclient.CatalogItemViewPagerFragment"
+                        android:name="stx.shopclient.mainactivity.CatalogItemViewPagerFragment"
                         android:layout_width="fill_parent"
                         android:layout_height="110dp" />
                 </LinearLayout>
@@ -46,7 +46,7 @@
 
                     <fragment
                         android:id="@+id/favoritesViewPager"
-                        android:name="stx.shopclient.CatalogItemViewPagerFragment"
+                        android:name="stx.shopclient.mainactivity.CatalogItemViewPagerFragment"
                         android:layout_width="fill_parent"
                         android:layout_height="110dp" />
                 </LinearLayout>
@@ -58,7 +58,7 @@
 
                     <fragment
                         android:id="@+id/recentViewPager"
-                        android:name="stx.shopclient.CatalogItemViewPagerFragment"
+                        android:name="stx.shopclient.mainactivity.CatalogItemViewPagerFragment"
                         android:layout_width="fill_parent"
                         android:layout_height="110dp" />
                 </LinearLayout>

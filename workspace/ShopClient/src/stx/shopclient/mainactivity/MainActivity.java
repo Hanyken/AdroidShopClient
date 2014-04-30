@@ -1,5 +1,8 @@
-package stx.shopclient;
+package stx.shopclient.mainactivity;
 
+import stx.shopclient.BaseActivity;
+import stx.shopclient.R;
+import stx.shopclient.R.layout;
 import stx.shopclient.mainmenu.MainMenuItem;
 import android.content.Intent;
 import android.view.View;
@@ -9,7 +12,7 @@ public class MainActivity extends BaseActivity {
 
 	@Override
 	public View createMainView(ViewGroup parent) {
-		View view = getLayoutInflater().inflate(R.layout.screen_main, parent, false);
+		View view = getLayoutInflater().inflate(R.layout.main_activity, parent, false);
 		
 		return view;
 	}

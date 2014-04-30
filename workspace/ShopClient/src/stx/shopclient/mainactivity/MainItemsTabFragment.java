@@ -1,5 +1,8 @@
-package stx.shopclient;
+package stx.shopclient.mainactivity;
 
+import stx.shopclient.R;
+import stx.shopclient.R.id;
+import stx.shopclient.R.layout;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,7 +16,7 @@ public class MainItemsTabFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
-		View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_main_items_tabs, container, false);
+		View view = getActivity().getLayoutInflater().inflate(R.layout.main_activity_items_tabs_fragment, container, false);
 		
 		TabHost tabHost = (TabHost)view.findViewById(R.id.tabhost);
 

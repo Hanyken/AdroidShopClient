@@ -1,7 +1,11 @@
-package stx.shopclient;
+package stx.shopclient.itemactivity;
 
 import java.io.File;
 
+import stx.shopclient.BaseActivity;
+import stx.shopclient.R;
+import stx.shopclient.R.id;
+import stx.shopclient.R.layout;
 import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity;
@@ -30,7 +34,7 @@ public class ItemActivity extends BaseActivity {
 		 String itemTitle = intent.getStringExtra("ItemTitle");
 		 String ItemID = intent.getStringExtra("ItemID");
 		
-		View view = getLayoutInflater().inflate(R.layout.screen_item, parent, false);
+		View view = getLayoutInflater().inflate(R.layout.item_activity, parent, false);
 		
 		TextView textView = (TextView)view.findViewById(R.id.textViewTitle);
 		 textView.setText(itemTitle);

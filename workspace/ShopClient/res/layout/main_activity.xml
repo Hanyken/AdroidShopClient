@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainItemsTabs"
-        android:name="stx.shopclient.MainItemsTabFragment"
+        android:name="stx.shopclient.mainactivity.MainItemsTabFragment"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 
@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/rootNodesBrowser"
-        android:name="stx.shopclient.mainscreen.MainRootNodesBrowserFragment"
+        android:name="stx.shopclient.mainactivity.MainRootNodesBrowserFragment"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 

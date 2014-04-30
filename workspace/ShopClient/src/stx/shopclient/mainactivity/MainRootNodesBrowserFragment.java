@@ -1,4 +1,4 @@
-package stx.shopclient.mainscreen;
+package stx.shopclient.mainactivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class MainRootNodesBrowserFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.screen_main_rootnodes_browser,
+		View view = inflater.inflate(R.layout.main_activity_rootnodes_browser,
 				container, false);
 
 		TabHost tabHost = (TabHost) view.findViewById(R.id.tabhost);
@@ -79,7 +79,7 @@ public class MainRootNodesBrowserFragment extends Fragment {
 
 		for (CatalogNode node : _nodes) {
 			View itemView = getActivity().getLayoutInflater()
-					.inflate(R.layout.screen_main_rootnodes_browser_griditem, gridLayout, false);
+					.inflate(R.layout.main_activity_rootnodes_browser_griditem, gridLayout, false);
 
 			gridLayout.addView(itemView);
 
@@ -105,7 +105,7 @@ public class MainRootNodesBrowserFragment extends Fragment {
 
 		for (CatalogNode node : _nodes) {
 			View itemView = getActivity().getLayoutInflater().inflate(
-					R.layout.screen_main_rootnodes_browser_listitem, linearLayout, false);
+					R.layout.main_activity_rootnodes_browser_listitem, linearLayout, false);
 
 			TextView nameTextView = (TextView) itemView.findViewById(R.id.nodeNameTextView);
 			TextView descriptionTextView = (TextView) itemView.findViewById(R.id.descriptionTextView);
