@@ -1,11 +1,14 @@
 package stx.shopclient;
 
+import stx.shopclient.mainactivity.MainActivity;
 import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.mainmenu.MainMenuListAdapter;
 import android.app.ActionBar;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NavUtils;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -51,7 +54,10 @@ public class BaseActivity extends FragmentActivity {
 	}
 
 	protected void onMainMenuItemClick(MainMenuItem item) {
-		_drawerLayout.closeDrawer(Gravity.LEFT);
+		if (item.getId() == MainMenuItem.HOME_MENU_ITEM_ID) {
+			Intent intent = new Intent(this, MainActivity.class);
+			NavUtils.navigateUpTo(this, intent);
+		}
 	}
 
 	protected View createMainView(ViewGroup parent) {
@@ -61,8 +67,8 @@ public class BaseActivity extends FragmentActivity {
 	protected void onHomeButtonClick() {
 		onBackPressed();
 	}
-	
-	protected void showOrHideMenu(){
+
+	protected void showOrHideMenu() {
 		if (_drawerLayout.isDrawerOpen(Gravity.LEFT))
 			_drawerLayout.closeDrawer(Gravity.LEFT);
 		else
@@ -89,6 +95,7 @@ public class BaseActivity extends FragmentActivity {
 			MainMenuItem item = (MainMenuItem) adapter.getAdapter().getItem(
 					index);
 
+			_drawerLayout.closeDrawer(Gravity.LEFT);
 			onMainMenuItemClick(item);
 		}
 	}

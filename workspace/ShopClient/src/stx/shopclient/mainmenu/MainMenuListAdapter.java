@@ -31,6 +31,13 @@ public class MainMenuListAdapter extends BaseAdapter {
 		item.setName("Главная");
 		item.setHasIcon(true);
 		_menuItems.add(item);
+		
+		item = new MainMenuItem();
+		item.setId(MainMenuItem.SEARCH_MENU_ITEM_ID);
+		item.setName("Поиск");
+		item.setHasIcon(true);
+		item.setIconId(R.drawable.search_menu_icon);
+		_menuItems.add(item);
 
 		item = new MainMenuItem();
 		item.setId(MainMenuItem.BASKET_MENU_ITEM_ID);
@@ -78,7 +85,7 @@ public class MainMenuListAdapter extends BaseAdapter {
 
 		if (item.isHasIcon()) {
 			if (item.getIconId() != 0)
-				image.setBackgroundResource(item.getIconId());
+				image.setImageResource(item.getIconId());
 		} else {
 			image.setVisibility(View.INVISIBLE);
 		}
