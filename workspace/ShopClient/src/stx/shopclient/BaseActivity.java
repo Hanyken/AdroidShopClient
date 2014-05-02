@@ -33,8 +33,6 @@ public class BaseActivity extends FragmentActivity {
 
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setContentView(R.layout.base_activity);
-		
-		ScrollView scrollView = (ScrollView)findViewById(R.id.scrollView);
 
 		_drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		ListView _menuList = (ListView) findViewById(R.id.mainMenuList);
@@ -50,8 +48,6 @@ public class BaseActivity extends FragmentActivity {
 		if (mainView != null) {
 			_mainViewContainer.addView(mainView);
 		}
-		
-		scrollView.fullScroll(ScrollView.FOCUS_UP);
 	}
 
 	protected void onMainMenuItemClick(MainMenuItem item) {
@@ -63,6 +59,10 @@ public class BaseActivity extends FragmentActivity {
 	}
 
 	protected void onHomeButtonClick() {
+		onBackPressed();
+	}
+	
+	protected void showOrHideMenu(){
 		if (_drawerLayout.isDrawerOpen(Gravity.LEFT))
 			_drawerLayout.closeDrawer(Gravity.LEFT);
 		else

@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Random;
 
 import stx.shopclient.R;
+import stx.shopclient.catalogbrowseractivity.CatalogBrowserActivity;
 import stx.shopclient.entity.CatalogNode;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -14,6 +16,7 @@ import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridLayout;
@@ -22,11 +25,13 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class MainRootNodesBrowserFragment extends Fragment {
+public class MainRootNodesBrowserFragment extends Fragment implements
+		OnClickListener {
 
 	List<CatalogNode> _nodes;
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -52,19 +57,19 @@ public class MainRootNodesBrowserFragment extends Fragment {
 		tabHost.setCurrentTab(0);
 
 		loadDataFromDatabase();
-		
+
 		loadList(view);
 		loadGrid(view);
 
 		return view;
 	}
-	
-	void loadDataFromDatabase(){
+
+	void loadDataFromDatabase() {
 		_nodes = generateData();
 	}
 
 	void loadGrid(View view) {
-		
+
 		Display display = getActivity().getWindowManager().getDefaultDisplay();
 		DisplayMetrics outMetrics = new DisplayMetrics();
 		display.getMetrics(outMetrics);
@@ -74,12 +79,16 @@ public class MainRootNodesBrowserFragment extends Fragment {
 		float dpWidth = outMetrics.widthPixels / density;
 
 		GridLayout gridLayout = (GridLayout) view.findViewById(R.id.gridLayout);
-		
+
 		gridLayout.removeAllViews();
 
 		for (CatalogNode node : _nodes) {
-			View itemView = getActivity().getLayoutInflater()
-					.inflate(R.layout.main_activity_rootnodes_browser_griditem, gridLayout, false);
+			View itemView = getActivity().getLayoutInflater().inflate(
+					R.layout.main_activity_rootnodes_browser_griditem,
+					gridLayout, false);
+
+			itemView.setTag(node);
+			itemView.setOnClickListener(this);
 
 			gridLayout.addView(itemView);
 
@@ -91,7 +100,7 @@ public class MainRootNodesBrowserFragment extends Fragment {
 			itemView.setLayoutParams(params);
 
 			TextView textView = (TextView) itemView.findViewById(R.id.textView);
-	
+
 			textView.setText(node.getName());
 		}
 	}
@@ -105,28 +114,35 @@ public class MainRootNodesBrowserFragment extends Fragment {
 
 		for (CatalogNode node : _nodes) {
 			View itemView = getActivity().getLayoutInflater().inflate(
-					R.layout.main_activity_rootnodes_browser_listitem, linearLayout, false);
+					R.layout.main_activity_rootnodes_browser_listitem,
+					linearLayout, false);
 
-			TextView nameTextView = (TextView) itemView.findViewById(R.id.nodeNameTextView);
-			TextView descriptionTextView = (TextView) itemView.findViewById(R.id.descriptionTextView);
+			itemView.setTag(node);
+			itemView.setOnClickListener(this);
+
+			TextView nameTextView = (TextView) itemView
+					.findViewById(R.id.nodeNameTextView);
+			TextView descriptionTextView = (TextView) itemView
+					.findViewById(R.id.descriptionTextView);
 
 			nameTextView.setText(node.getName());
-			
+
 			descriptionTextView.setText(getDescriptionForListItem(node));
 
 			linearLayout.addView(itemView);
 		}
 	}
-	
-	String getDescriptionForListItem(CatalogNode node){
-		String description = String.format("%d товаров от %d рублей", node.getCount(), (int)node.getMinPrice());
+
+	String getDescriptionForListItem(CatalogNode node) {
+		String description = String.format("%d товаров от %d рублей",
+				node.getCount(), (int) node.getMinPrice());
 		return description;
 	}
 
 	List<CatalogNode> generateData() {
-		
-		Random random = new Random();		
-		
+
+		Random random = new Random();
+
 		List<CatalogNode> data = new ArrayList<CatalogNode>();
 
 		for (int i = 0; i < 30; i++) {
@@ -138,5 +154,24 @@ public class MainRootNodesBrowserFragment extends Fragment {
 		}
 
 		return data;
+	}
+
+	void onCatalogNodeClick(CatalogNode node) {
+		Intent intent = new Intent(getActivity(), CatalogBrowserActivity.class);
+		
+		intent.putExtra(CatalogBrowserActivity.NODE_ID_EXTRA_KEY, node.getId());
+		intent.putExtra(CatalogBrowserActivity.NODE_NAME_EXTRA_KEY, node.getName());
+		
+		startActivity(intent);
+	}
+
+	@Override
+	public void onClick(View v) {
+		if(v.getTag() == null)
+			return;
+		
+		CatalogNode node = (CatalogNode)v.getTag();
+		
+		onCatalogNodeClick(node);
 	}
 }

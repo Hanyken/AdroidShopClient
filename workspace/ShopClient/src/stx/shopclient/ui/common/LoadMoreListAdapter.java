@@ -15,6 +15,7 @@ public abstract class LoadMoreListAdapter extends BaseAdapter implements
 	private int previousTotalItemCount = 0;
 	// True if we are still waiting for the last set of data to load.
 	private boolean loading = true;
+	private boolean _allDataLoaded = false;
 
 	private ListView listView;
 
@@ -54,7 +55,7 @@ public abstract class LoadMoreListAdapter extends BaseAdapter implements
 		// the visibleThreshold and need to reload more data.
 		// If we do need to reload some more data, we execute onLoadMore to
 		// fetch the data.
-		if (!loading
+		if (!_allDataLoaded && !loading
 				&& (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
 			startLoadingData();
 			loading = true;
@@ -70,7 +71,7 @@ public abstract class LoadMoreListAdapter extends BaseAdapter implements
 			@Override
 			public void run() {
 				try {
-					onLoadMore();
+				 	_allDataLoaded = onLoadMore();
 				} catch (Throwable e) {
 					Log.e("LoadMoreListAdapter.LoadingThread", e.getMessage(),
 							e);
@@ -92,7 +93,7 @@ public abstract class LoadMoreListAdapter extends BaseAdapter implements
 	}
 
 	// Defines the process for actually loading more data based on page
-	public abstract void onLoadMore();
+	public abstract boolean onLoadMore();
 	
 	public void onBeforeLoadData(){
 		

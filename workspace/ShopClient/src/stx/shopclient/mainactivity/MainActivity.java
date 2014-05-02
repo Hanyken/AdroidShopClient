@@ -7,6 +7,7 @@ import stx.shopclient.mainmenu.MainMenuItem;
 import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 
 public class MainActivity extends BaseActivity {
 
@@ -14,7 +15,16 @@ public class MainActivity extends BaseActivity {
 	public View createMainView(ViewGroup parent) {
 		View view = getLayoutInflater().inflate(R.layout.main_activity, parent, false);
 		
+		ScrollView scrollView = (ScrollView)view.findViewById(R.id.scrollView);
+		
+		scrollView.fullScroll(ScrollView.FOCUS_UP);
+		
 		return view;
+	}
+	
+	@Override
+	protected void onHomeButtonClick() {
+		showOrHideMenu();
 	}
 	
 	@Override

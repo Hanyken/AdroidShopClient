@@ -89,8 +89,9 @@ public class TestListFragment extends ListFragment {
 		}
 
 		@Override
-		public void onLoadMore() {
+		public boolean onLoadMore() {
 			addData();
+			return false;
 		}
 		
 		@Override

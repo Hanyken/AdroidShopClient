@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 public class ItemActivity extends BaseActivity {
 
+	public static final String ITEM_ID_EXTRA_KEY = "ItemID";
 	
 	LinearLayout myGallery;
 	@Override
@@ -32,7 +33,7 @@ public class ItemActivity extends BaseActivity {
 		 
 		 //Получаю параметры
 		 String itemTitle = intent.getStringExtra("ItemTitle");
-		 String ItemID = intent.getStringExtra("ItemID");
+		 String ItemID = intent.getStringExtra(ITEM_ID_EXTRA_KEY);
 		
 		View view = getLayoutInflater().inflate(R.layout.item_activity, parent, false);
 		

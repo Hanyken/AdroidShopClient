@@ -14,76 +14,76 @@ public class CatalogItem {
 	private String[] _tags;
 	private String _description;
 	
-	long getId() {
+	public long getId() {
 		return _id;
 	}
-	void setId(long id) {
+	public void setId(long id) {
 		_id = id;
 	}
-	long getParentId() {
+	public long getParentId() {
 		return _parentId;
 	}
-	void setParentId(long parentId) {
+	public void setParentId(long parentId) {
 		_parentId = parentId;
 	}
-	String getName() {
+	public String getName() {
 		return _name;
 	}
-	void setName(String name) {
+	public void setName(String name) {
 		_name = name;
 	}
-	String[] getSmallImageUrls() {
+	public String[] getSmallImageUrls() {
 		return _smallImageUrls;
 	}
-	void setSmallImageUrls(String[] smallImageUrls) {
+	public void setSmallImageUrls(String[] smallImageUrls) {
 		_smallImageUrls = smallImageUrls;
 	}
-	String[] getMediumImageUrls() {
+	public String[] getMediumImageUrls() {
 		return _mediumImageUrls;
 	}
-	void setMediumImageUrls(String[] mediumImageUrls) {
+	public void setMediumImageUrls(String[] mediumImageUrls) {
 		_mediumImageUrls = mediumImageUrls;
 	}
-	String[] getLargeImageUrls() {
+	public String[] getLargeImageUrls() {
 		return _largeImageUrls;
 	}
-	void setLargeImageUrls(String[] largeImageUrls) {
+	public void setLargeImageUrls(String[] largeImageUrls) {
 		_largeImageUrls = largeImageUrls;
 	}
-	double getPrice() {
+	public double getPrice() {
 		return _price;
 	}
-	void setPrice(double price) {
+	public void setPrice(double price) {
 		_price = price;
 	}
-	double getRating() {
+	public double getRating() {
 		return _rating;
 	}
-	void setRating(double rating) {
+	public void setRating(double rating) {
 		_rating = rating;
 	}
-	int getOverviewsCount() {
+	public int getOverviewsCount() {
 		return _overviewsCount;
 	}
-	void setOverviewsCount(int overviewsCount) {
+	public void setOverviewsCount(int overviewsCount) {
 		_overviewsCount = overviewsCount;
 	}
-	String[] getOverviews() {
+	public String[] getOverviews() {
 		return _overviews;
 	}
-	void setOverviews(String[] overviews) {
+	public void setOverviews(String[] overviews) {
 		_overviews = overviews;
 	}
-	String[] getTags() {
+	public String[] getTags() {
 		return _tags;
 	}
-	void setTags(String[] tags) {
+	public void setTags(String[] tags) {
 		_tags = tags;
 	}
-	String getDescription() {
+	public String getDescription() {
 		return _description;
 	}
-	void setDescription(String description) {
+	public void setDescription(String description) {
 		_description = description;
 	}
 }
