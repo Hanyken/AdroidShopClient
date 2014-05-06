@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TabHost;
+import android.widget.TabWidget;
 import android.widget.TextView;
 
 public class MainItemsTabFragment extends Fragment {
@@ -39,6 +40,13 @@ public class MainItemsTabFragment extends Fragment {
 		tabHost.addTab(spec);
 
 		tabHost.setCurrentTab(0);
+		
+		final TabWidget tabWidget = tabHost.getTabWidget();
+		for (int i = 0; i < tabWidget.getChildCount(); i++) {
+		    final ViewGroup tab = (ViewGroup) tabWidget.getChildAt(i);
+		    final TextView tabTextView = (TextView) tab.getChildAt(1); // Magic number
+		    tabTextView.setTextSize(10);
+		}
 		
 		return view;
 	}

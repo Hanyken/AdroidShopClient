@@ -3,6 +3,7 @@ package stx.shopclient;
 import stx.shopclient.mainactivity.MainActivity;
 import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.mainmenu.MainMenuListAdapter;
+import stx.shopclient.searchactivity.SearchActivity;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -57,6 +58,9 @@ public class BaseActivity extends FragmentActivity {
 		if (item.getId() == MainMenuItem.HOME_MENU_ITEM_ID) {
 			Intent intent = new Intent(this, MainActivity.class);
 			NavUtils.navigateUpTo(this, intent);
+		} else if(item.getId() == MainMenuItem.SEARCH_MENU_ITEM_ID){
+			Intent intent = new Intent(this, SearchActivity.class);
+			startActivity(intent);
 		}
 	}
 

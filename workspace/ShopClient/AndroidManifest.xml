@@ -30,6 +30,10 @@
             android:label="@string/app_name">
             
         </activity>
+        <activity android:name="stx.shopclient.searchactivity.SearchActivity"
+            android:label="@string/app_name">
+            
+        </activity>
     </application>
 
 </manifest>

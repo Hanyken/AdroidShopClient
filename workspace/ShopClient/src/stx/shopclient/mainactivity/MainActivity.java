@@ -13,25 +13,24 @@ public class MainActivity extends BaseActivity {
 
 	@Override
 	public View createMainView(ViewGroup parent) {
-		View view = getLayoutInflater().inflate(R.layout.main_activity, parent, false);
-		
-		ScrollView scrollView = (ScrollView)view.findViewById(R.id.scrollView);
-		
+		View view = getLayoutInflater().inflate(R.layout.main_activity, parent,
+				false);
+
+		ScrollView scrollView = (ScrollView) view.findViewById(R.id.scrollView);
+
 		scrollView.fullScroll(ScrollView.FOCUS_UP);
-		
+
 		return view;
 	}
-	
+
 	@Override
 	protected void onHomeButtonClick() {
 		showOrHideMenu();
 	}
-	
+
 	@Override
 	protected void onMainMenuItemClick(MainMenuItem item) {
-		super.onMainMenuItemClick(item);
-		
-		Intent intent = new Intent(this, this.getClass());
-		startActivity(intent);
+		if (item.getId() != MainMenuItem.HOME_MENU_ITEM_ID)
+			super.onMainMenuItemClick(item);
 	}
 }
