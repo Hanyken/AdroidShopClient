@@ -1,9 +1,11 @@
 package stx.shopclient.entity.searchproperties;
 
-public class PropertyDescriptor {
+public abstract class PropertyDescriptor {
 	private String _type;
 	private String _name;
 	private String _title;
+	
+	public abstract void clear();
 	
 	public String getName() {
 		return _name;

@@ -53,4 +53,9 @@ public class EnumPropertyDescriptor extends PropertyDescriptor {
 			_name = name;
 		}
 	}
+
+	@Override
+	public void clear() {
+		_currentValues.clear();
+	}
 }

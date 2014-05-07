@@ -20,4 +20,9 @@ public class DatePropertyDescriptor extends PropertyDescriptor {
 	public void setMaxValue(Date maxValue) {
 		_maxValue = maxValue;
 	}
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		
+	}
 }
