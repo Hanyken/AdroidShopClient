@@ -1,10 +1,12 @@
 package stx.shopclient.searchactivity;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.LayoutParams;
@@ -21,6 +23,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.entity.searchproperties.BooleanPropertyDescriptor;
+import stx.shopclient.entity.searchproperties.DatePropertyDescriptor;
 import stx.shopclient.entity.searchproperties.EnumPropertyDescriptor;
 import stx.shopclient.entity.searchproperties.NumberPropertyDescriptor;
 import stx.shopclient.entity.searchproperties.PropertyDescriptor;
@@ -37,7 +40,7 @@ public class SearchActivity extends BaseActivity implements
 
 		for (int i = 0; i < 30; i++) {
 
-			int type = random.nextInt(3);
+			int type = random.nextInt(4);
 
 			if (type == 1) {
 				BooleanPropertyDescriptor prop = new BooleanPropertyDescriptor();
@@ -52,6 +55,14 @@ public class SearchActivity extends BaseActivity implements
 				prop.setType(NumberPropertyDescriptor.TYPE_STRING);
 				prop.setMinValue(random.nextInt(10));
 				prop.setMaxValue(random.nextInt(50) + 10);
+				_props.add(prop);
+			} else if (type == 3) {
+				DatePropertyDescriptor prop = new DatePropertyDescriptor();
+				prop.setTitle("Date" + Integer.toString(i));
+				prop.setName("date");
+				prop.setType(DatePropertyDescriptor.TYPE_STRING);
+				prop.setMinValue(new GregorianCalendar(1997, 1, 1));
+				prop.setMaxValue(new GregorianCalendar(2020, 1, 1));
 				_props.add(prop);
 			} else {
 				EnumPropertyDescriptor prop = new EnumPropertyDescriptor();
@@ -100,9 +111,9 @@ public class SearchActivity extends BaseActivity implements
 
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(this);
-		
+
 		buttonClear.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				clearSearchParams();
@@ -111,13 +122,13 @@ public class SearchActivity extends BaseActivity implements
 
 		return view;
 	}
-	
-	void clearSearchParams(){
-		
-		for(PropertyDescriptor prop : _props){
+
+	void clearSearchParams() {
+
+		for (PropertyDescriptor prop : _props) {
 			prop.clear();
 		}
-		
+
 		adapter.notifyDataSetChanged();
 	}
 
@@ -141,6 +152,12 @@ public class SearchActivity extends BaseActivity implements
 
 			dialog.show(getFragmentManager(), prop.getName());
 
+		} else if (prop instanceof DatePropertyDescriptor) {
+			DatePropertyDescriptor
+					.setCurrentEditedProperty((DatePropertyDescriptor) prop);
+			
+			Intent intent = new Intent(this, DateRangeSelectActivity.class);
+			startActivity(intent);
 		}
 	}
 
@@ -234,6 +251,10 @@ public class SearchActivity extends BaseActivity implements
 
 				initNumberListItem(view,
 						(NumberPropertyDescriptor) propDescriptor);
+			} else if (propDescriptor instanceof DatePropertyDescriptor) {
+				view = getLayoutInflater().inflate(
+						R.layout.search_activity_item, parent, false);
+				view.setTag(propDescriptor);
 			} else
 				throw new RuntimeException("Unknown PropertyDescriptor");
 

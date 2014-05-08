@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:stx="http://schemas.android.com/apk/res/stx.shopclient.ui.common"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/fromTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="От:" />
+
+    <stx.shopclient.ui.common.StxDatePicker
+        android:id="@+id/dateFromPicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </stx.shopclient.ui.common.StxDatePicker>
+
+    <TextView
+        android:id="@+id/toTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="До:" />
+
+    <stx.shopclient.ui.common.StxDatePicker
+        android:id="@+id/dateToPicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </stx.shopclient.ui.common.StxDatePicker>
+
+</LinearLayout>
