@@ -17,13 +17,15 @@ import android.widget.ImageView;
 public class StxDatePicker extends FrameLayout implements
 		DatePickerDialog.OnDateSetListener {
 
-	boolean _isDateDefined = false;
-	private GregorianCalendar _date = new GregorianCalendar();
-	private GregorianCalendar _minDate = new GregorianCalendar();
-	private GregorianCalendar _maxDate = new GregorianCalendar();
+	protected boolean _isDateDefined = false;
+	protected GregorianCalendar _date = new GregorianCalendar();
+	protected GregorianCalendar _minDate = new GregorianCalendar();
+	protected GregorianCalendar _maxDate = new GregorianCalendar();
 
-	ImageView _resetImage;
-	EditText _dateEditText;
+	protected boolean _allowReset = true;
+
+	protected ImageView _resetImage;
+	protected EditText _dateEditText;
 
 	public StxDatePicker(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -36,11 +38,11 @@ public class StxDatePicker extends FrameLayout implements
 
 		_resetImage = (ImageView) view.findViewById(R.id.resetImageView);
 		_dateEditText = (EditText) view.findViewById(R.id.editText);
-		
+
 		_resetImage.setVisibility(View.GONE);
-		
+
 		_resetImage.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				resetDate();
@@ -66,7 +68,7 @@ public class StxDatePicker extends FrameLayout implements
 				_date.get(GregorianCalendar.YEAR),
 				_date.get(GregorianCalendar.MONTH),
 				_date.get(GregorianCalendar.DAY_OF_MONTH));
-		
+
 		dialog.show();
 	}
 
@@ -76,21 +78,25 @@ public class StxDatePicker extends FrameLayout implements
 
 	public void setDate(GregorianCalendar date) {
 		_date = date;
-		_resetImage.setVisibility(View.VISIBLE);
-		_dateEditText.setText(new SimpleDateFormat("dd.MM.yyyy").format(_date.getTime()));
-		_isDateDefined = true;
+		
+		if (_allowReset)
+			_resetImage.setVisibility(View.VISIBLE);
+		
+		_dateEditText.setText(new SimpleDateFormat("dd.MM.yyyy").format(_date
+				.getTime()));
+		setDateDefined(true);
 	}
-	
-	public void resetDate(){
+
+	public void resetDate() {
 		_resetImage.setVisibility(View.GONE);
 		_dateEditText.setText("");
-		_isDateDefined = false;
+		setDateDefined(false);
 	}
 
 	@Override
 	public void onDateSet(DatePicker picker, int y, int m, int d) {
 		GregorianCalendar date = new GregorianCalendar(y, m, d);
-		
+
 		setDate(date);
 	}
 
@@ -108,6 +114,22 @@ public class StxDatePicker extends FrameLayout implements
 
 	public void setMaxDate(GregorianCalendar maxDate) {
 		_maxDate = maxDate;
+	}
+
+	public boolean isDateDefined() {
+		return _isDateDefined;
+	}
+
+	protected void setDateDefined(boolean isDateDefined) {
+		_isDateDefined = isDateDefined;
+	}
+
+	public boolean isAllowReset() {
+		return _allowReset;
+	}
+
+	public void setAllowReset(boolean allowReset) {
+		_allowReset = allowReset;
 	}
 
 }

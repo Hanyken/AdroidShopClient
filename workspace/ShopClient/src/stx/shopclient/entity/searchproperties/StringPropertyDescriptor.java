@@ -2,10 +2,19 @@ package stx.shopclient.entity.searchproperties;
 
 public class StringPropertyDescriptor extends PropertyDescriptor {
 	public static final String TYPE_STRING = "String";
+	
+	private String _value = "";
 
 	@Override
 	public void clear() {
-		// TODO Auto-generated method stub
-		
+		_value = "";
+	}
+
+	public String getValue() {
+		return _value;
+	}
+
+	public void setValue(String value) {
+		_value = value;
 	}
 }

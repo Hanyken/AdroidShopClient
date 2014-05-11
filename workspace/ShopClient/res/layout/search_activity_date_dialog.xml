@@ -9,6 +9,7 @@
         android:id="@+id/fromTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="20sp" android:paddingLeft="15dp"
         android:text="От:" />
 
     <stx.shopclient.ui.common.StxDatePicker
@@ -17,10 +18,17 @@
         android:layout_height="wrap_content" >
     </stx.shopclient.ui.common.StxDatePicker>
 
+    <stx.shopclient.ui.common.StxTimePicker
+        android:id="@+id/timeFromPicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </stx.shopclient.ui.common.StxTimePicker>
+
     <TextView
         android:id="@+id/toTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="20sp" android:paddingLeft="15dp"
         android:text="До:" />
 
     <stx.shopclient.ui.common.StxDatePicker
@@ -28,5 +36,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
     </stx.shopclient.ui.common.StxDatePicker>
+
+    <stx.shopclient.ui.common.StxTimePicker
+        android:id="@+id/timeToPicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </stx.shopclient.ui.common.StxTimePicker>
 
 </LinearLayout>

@@ -1,11 +1,14 @@
 package stx.shopclient.searchactivity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +35,14 @@ import stx.shopclient.utils.DisplayUtil;
 public class SearchActivity extends BaseActivity implements
 		OnItemClickListener, DialogResultProcessor {
 
+	final int LIST_ITEM_HEIGHT = 50;
+
+	final int DATE_REQUEST_CODE = 1;
+
 	List<PropertyDescriptor> _props = new ArrayList<PropertyDescriptor>();
 	PropertiesListAdapter adapter;
+
+	SimpleDateFormat _dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 
 	void generateData() {
 		Random random = new Random();
@@ -153,11 +162,16 @@ public class SearchActivity extends BaseActivity implements
 			dialog.show(getFragmentManager(), prop.getName());
 
 		} else if (prop instanceof DatePropertyDescriptor) {
-			DatePropertyDescriptor
-					.setCurrentEditedProperty((DatePropertyDescriptor) prop);
+//			DatePropertyDescriptor
+//					.setCurrentEditedProperty((DatePropertyDescriptor) prop);
+
+//			Intent intent = new Intent(this, DateRangeSelectActivity.class);
+//			startActivityForResult(intent, DATE_REQUEST_CODE);
 			
-			Intent intent = new Intent(this, DateRangeSelectActivity.class);
-			startActivity(intent);
+			DateTimeRangeSelectDialog dialog = new DateTimeRangeSelectDialog();
+			dialog.setItemView(view);
+			dialog.setProperty((DatePropertyDescriptor)prop);
+			dialog.show(getFragmentManager(), prop.getName());
 		}
 	}
 
@@ -187,6 +201,22 @@ public class SearchActivity extends BaseActivity implements
 					+ String.format(" (%.2f - %.2f)",
 							prop.getCurrentMinValue(),
 							prop.getCurrentMaxValue()));
+		} else
+			resetImage.setVisibility(View.GONE);
+	}
+
+	void updateDateListItem(View view, DatePropertyDescriptor prop) {
+		ImageView resetImage = (ImageView) view.findViewById(R.id.imageView);
+		TextView captionTextView = (TextView) view.findViewById(R.id.textView);
+
+		captionTextView.setText(prop.getTitle());
+
+		if (prop.isCurrentValueDefined()) {
+			resetImage.setVisibility(View.VISIBLE);
+			captionTextView.setText(prop.getTitle()
+					+ String.format(" (%s - %s)", _dateFormat.format(prop
+							.getCurrentMinValue().getTime()), _dateFormat
+							.format(prop.getCurrentMaxValue().getTime())));
 		} else
 			resetImage.setVisibility(View.GONE);
 	}
@@ -237,8 +267,8 @@ public class SearchActivity extends BaseActivity implements
 				checkBox.setTag(prop);
 				checkBox.setText(prop.getTitle());
 				checkBox.setLayoutParams(new LayoutParams(
-						LayoutParams.MATCH_PARENT, DisplayUtil.dpToPx(50,
-								SearchActivity.this)));
+						LayoutParams.MATCH_PARENT, DisplayUtil.dpToPx(
+								LIST_ITEM_HEIGHT, SearchActivity.this)));
 				checkBox.setTextSize(20);
 
 				checkBox.setOnCheckedChangeListener(this);
@@ -255,10 +285,31 @@ public class SearchActivity extends BaseActivity implements
 				view = getLayoutInflater().inflate(
 						R.layout.search_activity_item, parent, false);
 				view.setTag(propDescriptor);
+
+				initDateListItem(view, (DatePropertyDescriptor) propDescriptor);
 			} else
 				throw new RuntimeException("Unknown PropertyDescriptor");
 
 			return view;
+		}
+
+		void initDateListItem(View view, DatePropertyDescriptor prop) {
+			final View itemView = view;
+			final DatePropertyDescriptor property = prop;
+
+			ImageView resetImage = (ImageView) view
+					.findViewById(R.id.imageView);
+
+			updateDateListItem(itemView, property);
+
+			resetImage.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					property.clear();
+					updateDateListItem(itemView, property);
+				}
+			});
 		}
 
 		void initEnumListItem(View view, EnumPropertyDescriptor prop) {
@@ -274,7 +325,7 @@ public class SearchActivity extends BaseActivity implements
 
 				@Override
 				public void onClick(View v) {
-					property.getCurrentValues().clear();
+					property.clear();
 					updateEnumListItem(itemView, property);
 				}
 			});
@@ -314,10 +365,18 @@ public class SearchActivity extends BaseActivity implements
 			updateEnumListItem(view, (EnumPropertyDescriptor) view.getTag());
 		else if (view.getTag() instanceof NumberPropertyDescriptor)
 			updateNumberListItem(view, (NumberPropertyDescriptor) view.getTag());
+		else if(view.getTag() instanceof DatePropertyDescriptor)
+			updateDateListItem(view, (DatePropertyDescriptor)view.getTag());
 	}
 
 	@Override
 	public void onNegativeDialogResult(View view) {
 
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == DATE_REQUEST_CODE)
+			adapter.notifyDataSetChanged();
 	}
 }
