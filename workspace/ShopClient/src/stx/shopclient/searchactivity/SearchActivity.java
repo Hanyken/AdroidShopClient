@@ -10,6 +10,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.LayoutParams;
@@ -18,6 +19,7 @@ import android.widget.CompoundButton;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,14 +32,15 @@ import stx.shopclient.entity.searchproperties.DatePropertyDescriptor;
 import stx.shopclient.entity.searchproperties.EnumPropertyDescriptor;
 import stx.shopclient.entity.searchproperties.NumberPropertyDescriptor;
 import stx.shopclient.entity.searchproperties.PropertyDescriptor;
+import stx.shopclient.entity.searchproperties.StringPropertyDescriptor;
 import stx.shopclient.utils.DisplayUtil;
 
 public class SearchActivity extends BaseActivity implements
 		OnItemClickListener, DialogResultProcessor {
 
-	final int LIST_ITEM_HEIGHT = 50;
+	public static final int LIST_ITEM_HEIGHT = 50;
 
-	final int DATE_REQUEST_CODE = 1;
+	public static final String TITLE_EXTRA_KEY = "Title";
 
 	List<PropertyDescriptor> _props = new ArrayList<PropertyDescriptor>();
 	PropertiesListAdapter adapter;
@@ -49,7 +52,7 @@ public class SearchActivity extends BaseActivity implements
 
 		for (int i = 0; i < 30; i++) {
 
-			int type = random.nextInt(4);
+			int type = random.nextInt(5);
 
 			if (type == 1) {
 				BooleanPropertyDescriptor prop = new BooleanPropertyDescriptor();
@@ -73,6 +76,12 @@ public class SearchActivity extends BaseActivity implements
 				prop.setMinValue(new GregorianCalendar(1997, 1, 1));
 				prop.setMaxValue(new GregorianCalendar(2020, 1, 1));
 				_props.add(prop);
+			} else if (type == 4) {
+				StringPropertyDescriptor prop = new StringPropertyDescriptor();
+				prop.setTitle("String" + Integer.toString(i));
+				prop.setName("string");
+				prop.setType(StringPropertyDescriptor.TYPE_STRING);
+				_props.add(prop);
 			} else {
 				EnumPropertyDescriptor prop = new EnumPropertyDescriptor();
 				prop.setName("OS");
@@ -91,7 +100,7 @@ public class SearchActivity extends BaseActivity implements
 							new EnumPropertyDescriptor.EnumValue("3",
 									"Windows Phone"));
 				} else {
-					int size = random.nextInt(20);
+					int size = random.nextInt(20) + 2;
 					for (int j = 0; j < size; j++) {
 						prop.getValues().add(
 								new EnumPropertyDescriptor.EnumValue(Integer
@@ -104,6 +113,17 @@ public class SearchActivity extends BaseActivity implements
 				_props.add(prop);
 			}
 		}
+	}
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		
+		Intent intent = getIntent();
+		
+		String title = intent.getStringExtra(TITLE_EXTRA_KEY);		
+		getActionBar().setTitle(title);
+		
+		super.onCreate(savedInstanceState);
 	}
 
 	@Override
@@ -162,15 +182,16 @@ public class SearchActivity extends BaseActivity implements
 			dialog.show(getFragmentManager(), prop.getName());
 
 		} else if (prop instanceof DatePropertyDescriptor) {
-//			DatePropertyDescriptor
-//					.setCurrentEditedProperty((DatePropertyDescriptor) prop);
 
-//			Intent intent = new Intent(this, DateRangeSelectActivity.class);
-//			startActivityForResult(intent, DATE_REQUEST_CODE);
-			
 			DateTimeRangeSelectDialog dialog = new DateTimeRangeSelectDialog();
 			dialog.setItemView(view);
-			dialog.setProperty((DatePropertyDescriptor)prop);
+			dialog.setProperty((DatePropertyDescriptor) prop);
+			dialog.show(getFragmentManager(), prop.getName());
+		} else if(prop instanceof StringPropertyDescriptor){
+			
+			StringEditDialog dialog = new StringEditDialog();
+			dialog.setItemView(view);
+			dialog.setProperty((StringPropertyDescriptor) prop);
 			dialog.show(getFragmentManager(), prop.getName());
 		}
 	}
@@ -217,6 +238,20 @@ public class SearchActivity extends BaseActivity implements
 					+ String.format(" (%s - %s)", _dateFormat.format(prop
 							.getCurrentMinValue().getTime()), _dateFormat
 							.format(prop.getCurrentMaxValue().getTime())));
+		} else
+			resetImage.setVisibility(View.GONE);
+	}
+
+	void updateStringListItem(View view, StringPropertyDescriptor prop) {
+		ImageView resetImage = (ImageView) view.findViewById(R.id.imageView);
+		TextView captionTextView = (TextView) view.findViewById(R.id.textView);
+
+		captionTextView.setText(prop.getTitle());
+
+		if (prop.getValue() != null && !prop.getValue().equals("")) {
+			resetImage.setVisibility(View.VISIBLE);
+			captionTextView.setText(prop.getTitle()
+					+ String.format(" (%s)", prop.getValue()));
 		} else
 			resetImage.setVisibility(View.GONE);
 	}
@@ -287,6 +322,13 @@ public class SearchActivity extends BaseActivity implements
 				view.setTag(propDescriptor);
 
 				initDateListItem(view, (DatePropertyDescriptor) propDescriptor);
+			} else if (propDescriptor instanceof StringPropertyDescriptor) {
+				view = getLayoutInflater().inflate(
+						R.layout.search_activity_item, parent, false);
+				view.setTag(propDescriptor);
+
+				initStringListItem(view,
+						(StringPropertyDescriptor) propDescriptor);
 			} else
 				throw new RuntimeException("Unknown PropertyDescriptor");
 
@@ -344,8 +386,27 @@ public class SearchActivity extends BaseActivity implements
 
 				@Override
 				public void onClick(View v) {
-					property.setCurrentValueDefined(false);
+					property.clear();
 					updateNumberListItem(itemView, property);
+				}
+			});
+		}
+
+		void initStringListItem(View view, StringPropertyDescriptor prop) {
+			final View itemView = view;
+			final StringPropertyDescriptor property = prop;
+
+			final ImageView resetImage = (ImageView) view
+					.findViewById(R.id.imageView);
+
+			updateStringListItem(itemView, property);
+
+			resetImage.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					property.clear();
+					updateStringListItem(itemView, property);
 				}
 			});
 		}
@@ -365,18 +426,12 @@ public class SearchActivity extends BaseActivity implements
 			updateEnumListItem(view, (EnumPropertyDescriptor) view.getTag());
 		else if (view.getTag() instanceof NumberPropertyDescriptor)
 			updateNumberListItem(view, (NumberPropertyDescriptor) view.getTag());
-		else if(view.getTag() instanceof DatePropertyDescriptor)
-			updateDateListItem(view, (DatePropertyDescriptor)view.getTag());
+		else if (view.getTag() instanceof DatePropertyDescriptor)
+			updateDateListItem(view, (DatePropertyDescriptor) view.getTag());
 	}
 
 	@Override
 	public void onNegativeDialogResult(View view) {
 
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == DATE_REQUEST_CODE)
-			adapter.notifyDataSetChanged();
 	}
 }

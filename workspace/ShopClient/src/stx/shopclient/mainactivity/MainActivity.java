@@ -15,6 +15,8 @@ public class MainActivity extends BaseActivity {
 	public View createMainView(ViewGroup parent) {
 		View view = getLayoutInflater().inflate(R.layout.main_activity, parent,
 				false);
+		
+		getActionBar().setTitle("Магазин 1");
 
 		ScrollView scrollView = (ScrollView) view.findViewById(R.id.scrollView);
 

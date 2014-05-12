@@ -27,7 +27,7 @@ public class CatalogBrowserActivity extends BaseActivity implements
 	public static final String NODE_ID_EXTRA_KEY = "nodeId";
 	public static final String NODE_NAME_EXTRA_KEY = "nodeName";
 
-	TextView _nodeNameTextView;
+	//TextView _nodeNameTextView;
 	long _rootNodeId;
 	String _rootNodeName;
 	ListView _listView;
@@ -48,11 +48,13 @@ public class CatalogBrowserActivity extends BaseActivity implements
 	protected View createMainView(ViewGroup parent) {
 		View view = getLayoutInflater().inflate(
 				R.layout.catalog_browser_activity, parent, false);
+		
+		getActionBar().setTitle(_rootNodeName);
 
 		_progressBar = new ProgressBar(CatalogBrowserActivity.this);
 
-		_nodeNameTextView = (TextView) view.findViewById(R.id.nodeNameTextView);
-		_nodeNameTextView.setText(_rootNodeName);
+		//_nodeNameTextView = (TextView) view.findViewById(R.id.nodeNameTextView);
+		//_nodeNameTextView.setText(_rootNodeName);
 
 		_listView = (ListView) view.findViewById(R.id.listView);
 		_adapter = new ListAdapter();

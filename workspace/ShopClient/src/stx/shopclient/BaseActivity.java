@@ -58,10 +58,15 @@ public class BaseActivity extends FragmentActivity {
 		if (item.getId() == MainMenuItem.HOME_MENU_ITEM_ID) {
 			Intent intent = new Intent(this, MainActivity.class);
 			NavUtils.navigateUpTo(this, intent);
-		} else if(item.getId() == MainMenuItem.SEARCH_MENU_ITEM_ID){
+		} else if (item.getId() == MainMenuItem.SEARCH_MENU_ITEM_ID) {
 			Intent intent = new Intent(this, SearchActivity.class);
+			intent.putExtra(SearchActivity.TITLE_EXTRA_KEY, getSearchActivityTitle());
 			startActivity(intent);
 		}
+	}
+
+	protected String getSearchActivityTitle() {
+		return getActionBar().getTitle().toString();
 	}
 
 	protected View createMainView(ViewGroup parent) {

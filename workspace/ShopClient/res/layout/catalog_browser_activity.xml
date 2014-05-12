@@ -5,13 +5,13 @@
     android:orientation="vertical"
     android:padding="5dp" >
 
-    <TextView
-        android:id="@+id/nodeNameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="20sp"
-        android:textStyle="bold" android:layout_gravity="center_horizontal" />
+<!--     <TextView -->
+<!--         android:id="@+id/nodeNameTextView" -->
+<!--         android:layout_width="wrap_content" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:text="TextView" -->
+<!--         android:textSize="20sp" -->
+<!--         android:textStyle="bold" android:layout_gravity="center_horizontal" /> -->
 
     <ListView
         android:id="@+id/listView"
