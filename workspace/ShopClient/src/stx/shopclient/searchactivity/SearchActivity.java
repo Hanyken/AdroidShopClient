@@ -33,6 +33,7 @@ import stx.shopclient.entity.searchproperties.EnumPropertyDescriptor;
 import stx.shopclient.entity.searchproperties.NumberPropertyDescriptor;
 import stx.shopclient.entity.searchproperties.PropertyDescriptor;
 import stx.shopclient.entity.searchproperties.StringPropertyDescriptor;
+import stx.shopclient.searchresultsactivity.SearchResultsActivity;
 import stx.shopclient.utils.DisplayUtil;
 
 public class SearchActivity extends BaseActivity implements
@@ -114,15 +115,15 @@ public class SearchActivity extends BaseActivity implements
 			}
 		}
 	}
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
+
 		Intent intent = getIntent();
-		
-		String title = intent.getStringExtra(TITLE_EXTRA_KEY);		
+
+		String title = intent.getStringExtra(TITLE_EXTRA_KEY);
 		getActionBar().setTitle(title);
-		
+
 		super.onCreate(savedInstanceState);
 	}
 
@@ -149,7 +150,22 @@ public class SearchActivity extends BaseActivity implements
 			}
 		});
 
+		Button buttonSearch = (Button) view.findViewById(R.id.buttonSearch);
+
+		buttonSearch.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				onButtonSearchClicked();
+			}
+		});
+
 		return view;
+	}
+
+	void onButtonSearchClicked() {
+		Intent intent = new Intent(this, SearchResultsActivity.class);
+		startActivity(intent);
 	}
 
 	void clearSearchParams() {
@@ -187,8 +203,8 @@ public class SearchActivity extends BaseActivity implements
 			dialog.setItemView(view);
 			dialog.setProperty((DatePropertyDescriptor) prop);
 			dialog.show(getFragmentManager(), prop.getName());
-		} else if(prop instanceof StringPropertyDescriptor){
-			
+		} else if (prop instanceof StringPropertyDescriptor) {
+
 			StringEditDialog dialog = new StringEditDialog();
 			dialog.setItemView(view);
 			dialog.setProperty((StringPropertyDescriptor) prop);
