@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.entity.CatalogItem;
+import stx.shopclient.itemactivity.ItemActivity;
 import stx.shopclient.ui.common.LoadMoreListAdapter;
 
 public class SearchResultsActivity extends BaseActivity implements
@@ -167,8 +169,12 @@ public class SearchResultsActivity extends BaseActivity implements
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		// TODO Auto-generated method stub
-
+	public void onItemClick(AdapterView<?> arg0, View view, int arg2, long arg3) {
+		CatalogItem item = (CatalogItem)view.getTag();
+		
+		Intent intent = new Intent(this, ItemActivity.class);
+		intent.putExtra("ItemTitle", item.getName());
+		
+		startActivity(intent);
 	}
 }
