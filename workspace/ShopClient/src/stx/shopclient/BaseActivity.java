@@ -1,5 +1,6 @@
 package stx.shopclient;
 
+import stx.shopclient.cartactivity.CartActivity;
 import stx.shopclient.mainactivity.MainActivity;
 import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.mainmenu.MainMenuListAdapter;
@@ -61,6 +62,9 @@ public class BaseActivity extends FragmentActivity {
 		} else if (item.getId() == MainMenuItem.SEARCH_MENU_ITEM_ID) {
 			Intent intent = new Intent(this, SearchActivity.class);
 			intent.putExtra(SearchActivity.TITLE_EXTRA_KEY, getSearchActivityTitle());
+			startActivity(intent);
+		} else if(item.getId() == MainMenuItem.CART_MENU_ITEM_ID){
+			Intent intent = new Intent(this, CartActivity.class);
 			startActivity(intent);
 		}
 	}

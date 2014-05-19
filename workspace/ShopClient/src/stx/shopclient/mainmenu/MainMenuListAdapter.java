@@ -31,7 +31,7 @@ public class MainMenuListAdapter extends BaseAdapter {
 		item.setName("Главная");
 		item.setHasIcon(true);
 		_menuItems.add(item);
-		
+
 		item = new MainMenuItem();
 		item.setId(MainMenuItem.SEARCH_MENU_ITEM_ID);
 		item.setName("Поиск");
@@ -40,9 +40,11 @@ public class MainMenuListAdapter extends BaseAdapter {
 		_menuItems.add(item);
 
 		item = new MainMenuItem();
-		item.setId(MainMenuItem.BASKET_MENU_ITEM_ID);
+		item.setId(MainMenuItem.CART_MENU_ITEM_ID);
 		item.setName("Корзина");
-		item.setHasIcon(false);
+		item.setHasIcon(true);
+		item.setIconId(R.drawable.shopping_cart);
+		item.setCount(5);
 		_menuItems.add(item);
 
 		item = new MainMenuItem();
@@ -76,7 +78,8 @@ public class MainMenuListAdapter extends BaseAdapter {
 		LayoutInflater inflater = (LayoutInflater) _context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		View itemView = inflater.inflate(R.layout.base_activity_main_menu_item, null);
+		View itemView = inflater.inflate(R.layout.base_activity_main_menu_item,
+				null);
 
 		ImageView image = (ImageView) itemView
 				.findViewById(R.id.mainMenuItemImage);
@@ -93,6 +96,19 @@ public class MainMenuListAdapter extends BaseAdapter {
 		nameTextView.setText(item.getName());
 		nameTextView.setTextColor(Color.WHITE);
 		nameTextView.setTextSize(18);
+
+		TextView counterTextView = (TextView) itemView
+				.findViewById(R.id.counterTextView);
+
+		if (item.getCount() == 0)
+			counterTextView.setVisibility(View.GONE);
+		else {
+			counterTextView.setVisibility(View.VISIBLE);
+			counterTextView.setText("(" + item.getCount() + ")");
+			
+			counterTextView.setTextColor(Color.WHITE);
+			counterTextView.setTextSize(19);
+		}
 
 		return itemView;
 	}
