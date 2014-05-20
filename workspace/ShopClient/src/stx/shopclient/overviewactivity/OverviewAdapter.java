@@ -1,10 +1,11 @@
 package stx.shopclient.overviewactivity;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import android.content.Context;
-import android.content.Loader.OnLoadCanceledListener;
 import android.os.AsyncTask;
+import android.provider.MediaStore.Images.ImageColumns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 import stx.shopclient.R;
-import stx.shopclient.ui.common.LoadMoreListAdapter;
 
 public class OverviewAdapter extends BaseAdapter implements OnScrollListener
 {
@@ -68,7 +68,7 @@ public class OverviewAdapter extends BaseAdapter implements OnScrollListener
 		return view;
 	}
 
-	public boolean onLoadMore()
+	public Collection<String> onLoadMore()
 	{
 		try
 		{
@@ -76,11 +76,12 @@ public class OverviewAdapter extends BaseAdapter implements OnScrollListener
 		}
 		catch(Exception ex){}
 		int size = _Items.size();
+		ArrayList<String> items = new ArrayList<String>();
 		for (int i = 0; i < 10; i++)
 		{
-			_Items.add("Коментарий № " + String.valueOf(size + i));
+			items.add("Коментарий № " + String.valueOf(size + i));
 		}
-		return true;
+		return items;
 	}
 
 	@Override
@@ -93,19 +94,31 @@ public class OverviewAdapter extends BaseAdapter implements OnScrollListener
 			{
 				loading = true;
 				_ListView.addFooterView(_progressBar);
-				new AsyncTask<Void, Void, Boolean>()
+				new AsyncTask<Void, Void, Collection<String>>()
 				{
 					@Override
-					protected Boolean doInBackground(Void... params)
+					protected Collection<String> doInBackground(Void... params)
 					{
 						return onLoadMore();
 					}
 					@Override
-					protected void onPostExecute(Boolean result)
+					protected void onPostExecute(Collection<String> result)
 					{
-						_ListView.removeFooterView(_progressBar);
-						notifyDataSetChanged();
-						loading = false;
+						_Items.addAll(result);
+						_ListView.post(new Runnable()
+						{
+							@Override
+							public void run()
+							{
+								try
+								{
+								_ListView.removeFooterView(_progressBar);
+								}
+								catch(Exception ex){}
+								notifyDataSetChanged();
+								loading = false;	
+							}
+						});
 					}
 				}.execute();
 			}

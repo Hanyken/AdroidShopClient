@@ -19,6 +19,7 @@ import android.text.style.StyleSpan;
 import android.text.style.TypefaceSpan;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -34,17 +35,15 @@ public class ItemActivity extends BaseActivity
 	LinearLayout myGallery;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState)
+	protected View createMainView(ViewGroup parent)
 	{
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.item_activity);
-
+		View view = getLayoutInflater().inflate(R.layout.item_activity, parent, false);
+	
 		Intent intent = getIntent();
 
-		ItemButtonBarFragment buttonBar = (ItemButtonBarFragment) getFragmentManager()
-				.findFragmentById(R.id.frgButtonBar);
-		txtTitle = (TextView) findViewById(R.id.textViewTitle);
-		TextView txtProperty = (TextView) findViewById(R.id.txtProperty);
+		ItemButtonBarFragment buttonBar = (ItemButtonBarFragment) getFragmentManager().findFragmentById(R.id.frgButtonBar);
+		txtTitle = (TextView)view.findViewById(R.id.textViewTitle);
+		TextView txtProperty = (TextView)view.findViewById(R.id.txtProperty);
 
 		Random rand = new Random();
 		buttonBar.setPrice(rand.nextFloat() * 30000);
@@ -59,6 +58,8 @@ public class ItemActivity extends BaseActivity
 		txtTitle.setText(itemTitle);
 
 		setProperty(txtProperty);
+		
+		return view;
 	}
 
 	public void setProperty(TextView txtProperty)
