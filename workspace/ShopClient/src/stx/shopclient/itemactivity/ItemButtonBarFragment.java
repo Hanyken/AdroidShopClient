@@ -1,0 +1,75 @@
+package stx.shopclient.itemactivity;
+
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
+import stx.shopclient.R;
+import android.app.Fragment;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RatingBar;
+import android.widget.ShareActionProvider;
+import android.widget.TextView;
+
+public class ItemButtonBarFragment extends Fragment implements OnClickListener
+{
+	private TextView lblPrice;
+	private RatingBar rtbRating;
+	private TextView lblComment;
+	private TextView lblRepost;
+
+	private Button btnComment;
+	private Button btnShare;
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState)
+	{		
+		View view = inflater.inflate(R.layout.item_activity_buttonbar_fragment,
+				container, false);
+
+		lblPrice = (TextView) view.findViewById(R.id.lblPrice);
+		rtbRating = (RatingBar) view.findViewById(R.id.rtbRating);
+		lblComment = (TextView) view.findViewById(R.id.lblComment);
+		lblRepost = (TextView) view.findViewById(R.id.lblShare);
+
+		btnComment = (Button) view.findViewById(R.id.btnComment);
+		btnShare = (Button) view.findViewById(R.id.btnShare);
+
+		btnShare.setOnClickListener(this);
+
+		return view;
+	}
+
+	public void setPrice(float value)
+	{
+		DecimalFormat format = new DecimalFormat("#,###,###,##0.00");
+		lblPrice.setText(format.format(value) + " руб.");
+	}
+
+	public void setRating(float value)
+	{
+		rtbRating.setRating(value);
+	}
+
+	public void setCommentCount(int value)
+	{
+		lblComment.setText(String.format("%d", value));
+	}
+
+	public void setRepostCount(int value)
+	{
+		lblRepost.setText(String.format("%d", value));
+	}
+
+	@Override
+	public void onClick(View view)
+	{
+		((ItemActivity)getActivity()).onBarButtonClick(view);
+	}
+}

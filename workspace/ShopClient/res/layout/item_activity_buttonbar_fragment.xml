@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    
+	<RelativeLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content" >
+	
+	    <RatingBar
+	        android:id="@+id/rtbRating"
+	        style="?android:attr/ratingBarStyleSmall"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_centerVertical="true"
+	        android:layout_alignParentLeft="true"
+	        android:layout_marginLeft="@dimen/buttonbar_margion_big"/>
+	
+	    <LinearLayout
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentRight="true" >	        
+	
+	        
+	        
+	        <TextView 
+	            android:id="@+id/lblComment"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_marginLeft="@dimen/buttonbar_margion_big"
+	            android:layout_gravity="center_vertical"/>
+	        
+	        <Button
+	            android:id="@+id/btnComment"
+	            android:layout_width="40dp"
+	            android:layout_height="40dp"
+	            android:layout_marginLeft="@dimen/buttonbar_margion_small"
+	            style="@style/ButtonComment"/>
+	
+	        
+	        
+	        <TextView 
+	            android:id="@+id/lblShare"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_marginLeft="@dimen/buttonbar_margion_big"
+	            android:layout_gravity="center_vertical"/>
+	        
+	        <Button
+	            android:id="@+id/btnShare"
+	            android:layout_width="40dp"
+	            android:layout_height="40dp"
+	            android:layout_marginLeft="@dimen/buttonbar_margion_small"
+	            android:layout_marginRight="@dimen/buttonbar_margion_big"
+	            style="@style/ButtonRepost"/>
+	        
+	    </LinearLayout>
+
+	</RelativeLayout>
+	
+	<RelativeLayout 
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginTop="@dimen/buttonbar_margion_big">
+	    
+	    <TextView 
+	        android:id="@+id/lblPrice"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textSize="20sp"
+	        android:layout_marginLeft="@dimen/buttonbar_margion_big"
+	        android:layout_alignParentLeft="true"
+	        android:layout_centerVertical="true"/>
+	    
+	    <Button 
+	        android:id="@+id/btnOrder"
+	        android:layout_width="@dimen/btnOrder_width"
+	        android:layout_height="@dimen/btnOrder_height"
+	        android:layout_alignParentRight="true"
+	        android:layout_marginRight="@dimen/buttonbar_margion_big"
+	        android:text="В корзину"/>
+	    
+	</RelativeLayout>
+	
+	
+	
+</LinearLayout>
