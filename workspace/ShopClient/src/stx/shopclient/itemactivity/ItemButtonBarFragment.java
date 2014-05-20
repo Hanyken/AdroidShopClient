@@ -20,10 +20,10 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 {
 	private TextView lblPrice;
 	private RatingBar rtbRating;
-	private TextView lblComment;
+	private TextView lblOverview;
 	private TextView lblRepost;
 
-	private Button btnComment;
+	private Button btnOverview;
 	private Button btnShare;
 
 	@Override
@@ -35,13 +35,14 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 
 		lblPrice = (TextView) view.findViewById(R.id.lblPrice);
 		rtbRating = (RatingBar) view.findViewById(R.id.rtbRating);
-		lblComment = (TextView) view.findViewById(R.id.lblComment);
+		lblOverview = (TextView) view.findViewById(R.id.lblOverview);
 		lblRepost = (TextView) view.findViewById(R.id.lblShare);
 
-		btnComment = (Button) view.findViewById(R.id.btnComment);
+		btnOverview = (Button) view.findViewById(R.id.btnOverview);
 		btnShare = (Button) view.findViewById(R.id.btnShare);
 
 		btnShare.setOnClickListener(this);
+		btnOverview.setOnClickListener(this);
 
 		return view;
 	}
@@ -57,9 +58,9 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 		rtbRating.setRating(value);
 	}
 
-	public void setCommentCount(int value)
+	public void setOverviewCount(int value)
 	{
-		lblComment.setText(String.format("%d", value));
+		lblOverview.setText(String.format("%d", value));
 	}
 
 	public void setRepostCount(int value)

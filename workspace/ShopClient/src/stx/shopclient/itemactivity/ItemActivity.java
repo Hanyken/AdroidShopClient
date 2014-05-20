@@ -4,6 +4,7 @@ import java.util.Random;
 
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
+import stx.shopclient.overviewactivity.OverviewActivity;
 import android.os.Bundle;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -26,7 +27,8 @@ import android.widget.TextView;
 public class ItemActivity extends BaseActivity
 {
 	private TextView txtTitle;
-	
+	private String ItemID;
+
 	public static final String ITEM_ID_EXTRA_KEY = "ItemID";
 
 	LinearLayout myGallery;
@@ -47,12 +49,12 @@ public class ItemActivity extends BaseActivity
 		Random rand = new Random();
 		buttonBar.setPrice(rand.nextFloat() * 30000);
 		buttonBar.setRating(rand.nextFloat() * 5);
-		buttonBar.setCommentCount(rand.nextInt(256));
+		buttonBar.setOverviewCount(rand.nextInt(256));
 		buttonBar.setRepostCount(rand.nextInt(512));
 
 		// Получаю параметры
 		String itemTitle = intent.getStringExtra("ItemTitle");
-		String ItemID = intent.getStringExtra(ITEM_ID_EXTRA_KEY);
+		ItemID = intent.getStringExtra(ITEM_ID_EXTRA_KEY);
 
 		txtTitle.setText(itemTitle);
 
@@ -61,26 +63,19 @@ public class ItemActivity extends BaseActivity
 
 	public void setProperty(TextView txtProperty)
 	{
-		String description  = "Это самый лучший тавар на планете\n\n\n";
+		String description = "Это самый лучший тавар на планете\n\n\n";
 		String text = "\t-Клевость - самый клевый\n\t-Привлекательность - привлекательнее товара не существует\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nНу и тут какие то еще вкусности про товар";
-		
-		
-		SpannableStringBuilder str = new SpannableStringBuilder("Общее\n"+description+"Характеристики\n"+text);
-		str.setSpan(
-		    new StyleSpan(Typeface.BOLD), 
-		    0, 
-		    5, 
-		    SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE
-		);
-		str.setSpan(
-			    new StyleSpan(Typeface.BOLD), 
-			    description.length()+5, 
-			    description.length()+20, 
-			    SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE
-			);
-		
-		
-		//Spanned str = Html.fromHtml("<font color=\"red\">Привет.</font> <font color=\"yellow\">как </font> <font color=\"blue\">дела?</font>");
+
+		SpannableStringBuilder str = new SpannableStringBuilder("Общее\n"
+				+ description + "Характеристики\n" + text);
+		str.setSpan(new StyleSpan(Typeface.BOLD), 0, 5,
+				SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE);
+		str.setSpan(new StyleSpan(Typeface.BOLD), description.length() + 5,
+				description.length() + 20,
+				SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+		// Spanned str =
+		// Html.fromHtml("<font color=\"red\">Привет.</font> <font color=\"yellow\">как </font> <font color=\"blue\">дела?</font>");
 		txtProperty.setText(str);
 	}
 
@@ -146,13 +141,14 @@ public class ItemActivity extends BaseActivity
 		return inSampleSize;
 	}
 
-	
 	public void onBarButtonClick(View view)
 	{
 		switch (view.getId())
 		{
-		case R.id.btnComment:
-			
+		case R.id.btnOverview:
+			Intent intent = new Intent(this, OverviewActivity.class);
+			intent.putExtra(ITEM_ID_EXTRA_KEY, ItemID);
+			startActivity(intent);
 			break;
 
 		case R.id.btnShare:
