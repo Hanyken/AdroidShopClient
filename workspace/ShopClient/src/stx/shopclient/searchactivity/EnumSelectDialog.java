@@ -15,17 +15,9 @@ public class EnumSelectDialog extends DialogFragment {
 	DialogResultProcessor _resultProcessor;
 	private EnumPropertyDescriptor _property;
 	private View _itemView;
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-
-		try {
-			_resultProcessor = (DialogResultProcessor) activity;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()
-					+ " must implement DialogResultProcessor");
-		}
+	
+	public void setResultProcessor(DialogResultProcessor processor){
+		_resultProcessor = processor;
 	}
 
 	@Override

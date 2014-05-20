@@ -24,6 +24,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -63,6 +64,15 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 		adapter = new PropertiesListAdapter(getContext());
 		_list.setAdapter(adapter);		
 	}
+	
+	public void clear() {
+
+		for (PropertyDescriptor prop : _props) {
+			prop.clear();
+		}
+
+		adapter.notifyDataSetChanged();
+	}
 
 	View createView() {
 		_list = new ListView(getContext());
@@ -93,7 +103,7 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 			EnumSelectDialog dialog = new EnumSelectDialog();
 			dialog.setItemView(view);
 			dialog.setProperty((EnumPropertyDescriptor) prop);
-
+			dialog.setResultProcessor(this);
 			dialog.show(getFragmentManager(), prop.getName());
 
 		} else if (prop instanceof NumberPropertyDescriptor) {
@@ -101,7 +111,7 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 			NumberSelectDialog dialog = new NumberSelectDialog();
 			dialog.setItemView(view);
 			dialog.setProperty((NumberPropertyDescriptor) prop);
-
+			dialog.setResultProcessor(this);
 			dialog.show(getFragmentManager(), prop.getName());
 
 		} else if (prop instanceof DatePropertyDescriptor) {
@@ -109,12 +119,14 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 			DateTimeRangeSelectDialog dialog = new DateTimeRangeSelectDialog();
 			dialog.setItemView(view);
 			dialog.setProperty((DatePropertyDescriptor) prop);
+			dialog.setResultProcessor(this);
 			dialog.show(getFragmentManager(), prop.getName());
 		} else if (prop instanceof StringPropertyDescriptor) {
 
 			StringEditDialog dialog = new StringEditDialog();
 			dialog.setItemView(view);
 			dialog.setProperty((StringPropertyDescriptor) prop);
+			dialog.setResultProcessor(this);
 			dialog.show(getFragmentManager(), prop.getName());
 		}
 	}
@@ -179,8 +191,8 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 				checkBox.setChecked(prop.getCurrentValue());
 				checkBox.setTag(prop);
 				checkBox.setText(prop.getTitle());
-				checkBox.setLayoutParams(new LayoutParams(
-						LayoutParams.MATCH_PARENT, DisplayUtil.dpToPx(
+				checkBox.setLayoutParams(new AbsListView.LayoutParams(
+						AbsListView.LayoutParams.MATCH_PARENT, DisplayUtil.dpToPx(
 								LIST_ITEM_HEIGHT, getContext())));
 				checkBox.setTextSize(20);
 
