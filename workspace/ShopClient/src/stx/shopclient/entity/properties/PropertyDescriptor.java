@@ -1,4 +1,4 @@
-package stx.shopclient.entity.searchproperties;
+package stx.shopclient.entity.properties;
 
 public abstract class PropertyDescriptor {
 	private String _type;

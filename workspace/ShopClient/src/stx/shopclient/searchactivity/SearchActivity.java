@@ -27,14 +27,14 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
-import stx.shopclient.entity.searchproperties.BooleanPropertyDescriptor;
-import stx.shopclient.entity.searchproperties.DatePropertyDescriptor;
-import stx.shopclient.entity.searchproperties.EnumPropertyDescriptor;
-import stx.shopclient.entity.searchproperties.NumberPropertyDescriptor;
-import stx.shopclient.entity.searchproperties.PropertyDescriptor;
-import stx.shopclient.entity.searchproperties.StringPropertyDescriptor;
+import stx.shopclient.entity.properties.BooleanPropertyDescriptor;
+import stx.shopclient.entity.properties.DatePropertyDescriptor;
+import stx.shopclient.entity.properties.EnumPropertyDescriptor;
+import stx.shopclient.entity.properties.NumberPropertyDescriptor;
+import stx.shopclient.entity.properties.PropertyDescriptor;
+import stx.shopclient.entity.properties.StringPropertyDescriptor;
 import stx.shopclient.searchresultsactivity.SearchResultsActivity;
-import stx.shopclient.ui.common.PropertiesList;
+import stx.shopclient.ui.common.properties.PropertiesList;
 import stx.shopclient.utils.DisplayUtil;
 
 public class SearchActivity extends BaseActivity {
@@ -66,6 +66,8 @@ public class SearchActivity extends BaseActivity {
 				NumberPropertyDescriptor prop = new NumberPropertyDescriptor();
 				prop.setTitle("Numeric " + Integer.toString(i));
 				prop.setName("number");
+				prop.setFloat(false);
+				prop.setRange(false);
 				prop.setType(NumberPropertyDescriptor.TYPE_STRING);
 				prop.setMinValue(random.nextInt(10));
 				prop.setMaxValue(random.nextInt(50) + 10);
@@ -74,6 +76,7 @@ public class SearchActivity extends BaseActivity {
 				DatePropertyDescriptor prop = new DatePropertyDescriptor();
 				prop.setTitle("Date" + Integer.toString(i));
 				prop.setName("date");
+				prop.setRange(false);
 				prop.setType(DatePropertyDescriptor.TYPE_STRING);
 				prop.setMinValue(new GregorianCalendar(1997, 1, 1));
 				prop.setMaxValue(new GregorianCalendar(2020, 1, 1));

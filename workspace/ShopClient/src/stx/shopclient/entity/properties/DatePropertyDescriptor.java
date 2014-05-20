@@ -1,4 +1,4 @@
-package stx.shopclient.entity.searchproperties;
+package stx.shopclient.entity.properties;
 
 import java.util.GregorianCalendar;
 
@@ -12,6 +12,7 @@ public class DatePropertyDescriptor extends PropertyDescriptor {
 	private GregorianCalendar _currentMinValue;
 	private GregorianCalendar _currentMaxValue;
 	private boolean _isCurrentValueDefined = false;
+	private boolean _isRange = true;
 
 	public GregorianCalendar getMinValue() {
 		return _minValue;
@@ -35,6 +36,10 @@ public class DatePropertyDescriptor extends PropertyDescriptor {
 	}
 
 	public GregorianCalendar getCurrentMinValue() {
+		return _currentMinValue;
+	}
+	
+	public GregorianCalendar getCurrentValue(){
 		return _currentMinValue;
 	}
 
@@ -65,5 +70,13 @@ public class DatePropertyDescriptor extends PropertyDescriptor {
 	public static void setCurrentEditedProperty(
 			DatePropertyDescriptor currentEditedProperty) {
 		_currentEditedProperty = currentEditedProperty;
+	}
+
+	public boolean isRange() {
+		return _isRange;
+	}
+
+	public void setRange(boolean isRange) {
+		_isRange = isRange;
 	}
 }

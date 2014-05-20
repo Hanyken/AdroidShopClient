@@ -1,4 +1,4 @@
-package stx.shopclient.entity.searchproperties;
+package stx.shopclient.entity.properties;
 
 import java.util.ArrayList;
 import java.util.List;

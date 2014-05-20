@@ -1,4 +1,4 @@
-package stx.shopclient.searchactivity;
+package stx.shopclient.ui.common.properties.dialogs;
 
 import android.view.View;
 
