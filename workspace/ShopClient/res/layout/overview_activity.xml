@@ -2,38 +2,51 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    android:animateLayoutChanges="true">
 
-    <LinearLayout
+    <LinearLayout 
+        android:id="@+id/llOverviw"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/buttonbar_margion_big"
-        android:orientation="horizontal" >
+        android:orientation="vertical"
+        android:visibility="gone">
+        
+	    <LinearLayout
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginTop="@dimen/buttonbar_margion_big"
+	        android:orientation="horizontal" >
+	
+	        <TextView
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="center_vertical"
+	            android:layout_marginLeft="@dimen/buttonbar_margion_big"
+	            android:text="Оценка:" />
+	
+	        <RatingBar
+	            android:id="@+id/rtgRating"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_gravity="end"
+	            android:layout_marginLeft="@dimen/buttonbar_margion_big"
+	            android:scaleX=".5"
+	            android:scaleY=".5" />
+	    </LinearLayout>
+	
+	    <EditText
+	        android:id="@+id/txtOverview"
+	        android:layout_width="fill_parent"
+	        android:layout_height="80dp"
+	        android:hint="Коментарий" 
+	        android:inputType="textMultiLine"
+	        android:focusable="true"
+	        android:focusableInTouchMode="true"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/buttonbar_margion_big"
-            android:text="Оценка:" />
-
-        <RatingBar
-            android:id="@+id/rtgRating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginLeft="@dimen/buttonbar_margion_big"
-            android:scaleX=".5"
-            android:scaleY=".5" />
     </LinearLayout>
-
-    <EditText
-        android:id="@+id/txtOverview"
-        android:layout_width="fill_parent"
-        android:layout_height="80dp"
-        android:hint="Коментарий" 
-        android:inputType="textMultiLine"/>
-
+    
+    
     <ListView
         android:id="@+id/lstMain"
         android:layout_width="fill_parent"

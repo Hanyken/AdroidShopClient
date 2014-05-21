@@ -2,6 +2,7 @@ package stx.shopclient.overviewactivity;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Random;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -13,13 +14,15 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 import stx.shopclient.R;
+import stx.shopclient.entity.Overview;
 
 public class OverviewAdapter extends BaseAdapter implements OnScrollListener
 {
-	private ArrayList<String> _Items;
+	private ArrayList<Overview> _Items;
 	private LayoutInflater _Inflater;
 	private ListView _ListView;
 	private boolean loading;
@@ -30,7 +33,7 @@ public class OverviewAdapter extends BaseAdapter implements OnScrollListener
 		_progressBar = new ProgressBar(context);
 		_Inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		_Items = new ArrayList<String>();
+		_Items = new ArrayList<Overview>();
 		_ListView = listView;
 		onLoadMore();
 	}
@@ -60,15 +63,18 @@ public class OverviewAdapter extends BaseAdapter implements OnScrollListener
 			view = _Inflater.inflate(R.layout.overview_activity_item,
 					viewgroup, false);
 
-		String item = (String) getItem(index);
+		Overview item = (Overview) getItem(index);
 		TextView txtOverview = (TextView) view.findViewById(R.id.txtOverview);
+		RatingBar rtgRating = (RatingBar)view.findViewById(R.id.rtgRating);
 
-		txtOverview.setText(item);
+		txtOverview.setText("Тут какой то охренно длинный коментарий с описанием самого лучшего товара на планете\n"+item.getDescription());
+		
+		rtgRating.setRating(item.getRating());
 
 		return view;
 	}
 
-	public Collection<String> onLoadMore()
+	public Collection<Overview> onLoadMore()
 	{
 		try
 		{
@@ -76,10 +82,11 @@ public class OverviewAdapter extends BaseAdapter implements OnScrollListener
 		}
 		catch(Exception ex){}
 		int size = _Items.size();
-		ArrayList<String> items = new ArrayList<String>();
+		ArrayList<Overview> items = new ArrayList<Overview>();
+		Random rand = new Random();
 		for (int i = 0; i < 10; i++)
 		{
-			items.add("Коментарий № " + String.valueOf(size + i));
+			items.add(new Overview((rand.nextFloat() * 5), "Коментарий № " + String.valueOf(size + i)));
 		}
 		return items;
 	}
@@ -94,15 +101,15 @@ public class OverviewAdapter extends BaseAdapter implements OnScrollListener
 			{
 				loading = true;
 				_ListView.addFooterView(_progressBar);
-				new AsyncTask<Void, Void, Collection<String>>()
+				new AsyncTask<Void, Void, Collection<Overview>>()
 				{
 					@Override
-					protected Collection<String> doInBackground(Void... params)
+					protected Collection<Overview> doInBackground(Void... params)
 					{
 						return onLoadMore();
 					}
 					@Override
-					protected void onPostExecute(Collection<String> result)
+					protected void onPostExecute(Collection<Overview> result)
 					{
 						_Items.addAll(result);
 						_ListView.post(new Runnable()

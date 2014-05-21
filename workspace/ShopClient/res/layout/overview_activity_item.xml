@@ -3,10 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
+    
+    <RatingBar
+        android:id="@+id/rtgRating"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:layout_gravity="right"
+        android:layout_marginRight="@dimen/buttonbar_margion_big"/>
 
     <TextView
         android:id="@+id/txtOverview"
         android:layout_width="fill_parent"
-        android:layout_height="60dp"/>
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/buttonbar_margion_small" /> 
 
 </LinearLayout>
