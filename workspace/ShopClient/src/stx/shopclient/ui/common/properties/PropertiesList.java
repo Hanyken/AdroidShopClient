@@ -1,21 +1,21 @@
-package stx.shopclient.ui.common;
+package stx.shopclient.ui.common.properties;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import stx.shopclient.R;
-import stx.shopclient.entity.searchproperties.BooleanPropertyDescriptor;
-import stx.shopclient.entity.searchproperties.DatePropertyDescriptor;
-import stx.shopclient.entity.searchproperties.EnumPropertyDescriptor;
-import stx.shopclient.entity.searchproperties.NumberPropertyDescriptor;
-import stx.shopclient.entity.searchproperties.PropertyDescriptor;
-import stx.shopclient.entity.searchproperties.StringPropertyDescriptor;
-import stx.shopclient.searchactivity.DateTimeRangeSelectDialog;
-import stx.shopclient.searchactivity.DialogResultProcessor;
-import stx.shopclient.searchactivity.EnumSelectDialog;
-import stx.shopclient.searchactivity.NumberSelectDialog;
-import stx.shopclient.searchactivity.StringEditDialog;
+import stx.shopclient.entity.properties.BooleanPropertyDescriptor;
+import stx.shopclient.entity.properties.DatePropertyDescriptor;
+import stx.shopclient.entity.properties.EnumPropertyDescriptor;
+import stx.shopclient.entity.properties.NumberPropertyDescriptor;
+import stx.shopclient.entity.properties.PropertyDescriptor;
+import stx.shopclient.entity.properties.StringPropertyDescriptor;
+import stx.shopclient.ui.common.properties.dialogs.DateTimeRangeSelectDialog;
+import stx.shopclient.ui.common.properties.dialogs.DialogResultProcessor;
+import stx.shopclient.ui.common.properties.dialogs.EnumSelectDialog;
+import stx.shopclient.ui.common.properties.dialogs.NumberSelectDialog;
+import stx.shopclient.ui.common.properties.dialogs.StringEditDialog;
 import stx.shopclient.utils.DisplayUtil;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -43,6 +43,7 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 	List<PropertyDescriptor> _props = new ArrayList<PropertyDescriptor>();
 	PropertiesListAdapter adapter;
 	ListView _list;
+	private boolean _allowClear = true;
 
 	SimpleDateFormat _dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 
@@ -50,21 +51,21 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 		super(context, attrs);
 
 		this.addView(createView());
-		
+
 		_list.setOnItemClickListener(this);
 	}
 
 	public List<PropertyDescriptor> getProperties() {
 		return _props;
 	}
-	
-	public void setProperties(List<PropertyDescriptor> props){
+
+	public void setProperties(List<PropertyDescriptor> props) {
 		_props = props;
-		
+
 		adapter = new PropertiesListAdapter(getContext());
-		_list.setAdapter(adapter);		
+		_list.setAdapter(adapter);
 	}
-	
+
 	public void clear() {
 
 		for (PropertyDescriptor prop : _props) {
@@ -192,8 +193,8 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 				checkBox.setTag(prop);
 				checkBox.setText(prop.getTitle());
 				checkBox.setLayoutParams(new AbsListView.LayoutParams(
-						AbsListView.LayoutParams.MATCH_PARENT, DisplayUtil.dpToPx(
-								LIST_ITEM_HEIGHT, getContext())));
+						AbsListView.LayoutParams.MATCH_PARENT, DisplayUtil
+								.dpToPx(LIST_ITEM_HEIGHT, getContext())));
 				checkBox.setTextSize(20);
 
 				checkBox.setOnCheckedChangeListener(this);
@@ -271,7 +272,7 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 					.findViewById(R.id.imageView);
 
 			updateNumberListItem(itemView, property);
-
+			
 			resetImage.setOnClickListener(new View.OnClickListener() {
 
 				@Override
@@ -322,6 +323,9 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 					+ String.format(" (%d)", prop.getCurrentValues().size()));
 		} else
 			resetImage.setVisibility(View.GONE);
+		
+		if (!_allowClear)
+			resetImage.setVisibility(View.GONE);
 	}
 
 	void updateNumberListItem(View view, NumberPropertyDescriptor prop) {
@@ -332,11 +336,32 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 
 		if (prop.isCurrentValueDefined()) {
 			resetImage.setVisibility(View.VISIBLE);
-			captionTextView.setText(prop.getTitle()
-					+ String.format(" (%.2f - %.2f)",
-							prop.getCurrentMinValue(),
-							prop.getCurrentMaxValue()));
+
+			if (prop.isRange()) {
+				if (prop.isFloat())
+					captionTextView.setText(prop.getTitle()
+							+ String.format(" (%.2f - %.2f)",
+									prop.getCurrentMinValue(),
+									prop.getCurrentMaxValue()));
+				else
+					captionTextView.setText(prop.getTitle()
+							+ String.format(" (%d - %d)",
+									(int) (prop.getCurrentMinValue()),
+									(int) (prop.getCurrentMaxValue())));
+			} else {
+				if (prop.isFloat())
+					captionTextView.setText(prop.getTitle()
+							+ String.format(" (%.2f)",
+									prop.getCurrentMinValue()));
+				else
+					captionTextView.setText(prop.getTitle()
+							+ String.format(" (%d)",
+									(int) prop.getCurrentMinValue()));
+			}
 		} else
+			resetImage.setVisibility(View.GONE);
+		
+		if (!_allowClear)
 			resetImage.setVisibility(View.GONE);
 	}
 
@@ -348,11 +373,21 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 
 		if (prop.isCurrentValueDefined()) {
 			resetImage.setVisibility(View.VISIBLE);
-			captionTextView.setText(prop.getTitle()
-					+ String.format(" (%s - %s)", _dateFormat.format(prop
-							.getCurrentMinValue().getTime()), _dateFormat
-							.format(prop.getCurrentMaxValue().getTime())));
+
+			if (prop.isRange()) {
+				captionTextView.setText(prop.getTitle()
+						+ String.format(" (%s - %s)", _dateFormat.format(prop
+								.getCurrentMinValue().getTime()), _dateFormat
+								.format(prop.getCurrentMaxValue().getTime())));
+			} else {
+				captionTextView.setText(prop.getTitle()
+						+ String.format(" (%s)", _dateFormat.format(prop
+								.getCurrentMinValue().getTime())));
+			}
 		} else
+			resetImage.setVisibility(View.GONE);
+		
+		if (!_allowClear)
 			resetImage.setVisibility(View.GONE);
 	}
 
@@ -368,6 +403,17 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 					+ String.format(" (%s)", prop.getValue()));
 		} else
 			resetImage.setVisibility(View.GONE);
+		
+		if (!_allowClear)
+			resetImage.setVisibility(View.GONE);
+	}
+
+	public boolean isAllowClear() {
+		return _allowClear;
+	}
+
+	public void setAllowClear(boolean allowClear) {
+		_allowClear = allowClear;
 	}
 
 }

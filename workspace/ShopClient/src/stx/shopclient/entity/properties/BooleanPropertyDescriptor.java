@@ -1,4 +1,4 @@
-package stx.shopclient.entity.searchproperties;
+package stx.shopclient.entity.properties;
 
 public class BooleanPropertyDescriptor extends PropertyDescriptor {
 	public static final String TYPE_STRING = "Boolean";

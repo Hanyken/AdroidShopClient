@@ -1,8 +1,8 @@
-package stx.shopclient.searchactivity;
+package stx.shopclient.ui.common.properties.dialogs;
 
-import stx.shopclient.entity.searchproperties.EnumPropertyDescriptor;
-import stx.shopclient.entity.searchproperties.StringPropertyDescriptor;
-import stx.shopclient.entity.searchproperties.EnumPropertyDescriptor.EnumValue;
+import stx.shopclient.entity.properties.EnumPropertyDescriptor;
+import stx.shopclient.entity.properties.StringPropertyDescriptor;
+import stx.shopclient.entity.properties.EnumPropertyDescriptor.EnumValue;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;

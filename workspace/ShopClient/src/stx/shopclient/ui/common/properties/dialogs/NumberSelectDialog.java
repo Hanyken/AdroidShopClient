@@ -1,7 +1,7 @@
-package stx.shopclient.searchactivity;
+package stx.shopclient.ui.common.properties.dialogs;
 
 import stx.shopclient.R;
-import stx.shopclient.entity.searchproperties.NumberPropertyDescriptor;
+import stx.shopclient.entity.properties.NumberPropertyDescriptor;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -22,7 +22,7 @@ public class NumberSelectDialog extends DialogFragment implements
 	EditText _numberFromEditText;
 	EditText _numberToEditText;
 
-	public void setResultProcessor(DialogResultProcessor processor){
+	public void setResultProcessor(DialogResultProcessor processor) {
 		_resultProcessor = processor;
 	}
 
@@ -38,24 +38,31 @@ public class NumberSelectDialog extends DialogFragment implements
 			public void onClick(DialogInterface dialog, int which) {
 
 				if (_numberFromEditText.getText().length() != 0
-						&& _numberToEditText.getText().length() != 0) {
+						&& (!_property.isRange() || _numberToEditText.getText()
+								.length() != 0)) {
 
 					double val1 = Double.parseDouble(_numberFromEditText
 							.getText().toString());
-					double val2 = Double.parseDouble(_numberToEditText
-							.getText().toString());
-					
-					if(val1 < _property.getMinValue())
-						val1 = _property.getMinValue();
-					if(val2 < _property.getMinValue())
-						val2 = _property.getMinValue();
-					if(val1 > _property.getMaxValue())
-						val1 = _property.getMaxValue();
-					if(val2 > _property.getMaxValue())
-						val2 = _property.getMaxValue();
 
-					_property.setCurrentMinValue(val1 < val2 ? val1 : val2);
-					_property.setCurrentMaxValue(val1 > val2 ? val1 : val2);
+					if (val1 < _property.getMinValue())
+						val1 = _property.getMinValue();
+					if (val1 > _property.getMaxValue())
+						val1 = _property.getMaxValue();
+
+					if (_property.isRange()) {
+						double val2 = Double.parseDouble(_numberToEditText
+								.getText().toString());
+
+						if (val2 < _property.getMinValue())
+							val2 = _property.getMinValue();
+						if (val2 > _property.getMaxValue())
+							val2 = _property.getMaxValue();
+
+						_property.setCurrentMinValue(val1 < val2 ? val1 : val2);
+						_property.setCurrentMaxValue(val1 > val2 ? val1 : val2);
+					} else
+						_property.setCurrentMinValue(val1);
+
 					_property.setCurrentValueDefined(true);
 
 					_resultProcessor.onPositiveDialogResult(_itemView);
@@ -87,6 +94,11 @@ public class NumberSelectDialog extends DialogFragment implements
 
 		_numberFromEditText.setOnFocusChangeListener(this);
 		_numberToEditText.setOnFocusChangeListener(this);
+
+		if (!_property.isRange()) {
+			_numberToEditText.setVisibility(View.GONE);
+			_numberFromEditText.setHint("");
+		}
 
 		if (_property.isCurrentValueDefined()) {
 			_numberFromEditText.setText(Double.toString(_property
@@ -132,10 +144,10 @@ public class NumberSelectDialog extends DialogFragment implements
 		if (!hasFocus
 				&& (v.equals(_numberFromEditText) || v
 						.equals(_numberToEditText))) {
-			
+
 			EditText edit = (EditText) v;
-			
-			if(edit.getText().length() == 0)
+
+			if (edit.getText().length() == 0)
 				return;
 
 			double val = Double.parseDouble(edit.getText().toString());

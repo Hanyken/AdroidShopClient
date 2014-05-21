@@ -3,18 +3,22 @@ package stx.shopclient.cartactivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.entity.CatalogItem;
+import stx.shopclient.order_properties_activity.OrderPropertiesActivity;
 
-public class CartActivity extends BaseActivity {
+public class CartActivity extends BaseActivity implements OnItemClickListener {
 
 	ListView _list;
 	CartListAdapter _adapter;
@@ -25,7 +29,7 @@ public class CartActivity extends BaseActivity {
 	protected View createMainView(ViewGroup parent) {
 
 		generateData();
-		
+
 		getActionBar().setTitle("Корзина");
 
 		View view = getLayoutInflater().inflate(R.layout.cart_activity, parent,
@@ -36,6 +40,7 @@ public class CartActivity extends BaseActivity {
 		_adapter = new CartListAdapter();
 
 		_list.setAdapter(_adapter);
+		_list.setOnItemClickListener(this);
 
 		return view;
 	}
@@ -82,6 +87,8 @@ public class CartActivity extends BaseActivity {
 			View view = getLayoutInflater().inflate(
 					R.layout.cart_activity_item, container, false);
 
+			view.setTag(item);
+
 			TextView nameTextView = (TextView) view
 					.findViewById(R.id.nameTextView);
 			nameTextView.setText(item.getName());
@@ -104,5 +111,14 @@ public class CartActivity extends BaseActivity {
 			return view;
 		}
 
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View view, int arg2, long arg3) {
+		CatalogItem item = (CatalogItem) view.getTag();
+		
+		Intent intent = new Intent(this, OrderPropertiesActivity.class);
+		intent.putExtra(OrderPropertiesActivity.TITLE_EXTRA_KEY, item.getName());
+		startActivity(intent);
 	}
 }

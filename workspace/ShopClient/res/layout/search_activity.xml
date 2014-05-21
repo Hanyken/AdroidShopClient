@@ -4,11 +4,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <stx.shopclient.ui.common.PropertiesList android:id="@+id/propertiesList"
+    <stx.shopclient.ui.common.properties.PropertiesList android:id="@+id/propertiesList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/buttonSearch"
-        android:layout_below="@+id/titleText" ></stx.shopclient.ui.common.PropertiesList>
+        android:layout_below="@+id/titleText" ></stx.shopclient.ui.common.properties.PropertiesList>
 
     <TextView
         android:id="@+id/titleText"
