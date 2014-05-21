@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/buttonbar_margion_big"
+        android:layout_marginRight="@dimen/buttonbar_margion_big"
+        android:layout_marginBottom="@dimen/buttonbar_margion_big">
+        
+        <TextView
+            android:id="@+id/lblItemName" 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@android:string/unknownName"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"/>
+        
+        <ImageView 
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_launcher"
+            android:contentDescription="@android:string/unknownName"/>
+        
+    </RelativeLayout>
+    
+    <LinearLayout 
+        android:id="@+id/llCountable"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="right"
+        android:layout_marginTop="@dimen/buttonbar_margion_big"
+        android:layout_marginRight="@dimen/buttonbar_margion_big">
+        
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/count"/>
+        
+        <EditText 
+            android:id="@+id/txtCount"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/buttonbar_margion_big"
+            android:inputType="numberSigned"/>
+        
+    </LinearLayout>
+    
+    <stx.shopclient.ui.common.properties.PropertiesList
+        android:id="@+id/plProperties"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+    </stx.shopclient.ui.common.properties.PropertiesList>
+
+</LinearLayout>

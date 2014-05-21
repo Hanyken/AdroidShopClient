@@ -79,7 +79,7 @@
 	        android:layout_height="@dimen/btnOrder_height"
 	        android:layout_alignParentRight="true"
 	        android:layout_marginRight="@dimen/buttonbar_margion_big"
-	        android:text="В корзину"/>
+	        android:text="@string/order_button"/>
 	    
 	</RelativeLayout>
 	

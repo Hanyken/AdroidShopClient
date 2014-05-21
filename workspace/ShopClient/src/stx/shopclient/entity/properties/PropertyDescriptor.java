@@ -4,6 +4,7 @@ public abstract class PropertyDescriptor {
 	private String _type;
 	private String _name;
 	private String _title;
+	private Boolean _required;
 	
 	public abstract void clear();
 	
@@ -24,5 +25,11 @@ public abstract class PropertyDescriptor {
 	}
 	public void setType(String type) {
 		_type = type;
+	}
+	public Boolean getRequired(){
+		return _required;
+	}
+	public void setRequired(Boolean required){
+		_required = required;
 	}
 }

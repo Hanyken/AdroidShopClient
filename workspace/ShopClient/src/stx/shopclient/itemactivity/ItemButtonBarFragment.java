@@ -25,6 +25,7 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 
 	private Button btnOverview;
 	private Button btnShare;
+	private Button btnOrder;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,9 +41,11 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 
 		btnOverview = (Button) view.findViewById(R.id.btnOverview);
 		btnShare = (Button) view.findViewById(R.id.btnShare);
+		btnOrder = (Button)view.findViewById(R.id.btnOrder);
 
 		btnShare.setOnClickListener(this);
 		btnOverview.setOnClickListener(this);
+		btnOrder.setOnClickListener(this);
 
 		return view;
 	}

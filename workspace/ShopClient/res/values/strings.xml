@@ -5,4 +5,10 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
+    
+    <string name="comment">Коментарий</string>
+    <string name="rating">Оценка:</string>
+    <string name="count">Количество:</string>
+    <string name="order_button">В корзину</string>
+    
 </resources>
