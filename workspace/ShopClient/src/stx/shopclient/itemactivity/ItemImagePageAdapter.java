@@ -15,9 +15,9 @@ import android.widget.ImageView;
 public class ItemImagePageAdapter extends GridPagerAdapter<String>
 {
 	Context _Context;
-	private String ItemId;
+	private long ItemId;
 
-	public ItemImagePageAdapter(Context context, String itemId,
+	public ItemImagePageAdapter(Context context, long itemId,
 			List<String> list)
 	{
 		super(list, context);

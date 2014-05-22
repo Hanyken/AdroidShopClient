@@ -50,15 +50,15 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 		return view;
 	}
 
-	public void setPrice(float value)
+	public void setPrice(double value)
 	{
 		DecimalFormat format = new DecimalFormat("#,###,###,##0.00");
 		lblPrice.setText(format.format(value) + " руб.");
 	}
 
-	public void setRating(float value)
+	public void setRating(double value)
 	{
-		rtbRating.setRating(value);
+		rtbRating.setRating((float)value);
 	}
 
 	public void setOverviewCount(int value)
