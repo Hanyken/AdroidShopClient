@@ -1,7 +1,6 @@
 package stx.shopclient.itemactivity;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import com.viewpagerindicator.CirclePageIndicator;
@@ -9,13 +8,10 @@ import com.viewpagerindicator.CirclePageIndicator;
 import stx.shopclient.R;
 import stx.shopclient.repository.Repository;
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
-import android.provider.MediaStore.Images.ImageColumns;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 public class ItemImageFragment extends Fragment

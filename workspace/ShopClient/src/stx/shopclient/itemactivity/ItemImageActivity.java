@@ -55,7 +55,7 @@ public class ItemImageActivity extends Activity implements OnClickListener
 	
 	private void ShowPanel()
 	{
-		ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(llPanel, "y", -150, 0);
+		ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(llPanel, "y", getResources().getDimension(R.dimen.top_panel_width) * -1, 0);
 		objectAnimator.addListener(new AnimatorListener()
 		{
 
@@ -84,7 +84,7 @@ public class ItemImageActivity extends Activity implements OnClickListener
 	}
 	private void HidePanel()
 	{
-		ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(llPanel, "y", 0, -150);
+		ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(llPanel, "y", 0, getResources().getDimension(R.dimen.top_panel_width) * -1);
 		objectAnimator.addListener(new AnimatorListener()
 		{
 

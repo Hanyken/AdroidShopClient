@@ -59,7 +59,8 @@
         	android:layout_weight="1" />
     
 
-    <Button 
+    <Button
+        android:id="@+id/btnOrder" 
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:layout_weight="0"

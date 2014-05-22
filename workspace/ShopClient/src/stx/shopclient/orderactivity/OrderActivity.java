@@ -1,28 +1,30 @@
 package stx.shopclient.orderactivity;
 
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import android.content.Intent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
-import stx.shopclient.entity.properties.DatePropertyDescriptor;
-import stx.shopclient.entity.properties.NumberPropertyDescriptor;
 import stx.shopclient.entity.properties.PropertyDescriptor;
 import stx.shopclient.itemactivity.ItemActivity;
+import stx.shopclient.repository.Repository;
 import stx.shopclient.ui.common.properties.PropertiesList;
 
-public class OrderActivity extends BaseActivity
+public class OrderActivity extends BaseActivity implements OnClickListener
 {
-	private Double ItemId;
+	private long ItemId;
 	private TextView lblItemName;
 	private PropertiesList plProperies;
 	private LinearLayout llCountable;
+	private Button btnOrder;
 	List<PropertyDescriptor> _properties = new ArrayList<PropertyDescriptor>();
 
 	@Override
@@ -38,12 +40,15 @@ public class OrderActivity extends BaseActivity
 		lblItemName = (TextView) view.findViewById(R.id.lblItemName);
 		plProperies = (PropertiesList) view.findViewById(R.id.plProperties);
 		llCountable = (LinearLayout) view.findViewById(R.id.llCountable);
-
+		btnOrder = (Button)view.findViewById(R.id.btnOrder);
+		
 		llCountable.setVisibility(View.GONE);
 
-		ItemId = intent.getDoubleExtra(ItemActivity.ITEM_ID_EXTRA_KEY, 0);
+		ItemId = intent.getLongExtra(ItemActivity.ITEM_ID_EXTRA_KEY, 0);
 		lblItemName.setText(intent.getStringExtra("ItemTitle"));
 
+		btnOrder.setOnClickListener(this);
+		
 		plProperies.setAllowClear(false);
 		plProperies.setProperties(_properties);
 
@@ -52,25 +57,14 @@ public class OrderActivity extends BaseActivity
 
 	private void generateData()
 	{
-		NumberPropertyDescriptor prop = new NumberPropertyDescriptor();
-		prop.setName("Count");
-		prop.setTitle("Количество");
-		prop.setMinValue(1);
-		prop.setMaxValue(99999);
-		prop.setFloat(false);
-		prop.setRange(false);
-		prop.setCurrentMinValue(1);
-		prop.setCurrentValueDefined(true);
-		_properties.add(prop);
+		_properties.addAll(Repository.getOrderProperties(ItemId));
+	}
 
-		DatePropertyDescriptor prop1 = new DatePropertyDescriptor();
-		prop1.setName("asd");
-		prop1.setTitle("Дата");
-		prop1.setMinValue(new GregorianCalendar(1997, 1, 1));
-		prop1.setMaxValue(new GregorianCalendar(2020, 1, 1));
-		prop1.setCurrentMinValue(new GregorianCalendar(2015, 1, 1));
-		prop1.setCurrentValueDefined(true);
-		prop1.setRange(false);
-		_properties.add(prop1);
+	@Override
+	public void onClick(View v)
+	{
+		Repository.addOrderItem(ItemId, _properties);
+		Toast.makeText(this, "Товар добавлен в карзину",Toast.LENGTH_SHORT).show();
+		finish();
 	}
 }

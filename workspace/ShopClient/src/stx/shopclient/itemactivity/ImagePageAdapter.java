@@ -16,13 +16,11 @@ import android.widget.ImageView;
 public class ImagePageAdapter extends PagerAdapter implements OnClickListener
 {
 	Context _Context;
-	private Long ItemId;
 	private List<String> _Items;
 	
     public ImagePageAdapter(Context context, long itemId) 
     {
         _Context = context;
-        ItemId = itemId;
         
         String[] images = Repository.getImages(itemId);
         _Items = new ArrayList<String>();
