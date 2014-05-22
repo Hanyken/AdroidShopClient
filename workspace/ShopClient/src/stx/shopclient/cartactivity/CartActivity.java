@@ -43,11 +43,12 @@ public class CartActivity extends BaseActivity implements OnItemClickListener {
 				false);
 
 		_list = (ListView) view.findViewById(R.id.listView);
+		_list.setOnItemClickListener(this);
 
 		_adapter = new CartListAdapter();
 
 		_list.setAdapter(_adapter);
-		_list.setOnItemClickListener(this);
+		
 		registerForContextMenu(_list);
 
 		return view;
