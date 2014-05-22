@@ -4,6 +4,6 @@
         <bitmap android:gravity="center" android:src="@drawable/img_comment_press"/>
     </item>
     <item>
-        <bitmap android:gravity="center" android:src="@drawable/img_comment"/>
+        <bitmap android:gravity="center" android:src="@drawable/img_comment"/>        
     </item>
 </selector>
