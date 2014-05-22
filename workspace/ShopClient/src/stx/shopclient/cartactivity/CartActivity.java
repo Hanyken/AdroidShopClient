@@ -5,10 +5,15 @@ import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -16,6 +21,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.entity.CatalogItem;
+import stx.shopclient.itemactivity.ItemActivity;
 import stx.shopclient.order_properties_activity.OrderPropertiesActivity;
 
 public class CartActivity extends BaseActivity implements OnItemClickListener {
@@ -36,6 +42,8 @@ public class CartActivity extends BaseActivity implements OnItemClickListener {
 				false);
 
 		_list = (ListView) view.findViewById(R.id.listView);
+		
+		registerForContextMenu(_list);
 
 		_adapter = new CartListAdapter();
 
@@ -53,11 +61,13 @@ public class CartActivity extends BaseActivity implements OnItemClickListener {
 		}
 	}
 
-	void removeImageClicked(View view) {
-		CatalogItem item = (CatalogItem) view.getTag();
-		_cartItems.remove(item);
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
 
-		_adapter.notifyDataSetChanged();
+		super.onCreateContextMenu(menu, v, menuInfo);
+
+		getMenuInflater().inflate(R.menu.cart_activity_item_menu, menu);
 	}
 
 	class CartListAdapter extends BaseAdapter {
@@ -84,7 +94,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener {
 
 			CatalogItem item = _cartItems.get(index);
 
-			View view = getLayoutInflater().inflate(
+			final View view = getLayoutInflater().inflate(
 					R.layout.cart_activity_item, container, false);
 
 			view.setTag(item);
@@ -97,14 +107,14 @@ public class CartActivity extends BaseActivity implements OnItemClickListener {
 					.findViewById(R.id.descriptionTextView);
 			descrTextView.setText("1 רע.");
 
-			ImageView removeImage = (ImageView) view
-					.findViewById(R.id.removeImageView);
-			removeImage.setTag(item);
-			removeImage.setOnClickListener(new View.OnClickListener() {
+			Button menuButton = (Button) view.findViewById(R.id.menuButton);
+
+			menuButton.setTag(item);
+			menuButton.setOnClickListener(new View.OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
-					removeImageClicked(v);
+					openContextMenu(view);
 				}
 			});
 
@@ -114,11 +124,30 @@ public class CartActivity extends BaseActivity implements OnItemClickListener {
 	}
 
 	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+		CatalogItem catalogItem = _cartItems.get(info.position);
+
+		if (item.getItemId() == R.id.edit) {
+			Intent intent = new Intent(this, OrderPropertiesActivity.class);
+			intent.putExtra(OrderPropertiesActivity.TITLE_EXTRA_KEY,
+					catalogItem.getName());
+			startActivity(intent);
+		} else if (item.getItemId() == R.id.delete) {
+			_cartItems.remove(catalogItem);
+
+			_adapter.notifyDataSetChanged();
+		}
+
+		return true;
+	}
+
+	@Override
 	public void onItemClick(AdapterView<?> arg0, View view, int arg2, long arg3) {
 		CatalogItem item = (CatalogItem) view.getTag();
-		
-		Intent intent = new Intent(this, OrderPropertiesActivity.class);
-		intent.putExtra(OrderPropertiesActivity.TITLE_EXTRA_KEY, item.getName());
+
+		Intent intent = new Intent(this, ItemActivity.class);
+		intent.putExtra("ItemTitle", item.getName());
 		startActivity(intent);
 	}
 }

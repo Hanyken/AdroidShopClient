@@ -17,20 +17,30 @@
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/imageView1"
         android:orientation="vertical" >
-        
-        <TextView android:id="@+id/nameTextView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Товар 1"/>
-        
-        <TextView android:id="@+id/descriptionTextView" android:textSize="10sp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Описание"/>
-        
+
+        <TextView
+            android:id="@+id/nameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Товар 1" />
+
+        <TextView
+            android:id="@+id/descriptionTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Описание"
+            android:textSize="10sp" />
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/removeImageView"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+    <Button
+        android:id="@+id/menuButton"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:padding="10dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="14dp"
-        android:src="@drawable/reset" />
+        android:layout_marginRight="18dp"
+        android:background="@drawable/stl_cart_item_menu_button"
+         />
 
 </RelativeLayout>
