@@ -9,4 +9,6 @@
     <dimen name="buttonbar_margion_big">10dp</dimen>
     <dimen name="buttonbar_margion_small">3dp</dimen>
     
+    <dimen name="top_panel_width">50dp</dimen>
+    
 </resources>

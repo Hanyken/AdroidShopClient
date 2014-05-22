@@ -19,7 +19,7 @@ import stx.shopclient.ui.common.properties.PropertiesList;
 
 public class OrderActivity extends BaseActivity
 {
-	private String ItemId;
+	private Double ItemId;
 	private TextView lblItemName;
 	private PropertiesList plProperies;
 	private LinearLayout llCountable;
@@ -41,7 +41,7 @@ public class OrderActivity extends BaseActivity
 
 		llCountable.setVisibility(View.GONE);
 
-		ItemId = intent.getStringExtra(ItemActivity.ITEM_ID_EXTRA_KEY);
+		ItemId = intent.getDoubleExtra(ItemActivity.ITEM_ID_EXTRA_KEY, 0);
 		lblItemName.setText(intent.getStringExtra("ItemTitle"));
 
 		plProperies.setAllowClear(false);

@@ -1,11 +1,11 @@
 package stx.shopclient.itemactivity;
 
-import java.util.Random;
-
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
+import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.orderactivity.OrderActivity;
 import stx.shopclient.overviewactivity.OverviewActivity;
+import stx.shopclient.repository.Repository;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,8 +22,7 @@ import android.widget.TextView;
 
 public class ItemActivity extends BaseActivity
 {
-	private TextView lblItemName;
-	private String ItemID;
+	private CatalogItem _Item;
 
 	public static final String ITEM_ID_EXTRA_KEY = "ItemID";
 
@@ -39,33 +38,32 @@ public class ItemActivity extends BaseActivity
 
 		// Получаю параметры
 		String itemTitle = intent.getStringExtra("ItemTitle");
-		ItemID = intent.getStringExtra(ITEM_ID_EXTRA_KEY);
+		String itemId = intent.getStringExtra(ITEM_ID_EXTRA_KEY);
 
+		_Item = Repository.getCatalogItem(itemId, itemTitle);
+		
 		ItemImageFragment imageFragment = (ItemImageFragment) getFragmentManager()
 				.findFragmentById(R.id.frgImages);
 		ItemButtonBarFragment buttonBar = (ItemButtonBarFragment) getFragmentManager()
 				.findFragmentById(R.id.frgButtonBar);
-		lblItemName = (TextView) view.findViewById(R.id.lblItemName);
 		TextView txtProperty = (TextView) view.findViewById(R.id.txtProperty);
 
-		imageFragment.setImages(ItemID);
+		imageFragment.setImages(_Item.getId());
 
-		Random rand = new Random();
-		buttonBar.setPrice(rand.nextFloat() * 30000);
-		buttonBar.setRating(rand.nextFloat() * 5);
-		buttonBar.setOverviewCount(rand.nextInt(256));
-		buttonBar.setRepostCount(rand.nextInt(512));
-
-		lblItemName.setText(itemTitle);
+		buttonBar.setPrice(_Item.getPrice());
+		buttonBar.setRating(_Item.getRating());
+		buttonBar.setOverviewCount(_Item.getOverviewsCount());
+		buttonBar.setRepostCount(0);
 
 		setProperty(txtProperty);
+		getActionBar().setTitle(itemTitle);
 
 		return view;
 	}
 
 	public void setProperty(TextView txtProperty)
 	{
-		String description = "Это самый лучший тавар на планете\n\n\n";
+		String description = _Item.getDescription() +"\n\n\n";
 		String text = "\t-Клевость - самый клевый\n\t-Привлекательность - привлекательнее товара не существует\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nНу и тут какие то еще вкусности про товар";
 
 		SpannableStringBuilder str = new SpannableStringBuilder("Общее\n"
@@ -76,8 +74,6 @@ public class ItemActivity extends BaseActivity
 				description.length() + 20,
 				SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-		// Spanned str =
-		// Html.fromHtml("<font color=\"red\">Привет.</font> <font color=\"yellow\">как </font> <font color=\"blue\">дела?</font>");
 		txtProperty.setText(str);
 	}
 
@@ -149,7 +145,7 @@ public class ItemActivity extends BaseActivity
 		{
 		case R.id.btnOverview:
 			Intent intent = new Intent(this, OverviewActivity.class);
-			intent.putExtra(ITEM_ID_EXTRA_KEY, ItemID);
+			intent.putExtra(ITEM_ID_EXTRA_KEY, _Item.getId());
 			startActivity(intent);
 			break;
 
@@ -157,7 +153,7 @@ public class ItemActivity extends BaseActivity
 			Intent sendIntent = new Intent();
 			sendIntent.setAction(Intent.ACTION_SEND);
 			sendIntent.setType("text/plain");
-			sendIntent.putExtra(Intent.EXTRA_TEXT, lblItemName.getText());
+			sendIntent.putExtra(Intent.EXTRA_TEXT, _Item.getName());
 			// TODO сделать передачу картинки
 			// sendIntent.setType("image/jpeg");
 			// sendIntent.putExtra(Intent.EXTRA_STREAM,
@@ -168,8 +164,8 @@ public class ItemActivity extends BaseActivity
 
 		case R.id.btnOrder:
 			Intent orderIntent = new Intent(this, OrderActivity.class);
-			orderIntent.putExtra(ITEM_ID_EXTRA_KEY, ItemID);
-			orderIntent.putExtra("ItemTitle", lblItemName.getText());
+			orderIntent.putExtra(ITEM_ID_EXTRA_KEY, _Item.getId());
+			orderIntent.putExtra("ItemTitle", _Item.getName());
 			startActivity(orderIntent);
 			break;
 		}

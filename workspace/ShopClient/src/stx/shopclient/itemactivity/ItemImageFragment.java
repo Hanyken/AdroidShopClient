@@ -1,14 +1,17 @@
 package stx.shopclient.itemactivity;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.viewpagerindicator.CirclePageIndicator;
 
 import stx.shopclient.R;
+import stx.shopclient.repository.Repository;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore.Images.ImageColumns;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,13 +38,12 @@ public class ItemImageFragment extends Fragment
 		return view;
 	}
 
-	public void setImages(String itemId)
+	public void setImages(long itemId)
 	{
+		String[] images = Repository.getImages(itemId);
 		List<String> items = new ArrayList<String>();
-		items.add("1");
-		items.add("2");
-		items.add("3");
-		items.add("4");
+		for(String el : images)
+			items.add(el);
 
 		ItemImagePageAdapter adapter = new ItemImagePageAdapter(this.getActivity(), itemId, items);
 

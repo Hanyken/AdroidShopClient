@@ -5,29 +5,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 import stx.shopclient.R;
+import stx.shopclient.repository.Repository;
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-public class ImagePageAdapter extends PagerAdapter
+public class ImagePageAdapter extends PagerAdapter implements OnClickListener
 {
 	Context _Context;
-	private String ItemId;
-	private int _Count = 4;
+	private Long ItemId;
 	private List<String> _Items;
 	
-    public ImagePageAdapter(Context context, String itemId) 
+    public ImagePageAdapter(Context context, long itemId) 
     {
         _Context = context;
         ItemId = itemId;
         
+        String[] images = Repository.getImages(itemId);
         _Items = new ArrayList<String>();
-        _Items.add("1");
-        _Items.add("2");
-        _Items.add("3");
-        _Items.add("4");
+        for(String el : images)
+        	_Items.add(el);
         
     }
 
@@ -36,7 +36,7 @@ public class ImagePageAdapter extends PagerAdapter
 	@Override
 	public int getCount()
 	{
-		return _Count;
+		return _Items.size();
 	}
 
 	@Override
@@ -53,6 +53,7 @@ public class ImagePageAdapter extends PagerAdapter
 		
 		ImageView view = new ImageView(_Context);
 		view.setImageResource(R.drawable.ic_launcher);
+		view.setOnClickListener(this);
 
 		container.addView(view);
 		
@@ -64,4 +65,12 @@ public class ImagePageAdapter extends PagerAdapter
 	{
 		container.removeView((View) view);
     }
+
+
+
+	@Override
+	public void onClick(View v)
+	{
+		((ItemImageActivity)_Context).onImageClick(v);
+	}
 }
