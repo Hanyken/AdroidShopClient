@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
@@ -42,13 +43,12 @@ public class CartActivity extends BaseActivity implements OnItemClickListener {
 				false);
 
 		_list = (ListView) view.findViewById(R.id.listView);
-		
-		registerForContextMenu(_list);
 
 		_adapter = new CartListAdapter();
 
 		_list.setAdapter(_adapter);
 		_list.setOnItemClickListener(this);
+		registerForContextMenu(_list);
 
 		return view;
 	}
@@ -137,6 +137,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener {
 			_cartItems.remove(catalogItem);
 
 			_adapter.notifyDataSetChanged();
+			Toast.makeText(this, String.format("Удалено (%s)",catalogItem.getName()), Toast.LENGTH_SHORT).show();
 		}
 
 		return true;
