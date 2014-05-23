@@ -7,34 +7,32 @@ import java.util.List;
 import java.util.Random;
 
 import stx.shopclient.entity.CatalogItem;
+import stx.shopclient.entity.CatalogItemOrder;
 import stx.shopclient.entity.properties.DatePropertyDescriptor;
 import stx.shopclient.entity.properties.NumberPropertyDescriptor;
 import stx.shopclient.entity.properties.PropertyDescriptor;
 
-public class Repository
-{
-	public static CatalogItem getCatalogItem(String itemId, String name)
-	{
+public class Repository {
+	static List<CatalogItemOrder> _orders = new ArrayList<CatalogItemOrder>();
+
+	public static CatalogItem getCatalogItem(String itemId, String name) {
 		CatalogItem item = new CatalogItem();
 		item.setName(name);
 		Random rand = new Random();
 		item.setPrice(rand.nextFloat() * 30000);
 		item.setRating(rand.nextFloat() * 5);
 		item.setOverviewsCount(rand.nextInt(256));
-		//item.setRepostCount(rand.nextInt(512));
+		// item.setRepostCount(rand.nextInt(512));
 		item.setDescription("Это самый лучший тавар на планете");
-		
+
 		return item;
 	}
-	
-	public static String[] getImages(long itemId)
-	{
+
+	public static String[] getImages(long itemId) {
 		return new String[] { "1", "2", "3", "4" };
 	}
-	
-	
-	public static Collection<PropertyDescriptor> getOrderProperties(long itemId)
-	{
+
+	public static Collection<PropertyDescriptor> getOrderProperties(long itemId) {
 		List<PropertyDescriptor> items = new ArrayList<PropertyDescriptor>();
 		NumberPropertyDescriptor prop = new NumberPropertyDescriptor();
 		prop.setName("Count");
@@ -56,11 +54,34 @@ public class Repository
 		prop1.setCurrentValueDefined(true);
 		prop1.setRange(false);
 		items.add(prop1);
-		
+
 		return items;
 	}
-	public static void addOrderItem(long itemId, Collection<PropertyDescriptor> properties)
-	{
-		
+
+	public static void addOrderItem(long itemId,
+			Collection<PropertyDescriptor> properties) {
+		CatalogItemOrder order = new CatalogItemOrder();
+		order.setItemId(itemId);
+		order.getOrderProperties().addAll(properties);
+
+		_orders.add(order);
+	}
+
+	public static void removeOrderItem(long orderId) {
+
+		CatalogItemOrder orderToRemove = null;
+
+		for (CatalogItemOrder order : _orders) {
+			if (order.getOrderId() == orderId) {
+				orderToRemove = order;
+				break;
+			}
+		}
+
+		_orders.remove(orderToRemove);
+	}
+
+	public static List<CatalogItemOrder> getOrders() {
+		return _orders;
 	}
 }
