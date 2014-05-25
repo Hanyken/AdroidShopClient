@@ -5,27 +5,27 @@ public class Catalog {
 	private String _name;
 	private int _nodeCount;
 	
-	long getId() {
+	public long getId() {
 		return _id;
 	
 	}
-	void setId(long id) {
+	public void setId(long id) {
 		_id = id;
 	}
 	
-	String getName() {
+	public String getName() {
 		return _name;
 	}
 	
-	void setName(String name) {
+	public void setName(String name) {
 		_name = name;
 	}
 	
-	int getNodeCount() {
+	public int getNodeCount() {
 		return _nodeCount;
 	}
 	
-	void setNodeCount(int nodeCount) {
+	public void setNodeCount(int nodeCount) {
 		_nodeCount = nodeCount;
 	}
 }

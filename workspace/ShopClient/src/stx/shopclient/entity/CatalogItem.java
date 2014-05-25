@@ -1,89 +1,122 @@
 package stx.shopclient.entity;
 
-public class CatalogItem {
+public class CatalogItem
+{
+	private long _rowNumber;
 	private long _id;
-	private long _parentId;
 	private String _name;
-	private String[] _smallImageUrls;
-	private String[] _mediumImageUrls;
-	private String[] _largeImageUrls;
-	private double _price;
+	private long _catalogId;
+	private boolean _isLeaf;
+	private int _childCount;
+	private boolean _canBubble;
 	private double _rating;
 	private int _overviewsCount;
-	private String[] _overviews;
-	private String[] _tags;
-	private String _description;
 	
-	public long getId() {
+	private String _description;
+	private long _nodeId;
+
+	public long getRowNumber()
+	{
+		return _rowNumber;
+	}
+	public void setRowNumber(long rowNumber)
+	{
+		_rowNumber = rowNumber;
+	}
+	
+	public long getId()
+	{
 		return _id;
 	}
-	public void setId(long id) {
+	public void setId(long id)
+	{
 		_id = id;
 	}
-	public long getParentId() {
-		return _parentId;
+
+	public long getCatalogId()
+	{
+		return _catalogId;
 	}
-	public void setParentId(long parentId) {
-		_parentId = parentId;
+	public void setCatalogId(long catalogId)
+	{
+		_catalogId = catalogId;
 	}
-	public String getName() {
+
+	public String getName()
+	{
 		return _name;
 	}
-	public void setName(String name) {
+	public void setName(String name)
+	{
 		_name = name;
 	}
-	public String[] getSmallImageUrls() {
-		return _smallImageUrls;
+
+	public boolean getIsLeaf()
+	{
+		return _isLeaf;
 	}
-	public void setSmallImageUrls(String[] smallImageUrls) {
-		_smallImageUrls = smallImageUrls;
+	public void setIsLeaf(boolean isLeaf)
+	{
+		_isLeaf = isLeaf;
 	}
-	public String[] getMediumImageUrls() {
-		return _mediumImageUrls;
+
+	public int getChildCount()
+	{
+		return _childCount;
 	}
-	public void setMediumImageUrls(String[] mediumImageUrls) {
-		_mediumImageUrls = mediumImageUrls;
+	public void setChildCount(int childCount)
+	{
+		_childCount = childCount;
 	}
-	public String[] getLargeImageUrls() {
-		return _largeImageUrls;
+	
+	public boolean getCanBubble()
+	{
+		return _canBubble;
 	}
-	public void setLargeImageUrls(String[] largeImageUrls) {
-		_largeImageUrls = largeImageUrls;
+	public void setCanBubble(boolean canBubble)
+	{
+		_canBubble = canBubble;
 	}
-	public double getPrice() {
-		return _price;
-	}
-	public void setPrice(double price) {
-		_price = price;
-	}
-	public double getRating() {
+	
+	public double getRating()
+	{
 		return _rating;
 	}
-	public void setRating(double rating) {
+
+	public void setRating(double rating)
+	{
 		_rating = rating;
 	}
-	public int getOverviewsCount() {
+
+	public int getOverviewsCount()
+	{
 		return _overviewsCount;
 	}
-	public void setOverviewsCount(int overviewsCount) {
+
+	public void setOverviewsCount(int overviewsCount)
+	{
 		_overviewsCount = overviewsCount;
 	}
-	public String[] getOverviews() {
-		return _overviews;
-	}
-	public void setOverviews(String[] overviews) {
-		_overviews = overviews;
-	}
-	public String[] getTags() {
-		return _tags;
-	}
-	public void setTags(String[] tags) {
-		_tags = tags;
-	}
-	public String getDescription() {
+
+	
+	
+
+	public String getDescription()
+	{
 		return _description;
 	}
-	public void setDescription(String description) {
+
+	public void setDescription(String description)
+	{
 		_description = description;
+	}
+	
+	public long getNodeId()
+	{
+		return _nodeId;
+	}
+	public void setNodeId(long nodeId)
+	{
+		_nodeId = nodeId;
 	}
 }

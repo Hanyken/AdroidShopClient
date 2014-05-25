@@ -69,7 +69,7 @@ public class OverviewAdapter extends BaseAdapter implements OnScrollListener
 
 		txtOverview.setText("Тут какой то охренно длинный коментарий с описанием самого лучшего товара на планете\n"+item.getDescription());
 		
-		rtgRating.setRating(item.getRating());
+		rtgRating.setRating((float)item.getRating());
 
 		return view;
 	}

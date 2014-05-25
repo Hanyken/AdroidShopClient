@@ -38,9 +38,10 @@ public class ItemActivity extends BaseActivity
 
 		// Получаю параметры
 		String itemTitle = intent.getStringExtra("ItemTitle");
-		String itemId = intent.getStringExtra(ITEM_ID_EXTRA_KEY);
+		String strId = intent.getStringExtra(ITEM_ID_EXTRA_KEY);
+		Long itemId = Long.parseLong(strId);
 
-		_Item = Repository.getCatalogItem(itemId, itemTitle);
+		_Item = Repository.getIntent().getItemsManager().getItem(itemId);
 		
 		ItemImageFragment imageFragment = (ItemImageFragment) getFragmentManager()
 				.findFragmentById(R.id.frgImages);
@@ -50,7 +51,7 @@ public class ItemActivity extends BaseActivity
 
 		imageFragment.setImages(_Item.getId());
 
-		buttonBar.setPrice(_Item.getPrice());
+		buttonBar.setPrice(Repository.getIntent().getPropertiesManager().getItemPrice(itemId));
 		buttonBar.setRating(_Item.getRating());
 		buttonBar.setOverviewCount(_Item.getOverviewsCount());
 		buttonBar.setRepostCount(0);

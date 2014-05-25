@@ -2,7 +2,7 @@ package stx.shopclient.entity;
 
 public class CatalogNode {
 	private long _id;
-	private long _parentId;
+	private Long _parentId;
 	private long _catalogId;
 	private String _name;
 	private int _count;
@@ -18,10 +18,10 @@ public class CatalogNode {
 	public void setId(long id) {
 		_id = id;
 	}	
-	public long getParentId() {
+	public Long getParentId() {
 		return _parentId;
 	}	
-	public void setParentId(long parentId) {
+	public void setParentId(Long parentId) {
 		_parentId = parentId;
 	}	
 	public long getCatalogId() {

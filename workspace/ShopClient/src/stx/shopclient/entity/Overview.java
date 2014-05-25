@@ -1,15 +1,17 @@
 package stx.shopclient.entity;
 
+import android.util.EventLogTags.Description;
+
 public class Overview
 {
-	private float _rating;
+	private double _rating;
 	private String _description;
 	
-	public float getRating() 
+	public double getRating() 
 	{
 		return _rating;
 	}
-	public void setRating(float rating) 
+	public void setRating(double rating) 
 	{
 		_rating = rating;
 	}

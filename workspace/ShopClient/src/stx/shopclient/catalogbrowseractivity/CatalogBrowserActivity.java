@@ -19,6 +19,7 @@ import stx.shopclient.R;
 import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.entity.CatalogNode;
 import stx.shopclient.itemactivity.ItemActivity;
+import stx.shopclient.repository.Repository;
 import stx.shopclient.ui.common.LoadMoreListAdapter;
 
 public class CatalogBrowserActivity extends BaseActivity implements
@@ -105,7 +106,7 @@ public class CatalogBrowserActivity extends BaseActivity implements
 			for (int i = 0; i < 10; i++) {
 				CatalogItem item = new CatalogItem();
 				item.setName("Товар " + Integer.toString(i));
-				item.setPrice(random.nextInt(5000));
+				//item.setPrice(random.nextInt(5000));
 				item.setRating(random.nextInt(5));
 				_items.add(item);
 			}
@@ -136,7 +137,7 @@ public class CatalogBrowserActivity extends BaseActivity implements
 			RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingBar);
 
 			nameTextView.setText(item.getName());
-			descriptionTextView.setText(Integer.toString((int) item.getPrice())
+			descriptionTextView.setText(Double.toString(Repository.getIntent().getPropertiesManager().getItemPrice(item.getId()))
 					+ " рублей");
 
 			ratingBar.setRating((float) item.getRating());
@@ -203,7 +204,6 @@ public class CatalogBrowserActivity extends BaseActivity implements
 			for (int i = size; i < size + 10; i++) {
 				CatalogItem item = new CatalogItem();
 				item.setName("Товар " + Integer.toString(i));
-				item.setPrice(random.nextInt(5000));
 				item.setRating(random.nextInt(5));
 				_items.add(item);
 			}
@@ -238,7 +238,7 @@ public class CatalogBrowserActivity extends BaseActivity implements
 			
 			Intent intent = new Intent(this, ItemActivity.class);
 			intent.putExtra("ItemTitle", item.getName());
-			
+			intent.putExtra(ItemActivity.ITEM_ID_EXTRA_KEY, "123");
 			startActivity(intent);
 		}
 	}
