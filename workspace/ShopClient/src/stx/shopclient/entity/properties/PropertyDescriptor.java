@@ -8,6 +8,8 @@ public abstract class PropertyDescriptor {
 	
 	public abstract void clear();
 	
+	public abstract String getStringValue();
+	
 	public String getName() {
 		return _name;
 	}

@@ -79,4 +79,9 @@ public class DatePropertyDescriptor extends PropertyDescriptor {
 	public void setRange(boolean isRange) {
 		_isRange = isRange;
 	}
+
+	@Override
+	public String getStringValue() {
+		return _minValue.toString();
+	}
 }

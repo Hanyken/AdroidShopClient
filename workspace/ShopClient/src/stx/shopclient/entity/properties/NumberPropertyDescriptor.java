@@ -77,4 +77,9 @@ public class NumberPropertyDescriptor extends PropertyDescriptor {
 	public void setFloat(boolean isFloat) {
 		_isFloat = isFloat;
 	}
+	
+	@Override
+	public String getStringValue() {
+		return Double.toString(_minValue);
+	}
 }

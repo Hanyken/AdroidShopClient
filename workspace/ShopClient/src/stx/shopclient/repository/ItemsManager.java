@@ -2,8 +2,13 @@ package stx.shopclient.repository;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 import stx.shopclient.entity.CatalogItem;
+import stx.shopclient.entity.properties.DatePropertyDescriptor;
+import stx.shopclient.entity.properties.NumberPropertyDescriptor;
+import stx.shopclient.entity.properties.PropertyDescriptor;
 
 public class ItemsManager
 {
@@ -46,6 +51,32 @@ public class ItemsManager
 		return items;
 	}
 	
+	public Collection<PropertyDescriptor> getOrderProperties(long itemId)
+	{
+		List<PropertyDescriptor> items = new ArrayList<PropertyDescriptor>();
+		NumberPropertyDescriptor prop = new NumberPropertyDescriptor();
+		prop.setName("Count");
+		prop.setTitle("Количество");
+		prop.setMinValue(1);
+		prop.setMaxValue(99999);
+		prop.setFloat(false);
+		prop.setRange(false);
+		prop.setCurrentMinValue(1);
+		prop.setCurrentValueDefined(true);
+		items.add(prop);
+
+		DatePropertyDescriptor prop1 = new DatePropertyDescriptor();
+		prop1.setName("asd");
+		prop1.setTitle("Дата");
+		prop1.setMinValue(new GregorianCalendar(1997, 1, 1));
+		prop1.setMaxValue(new GregorianCalendar(2020, 1, 1));
+		prop1.setCurrentMinValue(new GregorianCalendar(2015, 1, 1));
+		prop1.setCurrentValueDefined(true);
+		prop1.setRange(false);
+		items.add(prop1);
+		
+		return items;
+	}
 	
 	public void initItems(long nodeId, long catalogId)
 	{		

@@ -19,23 +19,28 @@ import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 import stx.shopclient.R;
 import stx.shopclient.entity.Overview;
+import stx.shopclient.repository.OverviewsManager;
+import stx.shopclient.repository.Repository;
 
 public class OverviewAdapter extends BaseAdapter implements OnScrollListener
 {
 	private ArrayList<Overview> _Items;
 	private LayoutInflater _Inflater;
 	private ListView _ListView;
-	private boolean loading;
+	private boolean _Loading;
+	private boolean _LoadNeeded;
 	private ProgressBar _progressBar;
+	private long _ItemId;
 
-	public OverviewAdapter(Context context, ListView listView)
+	public OverviewAdapter(Context context, ListView listView, long itemId)
 	{
+		_LoadNeeded = true;
 		_progressBar = new ProgressBar(context);
 		_Inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		_Items = new ArrayList<Overview>();
 		_ListView = listView;
-		onLoadMore();
+		_ItemId = itemId;
 	}
 
 	@Override
@@ -81,13 +86,22 @@ public class OverviewAdapter extends BaseAdapter implements OnScrollListener
 		Thread.sleep(1000);
 		}
 		catch(Exception ex){}
-		int size = _Items.size();
+		
 		ArrayList<Overview> items = new ArrayList<Overview>();
-		Random rand = new Random();
-		for (int i = 0; i < 10; i++)
+		
+		int size = _Items.size();
+		OverviewsManager manager = Repository.getIntent().getOverviewsManager();
+		int count = manager.getOverviewsCount(_ItemId);
+		
+		if (size >= count)
 		{
-			items.add(new Overview((rand.nextFloat() * 5), "Коментарий № " + String.valueOf(size + i)));
+			_LoadNeeded = false;
 		}
+		else
+		{
+			items.addAll(manager.getOverviews(_ItemId));
+		}
+		
 		return items;
 	}
 
@@ -95,11 +109,11 @@ public class OverviewAdapter extends BaseAdapter implements OnScrollListener
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount)
 	{
-		if (!loading)
+		if (!_Loading && _LoadNeeded)
 		{
 			if ((firstVisibleItem + visibleItemCount) >= getCount())
 			{
-				loading = true;
+				_Loading = true;
 				_ListView.addFooterView(_progressBar);
 				new AsyncTask<Void, Void, Collection<Overview>>()
 				{
@@ -123,7 +137,7 @@ public class OverviewAdapter extends BaseAdapter implements OnScrollListener
 								}
 								catch(Exception ex){}
 								notifyDataSetChanged();
-								loading = false;	
+								_Loading = false;	
 							}
 						});
 					}

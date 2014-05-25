@@ -17,4 +17,9 @@ public class StringPropertyDescriptor extends PropertyDescriptor {
 	public void setValue(String value) {
 		_value = value;
 	}
+	
+	@Override
+	public String getStringValue() {
+		return _value;
+	}
 }

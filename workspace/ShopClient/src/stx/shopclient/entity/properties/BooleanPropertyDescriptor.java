@@ -17,4 +17,9 @@ public class BooleanPropertyDescriptor extends PropertyDescriptor {
 	public void clear() {
 		_currentValue = false;
 	}
+
+	@Override
+	public String getStringValue() {
+		return Boolean.toString(_currentValue);
+	}
 }

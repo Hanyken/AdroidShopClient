@@ -36,10 +36,8 @@ public class ItemImageFragment extends Fragment
 
 	public void setImages(long itemId)
 	{
-		String[] images = Repository.getImages(itemId);
 		List<String> items = new ArrayList<String>();
-		for(String el : images)
-			items.add(el);
+		items.addAll(Repository.getIntent().getImagesManager().getItemImages(itemId));
 
 		ItemImagePageAdapter adapter = new ItemImagePageAdapter(this.getActivity(), itemId, items);
 

@@ -2,10 +2,12 @@ package stx.shopclient.overviewactivity;
 
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
+import stx.shopclient.itemactivity.ItemActivity;
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,13 +32,16 @@ public class OverviewActivity extends BaseActivity
 		View view = getLayoutInflater().inflate(R.layout.overview_activity,
 				parent, false);
 
+		Intent intent = getIntent();
+		long itemId = intent.getLongExtra(ItemActivity.ITEM_ID_EXTRA_KEY, 0);
+		
 		ListView lstMain = (ListView) view.findViewById(R.id.lstMain);
 
 		llOverview = (LinearLayout) view.findViewById(R.id.llOverviw);
 		txtOverview = (TextView)view.findViewById(R.id.txtOverview);
 		rtgRaiting = (RatingBar)view.findViewById(R.id.rtgRating);
 
-		OverviewAdapter adapter = new OverviewAdapter(this, lstMain);
+		OverviewAdapter adapter = new OverviewAdapter(this, lstMain, itemId);
 
 		lstMain.setAdapter(adapter);
 		lstMain.setOnScrollListener(adapter);

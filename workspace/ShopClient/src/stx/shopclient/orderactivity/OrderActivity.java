@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
+import stx.shopclient.entity.OrderProperty;
 import stx.shopclient.entity.properties.PropertyDescriptor;
 import stx.shopclient.itemactivity.ItemActivity;
 import stx.shopclient.repository.Repository;
@@ -57,13 +58,22 @@ public class OrderActivity extends BaseActivity implements OnClickListener
 
 	private void generateData()
 	{
-		_properties.addAll(Repository.getOrderProperties(ItemId));
+		_properties.addAll(Repository.getIntent().getItemsManager().getOrderProperties(ItemId));
 	}
 
 	@Override
 	public void onClick(View v)
 	{
-		Repository.addOrderItem(ItemId, _properties);
+		ArrayList<OrderProperty> items = new ArrayList<OrderProperty>();
+		for(PropertyDescriptor el : _properties)
+		{
+			OrderProperty item = new OrderProperty();
+			item.setName(el.getName());
+			item.setValue(el.getStringValue());
+			items.add(item);
+		}
+		
+		Repository.getIntent().getOrderManager().addOrder(ItemId, items);
 		Toast.makeText(this, "Товар добавлен в карзину",Toast.LENGTH_SHORT).show();
 		finish();
 	}

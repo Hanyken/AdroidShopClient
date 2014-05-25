@@ -58,4 +58,11 @@ public class EnumPropertyDescriptor extends PropertyDescriptor {
 	public void clear() {
 		_currentValues.clear();
 	}
+
+	@Override
+	public String getStringValue() {
+		if (_currentValues != null && _currentValues.size() > 0)
+			return _currentValues.get(0).getValue();
+		return null;
+	}
 }

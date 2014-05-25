@@ -4,9 +4,18 @@ import android.util.EventLogTags.Description;
 
 public class Overview
 {
+	private long _itemId;
 	private double _rating;
 	private String _description;
 	
+	public long getItemId()
+	{
+		return _itemId;
+	}
+	public void setItemId(long itemId)
+	{
+		_itemId = itemId;
+	}
 	public double getRating() 
 	{
 		return _rating;

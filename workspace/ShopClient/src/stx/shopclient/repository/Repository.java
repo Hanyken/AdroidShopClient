@@ -19,6 +19,8 @@ public class Repository
 		return _intent;
 	}
 	
+	private ImagesManager _ImagesManager;
+	private OrdersManager _OrderManager;
 	private CatalogManager _CatalogManager;
 	private OverviewsManager _OverviewsManager;
 	private ItemsManager _ItemsManager;
@@ -26,6 +28,8 @@ public class Repository
 	
 	private Repository()
 	{
+		_ImagesManager = new ImagesManager();
+		_OrderManager = new OrdersManager();
 		_PropertiesManager = new PropertiesManager();
 		_OverviewsManager = new OverviewsManager();
 		_ItemsManager = new ItemsManager(_OverviewsManager);
@@ -46,41 +50,17 @@ public class Repository
 	{
 		return _PropertiesManager;
 	}
-	
-	public static String[] getImages(long itemId)
+	public OrdersManager getOrderManager()
 	{
-		return new String[] { "1", "2", "3", "4" };
+		return _OrderManager;
+	}
+	public ImagesManager getImagesManager()
+	{
+		return _ImagesManager;
+	}
+	public OverviewsManager getOverviewsManager()
+	{
+		return _OverviewsManager;
 	}
 	
-	
-	public static Collection<PropertyDescriptor> getOrderProperties(long itemId)
-	{
-		List<PropertyDescriptor> items = new ArrayList<PropertyDescriptor>();
-		NumberPropertyDescriptor prop = new NumberPropertyDescriptor();
-		prop.setName("Count");
-		prop.setTitle("Количество");
-		prop.setMinValue(1);
-		prop.setMaxValue(99999);
-		prop.setFloat(false);
-		prop.setRange(false);
-		prop.setCurrentMinValue(1);
-		prop.setCurrentValueDefined(true);
-		items.add(prop);
-
-		DatePropertyDescriptor prop1 = new DatePropertyDescriptor();
-		prop1.setName("asd");
-		prop1.setTitle("Дата");
-		prop1.setMinValue(new GregorianCalendar(1997, 1, 1));
-		prop1.setMaxValue(new GregorianCalendar(2020, 1, 1));
-		prop1.setCurrentMinValue(new GregorianCalendar(2015, 1, 1));
-		prop1.setCurrentValueDefined(true);
-		prop1.setRange(false);
-		items.add(prop1);
-		
-		return items;
-	}
-	public static void addOrderItem(long itemId, Collection<PropertyDescriptor> properties)
-	{
-		
-	}
 }
