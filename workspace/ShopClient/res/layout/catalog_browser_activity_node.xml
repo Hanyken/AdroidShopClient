@@ -42,6 +42,6 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="5dp"
-        android:src="@drawable/arrow_forward" />
+        android:src="@drawable/img_arrow_forward" />
 
 </RelativeLayout>

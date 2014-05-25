@@ -1,6 +1,7 @@
 package stx.shopclient;
 
 import stx.shopclient.cartactivity.CartActivity;
+import stx.shopclient.discountactivity.DiscountListActivity;
 import stx.shopclient.mainactivity.MainActivity;
 import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.mainmenu.MainMenuListAdapter;
@@ -24,13 +25,15 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 
-public class BaseActivity extends FragmentActivity {
+public class BaseActivity extends FragmentActivity
+{
 	DrawerLayout _drawerLayout;
 	LinearLayout _mainViewContainer;
 	MainMenuListAdapter _mainMenuListAdapter;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 
 		ActionBar actionBar = getActionBar();
@@ -50,38 +53,52 @@ public class BaseActivity extends FragmentActivity {
 
 		View mainView = createMainView(_mainViewContainer);
 
-		if (mainView != null) {
+		if (mainView != null)
+		{
 			_mainViewContainer.addView(mainView);
 		}
 	}
 
-	protected void onMainMenuItemClick(MainMenuItem item) {
-		if (item.getId() == MainMenuItem.HOME_MENU_ITEM_ID) {
+	protected void onMainMenuItemClick(MainMenuItem item)
+	{
+		if (item.getId() == MainMenuItem.HOME_MENU_ITEM_ID)
+		{
 			Intent intent = new Intent(this, MainActivity.class);
 			NavUtils.navigateUpTo(this, intent);
-		} else if (item.getId() == MainMenuItem.SEARCH_MENU_ITEM_ID) {
+		} else if (item.getId() == MainMenuItem.SEARCH_MENU_ITEM_ID)
+		{
 			Intent intent = new Intent(this, SearchActivity.class);
-			intent.putExtra(SearchActivity.TITLE_EXTRA_KEY, getSearchActivityTitle());
+			intent.putExtra(SearchActivity.TITLE_EXTRA_KEY,
+					getSearchActivityTitle());
 			startActivity(intent);
-		} else if(item.getId() == MainMenuItem.CART_MENU_ITEM_ID){
+		} else if (item.getId() == MainMenuItem.CART_MENU_ITEM_ID)
+		{
 			Intent intent = new Intent(this, CartActivity.class);
+			startActivity(intent);
+		} else if (item.getId() == MainMenuItem.DISCOUNT_CARDS_MENU_ITEM_ID)
+		{
+			Intent intent = new Intent(this, DiscountListActivity.class);
 			startActivity(intent);
 		}
 	}
 
-	protected String getSearchActivityTitle() {
+	protected String getSearchActivityTitle()
+	{
 		return getActionBar().getTitle().toString();
 	}
 
-	protected View createMainView(ViewGroup parent) {
+	protected View createMainView(ViewGroup parent)
+	{
 		return null;
 	}
 
-	protected void onHomeButtonClick() {
+	protected void onHomeButtonClick()
+	{
 		onBackPressed();
 	}
 
-	protected void showOrHideMenu() {
+	protected void showOrHideMenu()
+	{
 		if (_drawerLayout.isDrawerOpen(Gravity.LEFT))
 			_drawerLayout.closeDrawer(Gravity.LEFT);
 		else
@@ -89,8 +106,10 @@ public class BaseActivity extends FragmentActivity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId())
+		{
 		case android.R.id.home:
 			onHomeButtonClick();
 			return true;
@@ -99,11 +118,13 @@ public class BaseActivity extends FragmentActivity {
 		}
 	}
 
-	class MainMenuOnClickListener implements OnItemClickListener {
+	class MainMenuOnClickListener implements OnItemClickListener
+	{
 
 		@Override
 		public void onItemClick(AdapterView<?> adapter, View view, int index,
-				long id) {
+				long id)
+		{
 
 			MainMenuItem item = (MainMenuItem) adapter.getAdapter().getItem(
 					index);

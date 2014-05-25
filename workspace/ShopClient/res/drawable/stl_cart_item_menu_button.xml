@@ -6,11 +6,11 @@
                 <color android:color="#ABB0B3" />
 			</item>
 			<item >
-			    <bitmap android:gravity="center" android:src="@drawable/context_menu"/>
+			    <bitmap android:gravity="center" android:src="@drawable/img_context_menu"/>
 			</item>
         </layer-list>
     </item>
     <item>
-        <bitmap android:gravity="center" android:src="@drawable/context_menu"/>        
+        <bitmap android:gravity="center" android:src="@drawable/img_context_menu"/>        
     </item>
 </selector>

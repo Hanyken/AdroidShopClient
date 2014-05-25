@@ -10,7 +10,7 @@
         android:layout_height="30dp"
         android:layout_gravity="center_vertical"
         android:paddingLeft="5dp"
-        android:src="@drawable/reset" />
+        android:src="@drawable/img_reset" />
 
     <EditText
         android:id="@+id/editText"

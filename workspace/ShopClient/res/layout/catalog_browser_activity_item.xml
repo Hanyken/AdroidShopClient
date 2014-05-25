@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"            
             android:layout_centerVertical="true"
-            android:src="@drawable/arrow_forward"
+            android:src="@drawable/img_arrow_forward"
             android:layout_marginRight="5dp" />
 
         <RatingBar
