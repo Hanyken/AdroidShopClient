@@ -36,15 +36,22 @@ public class MainMenuListAdapter extends BaseAdapter {
 		item.setId(MainMenuItem.SEARCH_MENU_ITEM_ID);
 		item.setName("Поиск");
 		item.setHasIcon(true);
-		item.setIconId(R.drawable.search_menu_icon);
+		item.setIconId(R.drawable.img_search_menu_icon);
 		_menuItems.add(item);
 
 		item = new MainMenuItem();
 		item.setId(MainMenuItem.CART_MENU_ITEM_ID);
 		item.setName("Корзина");
 		item.setHasIcon(true);
-		item.setIconId(R.drawable.shopping_cart);
+		item.setIconId(R.drawable.img_shopping_cart);
 		item.setCount(5);
+		_menuItems.add(item);
+		
+		item = new MainMenuItem();
+		item.setId(MainMenuItem.DISCOUNT_MENU_ITEM_ID);
+		item.setName("Скидочные карты");		
+		item.setHasIcon(true);
+		item.setIconId(R.drawable.img_discount);
 		_menuItems.add(item);
 
 		item = new MainMenuItem();
