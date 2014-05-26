@@ -43,6 +43,34 @@ public class BaseActivity extends FragmentActivity
 		setContentView(R.layout.base_activity);
 
 		_drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		_drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener()
+		{
+			
+			@Override
+			public void onDrawerStateChanged(int arg0)
+			{
+				
+			}
+			
+			@Override
+			public void onDrawerSlide(View arg0, float arg1)
+			{
+				
+			}
+			
+			@Override
+			public void onDrawerOpened(View arg0)
+			{
+				_mainMenuListAdapter.notifyDataSetChanged();
+			}
+			
+			@Override
+			public void onDrawerClosed(View arg0)
+			{
+				
+			}
+		});
+		
 		ListView _menuList = (ListView) findViewById(R.id.mainMenuList);
 
 		_mainMenuListAdapter = new MainMenuListAdapter(this);
