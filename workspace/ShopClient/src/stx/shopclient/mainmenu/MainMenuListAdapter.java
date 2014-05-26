@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import stx.shopclient.R;
+import stx.shopclient.repository.Repository;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -44,6 +45,7 @@ public class MainMenuListAdapter extends BaseAdapter {
 		item.setName("Корзина");
 		item.setHasIcon(true);
 		item.setIconId(R.drawable.img_shopping_cart);
+		//item.setCount(Repository.getIntent().getOrderManager().getOrderItemsCount()); // Так должно определятся кол-во элементов в корзине
 		item.setCount(5);
 		_menuItems.add(item);
 		

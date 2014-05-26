@@ -17,7 +17,7 @@ public class OrdersManager
 		_Properties = new ArrayList<OrderProperty>();
 	}
 	
-	public void addOrder(long itemId, Collection<OrderProperty> properties)
+	public void addOrderItem(long itemId, Collection<OrderProperty> properties)
 	{
 		Order item = new Order();
 		
@@ -33,10 +33,16 @@ public class OrdersManager
 		_Orders.add(item);
 	}
 	
-	public Collection<Order> getOrders()
+	public Collection<Order> getOrderItems()
 	{
 		return _Orders;
 	}
+	
+	public int getOrderItemsCount()
+	{
+		return _Orders.size();
+	}
+	
 	public Collection<OrderProperty> getOrderProperties(long orderId)
 	{
 		ArrayList<OrderProperty> items = new ArrayList<OrderProperty>();

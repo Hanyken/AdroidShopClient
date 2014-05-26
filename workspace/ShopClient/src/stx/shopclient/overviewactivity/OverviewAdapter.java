@@ -2,11 +2,9 @@ package stx.shopclient.overviewactivity;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Random;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.provider.MediaStore.Images.ImageColumns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

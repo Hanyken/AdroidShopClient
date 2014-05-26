@@ -1,6 +1,7 @@
 package stx.shopclient.cartactivity;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import android.content.Intent;
@@ -22,8 +23,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.entity.CatalogItem;
+import stx.shopclient.entity.Order;
 import stx.shopclient.itemactivity.ItemActivity;
 import stx.shopclient.order_properties_activity.OrderPropertiesActivity;
+import stx.shopclient.repository.ItemsManager;
+import stx.shopclient.repository.Repository;
 
 public class CartActivity extends BaseActivity implements OnItemClickListener {
 
@@ -55,9 +59,19 @@ public class CartActivity extends BaseActivity implements OnItemClickListener {
 	}
 
 	void generateData() {
+		/*
 		for (int i = 1; i <= 5; i++) {
 			CatalogItem item = new CatalogItem();
 			item.setName("Товар " + Integer.toString(i));
+			_cartItems.add(item);
+		}
+		*/
+		ItemsManager manager = Repository.getIntent().getItemsManager();
+		Collection<Order> orderItems = Repository.getIntent().getOrderManager().getOrderItems();
+		for (Order el : orderItems) 
+		{
+			CatalogItem item = manager.getItem(el.getItemId());
+			//item.setName("Товар: " + item.getName());
 			_cartItems.add(item);
 		}
 	}
@@ -149,6 +163,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener {
 		CatalogItem item = (CatalogItem) view.getTag();
 
 		Intent intent = new Intent(this, ItemActivity.class);
+		intent.putExtra(ItemActivity.ITEM_ID_EXTRA_KEY, item.getId());
 		intent.putExtra("ItemTitle", item.getName());
 		startActivity(intent);
 	}

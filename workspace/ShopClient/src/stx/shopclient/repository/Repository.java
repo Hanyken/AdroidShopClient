@@ -1,12 +1,5 @@
 package stx.shopclient.repository;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.GregorianCalendar;
-import java.util.List;
-import stx.shopclient.entity.properties.DatePropertyDescriptor;
-import stx.shopclient.entity.properties.NumberPropertyDescriptor;
-import stx.shopclient.entity.properties.PropertyDescriptor;
 
 public class Repository
 {

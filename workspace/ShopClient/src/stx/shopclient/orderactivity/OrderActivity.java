@@ -73,7 +73,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener
 			items.add(item);
 		}
 		
-		Repository.getIntent().getOrderManager().addOrder(ItemId, items);
+		Repository.getIntent().getOrderManager().addOrderItem(ItemId, items);
 		Toast.makeText(this, "Товар добавлен в карзину",Toast.LENGTH_SHORT).show();
 		finish();
 	}
