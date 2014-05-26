@@ -2,7 +2,9 @@ package stx.shopclient.overviewactivity;
 
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
+import stx.shopclient.entity.Overview;
 import stx.shopclient.itemactivity.ItemActivity;
+import stx.shopclient.repository.Repository;
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ObjectAnimator;
@@ -11,21 +13,25 @@ import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class OverviewActivity extends BaseActivity
+public class OverviewActivity extends BaseActivity implements OnClickListener
 {
 	private final int MI_COMMENT = 1;
 
 	private LinearLayout llOverview;
 	private RatingBar rtgRaiting;
 	private TextView txtOverview; 
-
+	private long _ItemId;
+	
 	@Override
 	protected View createMainView(ViewGroup parent)
 	{
@@ -33,19 +39,26 @@ public class OverviewActivity extends BaseActivity
 				parent, false);
 
 		Intent intent = getIntent();
-		long itemId = intent.getLongExtra(ItemActivity.ITEM_ID_EXTRA_KEY, 0);
+		_ItemId = intent.getLongExtra(ItemActivity.ITEM_ID_EXTRA_KEY, 0);
 		
 		ListView lstMain = (ListView) view.findViewById(R.id.lstMain);
 
 		llOverview = (LinearLayout) view.findViewById(R.id.llOverviw);
 		txtOverview = (TextView)view.findViewById(R.id.txtOverview);
 		rtgRaiting = (RatingBar)view.findViewById(R.id.rtgRating);
-
-		OverviewAdapter adapter = new OverviewAdapter(this, lstMain, itemId);
+		
+		Button btnOk = (Button)view.findViewById(R.id.btnOk);
+		Button btnCancel = (Button)view.findViewById(R.id.btnCancel);
+		btnOk.setOnClickListener(this);
+		btnCancel.setOnClickListener(this);
+		
+		OverviewAdapter adapter = new OverviewAdapter(this, lstMain, _ItemId);
 
 		lstMain.setAdapter(adapter);
 		lstMain.setOnScrollListener(adapter);
-
+		
+		readUserOverview();
+		
 		return view;
 	}
 
@@ -137,5 +150,29 @@ public class OverviewActivity extends BaseActivity
 		});
 		objectAnimator.setDuration(500);
 		objectAnimator.start();
+	}
+
+	@Override
+	public void onClick(View v)
+	{
+		switch (v.getId())
+		{
+			case R.id.btnOk:
+				Repository.getIntent().getOverviewsManager().addUserOverview(_ItemId, (double)rtgRaiting.getRating(), txtOverview.getText().toString());
+				HideOverview();
+				Toast.makeText(this, getString(R.string.overview_add_message), Toast.LENGTH_SHORT).show();
+				break;
+			case R.id.btnCancel:
+				readUserOverview();
+				HideOverview();
+				break;
+		}
+	}
+	
+	private void readUserOverview()
+	{
+		Overview item = Repository.getIntent().getOverviewsManager().getUserOverview(_ItemId);
+		txtOverview.setText(item.getDescription());
+		rtgRaiting.setRating((float)item.getRating());
 	}
 }

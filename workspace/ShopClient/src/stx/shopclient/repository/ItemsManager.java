@@ -2,25 +2,22 @@ package stx.shopclient.repository;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.GregorianCalendar;
-import java.util.List;
 
 import stx.shopclient.entity.CatalogItem;
-import stx.shopclient.entity.properties.DatePropertyDescriptor;
-import stx.shopclient.entity.properties.NumberPropertyDescriptor;
-import stx.shopclient.entity.properties.PropertyDescriptor;
 
 public class ItemsManager
 {
 	private ArrayList<CatalogItem> _Items;
 	private OverviewsManager _OverviewsManager;
+	private PropertiesManager _PropertiesManager;
 	
-	public ItemsManager(OverviewsManager overviewsManager)
+	public ItemsManager(OverviewsManager overviewsManager, PropertiesManager propertiesManager)
 	{
 		_Items = new ArrayList<CatalogItem>();
 		_OverviewsManager = overviewsManager;
+		_PropertiesManager = propertiesManager;
 		
-		addItem(1, 1, 123, "Тестовый элемент");
+		addItem(0, 0, 123, "Тестовый элемент");
 	}
 	
 	public CatalogItem getItem(long itemId)
@@ -51,33 +48,6 @@ public class ItemsManager
 		return items;
 	}
 	
-	public Collection<PropertyDescriptor> getOrderProperties(long itemId)
-	{
-		List<PropertyDescriptor> items = new ArrayList<PropertyDescriptor>();
-		NumberPropertyDescriptor prop = new NumberPropertyDescriptor();
-		prop.setName("Count");
-		prop.setTitle("Количество");
-		prop.setMinValue(1);
-		prop.setMaxValue(99999);
-		prop.setFloat(false);
-		prop.setRange(false);
-		prop.setCurrentMinValue(1);
-		prop.setCurrentValueDefined(true);
-		items.add(prop);
-
-		DatePropertyDescriptor prop1 = new DatePropertyDescriptor();
-		prop1.setName("asd");
-		prop1.setTitle("Дата");
-		prop1.setMinValue(new GregorianCalendar(1997, 1, 1));
-		prop1.setMaxValue(new GregorianCalendar(2020, 1, 1));
-		prop1.setCurrentMinValue(new GregorianCalendar(2015, 1, 1));
-		prop1.setCurrentValueDefined(true);
-		prop1.setRange(false);
-		items.add(prop1);
-		
-		return items;
-	}
-	
 	public void initItems(long nodeId, long catalogId)
 	{		
 		addItem(nodeId, catalogId, (nodeId * 10 + 1), "Тут каке то имя первого item'а");
@@ -89,6 +59,7 @@ public class ItemsManager
 	private void addItem(long nodeId, long catalogId, long itemId, String itemName)
 	{
 		_OverviewsManager.initOverviews(itemId);
+		_PropertiesManager.initItemProperties(itemId);
 		
 		CatalogItem item = new CatalogItem();
 		item.setId(itemId);
@@ -98,7 +69,7 @@ public class ItemsManager
 		item.setIsLeaf(false);
 		item.setChildCount(0);
 		item.setCanBubble(false);
-		
+		item.setDescription(itemName);//-------
 		item.setRating(_OverviewsManager.getAvgRating(itemId));
 		item.setOverviewsCount(_OverviewsManager.getOverviewsCount(item.getId()));
 		
@@ -108,14 +79,30 @@ public class ItemsManager
 	}
 	public double getMaxPrice(long nodeId)
 	{
-		return 0;
+		double value = Double.MIN_VALUE;
+		Collection<CatalogItem> items = getItems(nodeId);
+		for(CatalogItem el : items)
+		{
+			double tmpValue = _PropertiesManager.getItemPrice(el.getId());
+			if (tmpValue > value)
+				value = tmpValue;
+		}
+		return Math.round(value);
 	}
 	public double getMinPrice(long nodeId)
 	{
-		return 0;
+		double value = Double.MAX_VALUE;
+		Collection<CatalogItem> items = getItems(nodeId);
+		for(CatalogItem el : items)
+		{
+			double tmpValue = _PropertiesManager.getItemPrice(el.getId());
+			if (tmpValue < value)
+				value = tmpValue;
+		}
+		return Math.round(value);
 	}
 	public int getCountItems(long nodeId)
 	{
-		return 0;
+		return getItems(nodeId).size();
 	}
 }

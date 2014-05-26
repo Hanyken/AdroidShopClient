@@ -58,7 +58,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener
 
 	private void generateData()
 	{
-		_properties.addAll(Repository.getIntent().getItemsManager().getOrderProperties(ItemId));
+		_properties.addAll(Repository.getIntent().getPropertiesManager().getOrderProperties(ItemId));
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.Animator.AnimatorListener;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -15,6 +16,8 @@ import android.widget.LinearLayout;
 
 public class ItemImageActivity extends Activity implements OnClickListener
 {
+	public static final String SELECTED_ITEM_POSITION = "SelectedItemPosition";
+	
 	private LinearLayout llPanel;
 	private Button btnBack;
 	
@@ -24,18 +27,23 @@ public class ItemImageActivity extends Activity implements OnClickListener
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.item_image_activity);
 		
+		Intent intent = getIntent();
+		
 		ViewPager viewPager = (ViewPager) findViewById(R.id.product_viewpager);
+		
 		
 		llPanel = (LinearLayout)findViewById(R.id.llPanel);
 		btnBack = (Button)findViewById(R.id.btnBack);
 		
 
-		ImagePageAdapter adapter = new ImagePageAdapter(this, getIntent().getLongExtra(ItemActivity.ITEM_ID_EXTRA_KEY, 0));
+		ImagePageAdapter adapter = new ImagePageAdapter(this, intent.getLongExtra(ItemActivity.ITEM_ID_EXTRA_KEY, 0));
 
 		viewPager.setAdapter(adapter);
 		
 		viewPager.setOnClickListener(this);
 		btnBack.setOnClickListener(this);
+		
+		viewPager.setCurrentItem(intent.getIntExtra(SELECTED_ITEM_POSITION, 0));
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import java.util.Random;
 import stx.shopclient.R;
 import stx.shopclient.catalogbrowseractivity.CatalogBrowserActivity;
 import stx.shopclient.entity.CatalogNode;
+import stx.shopclient.repository.Repository;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -65,7 +66,9 @@ public class MainRootNodesBrowserFragment extends Fragment implements
 	}
 
 	void loadDataFromDatabase() {
-		_nodes = generateData();
+		//_nodes = generateData();
+		_nodes = new ArrayList<CatalogNode>();
+		_nodes.addAll(Repository.getIntent().getCatalogManager().getNodes());
 	}
 
 	void loadGrid(View view) {

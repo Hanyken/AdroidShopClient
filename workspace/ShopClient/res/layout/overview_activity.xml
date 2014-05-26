@@ -44,6 +44,30 @@
 	        android:inputType="textMultiLine"
 	        android:focusable="true"
 	        android:focusableInTouchMode="true"/>
+	    
+	    <LinearLayout 
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content">
+	        
+	        <Button
+	            android:id="@+id/btnOk" 
+	            android:layout_width="0dp"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:layout_marginLeft="@dimen/buttonbar_margion_big"
+	            android:layout_marginRight="@dimen/buttonbar_margion_small"
+	            android:text="OK"/>
+	        
+	        <Button 
+	            android:id="@+id/btnCancel"
+	            android:layout_width="0dp"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:layout_marginLeft="@dimen/buttonbar_margion_small"
+	            android:layout_marginRight="@dimen/buttonbar_margion_big"
+	            android:text="Cancel"/>
+	        
+	    </LinearLayout>
 
     </LinearLayout>
     

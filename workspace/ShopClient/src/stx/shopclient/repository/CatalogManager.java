@@ -20,13 +20,19 @@ public class CatalogManager
 		_ItemsManager = itemsManager;
 		
 		long id = 1l;
-		addNode(id, null);
+		addNode(id, null, "Какое то имя каталога №1");
 		
 		id = 2l;
-		addNode(id, null);
+		addNode(id, null, "Какое то имя каталога №2");
 		
 		id = 3l;
-		addNode(id, null);
+		addNode(id, null, "Какое то имя каталога №3");
+		
+		id = 10l;
+		addNode(id, 1l, "Какое то имя подкаталога №1 каталога №1");
+		
+		id = 20l;
+		addNode(id, 2l, "Какое то имя подкаталога №1 каталога №2");
 	}
 	
 	public Catalog getCatalog()
@@ -40,7 +46,24 @@ public class CatalogManager
 	
 	public Collection<CatalogNode> getNodes()
 	{
-		return _Nodes;
+		ArrayList<CatalogNode> items = new ArrayList<CatalogNode>();
+		for(CatalogNode el : _Nodes)
+		{
+			if (el.getCatalogId() == _CatalogId && el.getParentId() == null)
+				items.add(el);
+		}
+		return items;
+	}
+	
+	public Collection<CatalogNode> getNodes(long parentNodeId)
+	{
+		ArrayList<CatalogNode> items = new ArrayList<CatalogNode>();
+		for(CatalogNode el : _Nodes)
+		{
+			if (el.getCatalogId() == _CatalogId && el.getParentId() != null && el.getParentId() == parentNodeId)
+				items.add(el);
+		}
+		return items;
 	}
 
 	
@@ -48,13 +71,13 @@ public class CatalogManager
 	
 	
 	
-	private void addNode(long id, Long parentId)
+	private void addNode(long id, Long parentId, String name)
 	{
 		_ItemsManager.initItems(id, _CatalogId);
 		CatalogNode node = new CatalogNode();
 		node.setCatalogId(_CatalogId);
-		node.setName("Какое то имя");
-		node.setDescription("Описание ноды");
+		node.setName(name);
+		node.setDescription("Описание ноды: "+name);
 		node.setIcon("node1_img1");
 		node.setId(id);
 		node.setMajor(false);

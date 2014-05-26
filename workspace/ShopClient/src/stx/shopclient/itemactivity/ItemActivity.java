@@ -7,16 +7,11 @@ import stx.shopclient.orderactivity.OrderActivity;
 import stx.shopclient.overviewactivity.OverviewActivity;
 import stx.shopclient.repository.Repository;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -36,13 +31,21 @@ public class ItemActivity extends BaseActivity
 
 		Intent intent = getIntent();
 
+		Long itemId = 0l;
 		// Получаю параметры
 		String itemTitle = intent.getStringExtra("ItemTitle");
 		String strId = intent.getStringExtra(ITEM_ID_EXTRA_KEY);
-		Long itemId = Long.parseLong(strId);
+		if (strId != null)
+		{
+			itemId = Long.parseLong(strId);
+		}
+		else
+		{
+			itemId = intent.getLongExtra(ITEM_ID_EXTRA_KEY, 0);
 
+		}
 		_Item = Repository.getIntent().getItemsManager().getItem(itemId);
-		
+
 		ItemImageFragment imageFragment = (ItemImageFragment) getFragmentManager()
 				.findFragmentById(R.id.frgImages);
 		ItemButtonBarFragment buttonBar = (ItemButtonBarFragment) getFragmentManager()
@@ -51,7 +54,8 @@ public class ItemActivity extends BaseActivity
 
 		imageFragment.setImages(_Item.getId());
 
-		buttonBar.setPrice(Repository.getIntent().getPropertiesManager().getItemPrice(itemId));
+		buttonBar.setPrice(Repository.getIntent().getPropertiesManager()
+				.getItemPrice(itemId));
 		buttonBar.setRating(_Item.getRating());
 		buttonBar.setOverviewCount(_Item.getOverviewsCount());
 		buttonBar.setRepostCount(0);
@@ -64,7 +68,7 @@ public class ItemActivity extends BaseActivity
 
 	public void setProperty(TextView txtProperty)
 	{
-		String description = _Item.getDescription() +"\n\n\n";
+		String description = _Item.getDescription() + "\n\n\n";
 		String text = "\t-Клевость - самый клевый\n\t-Привлекательность - привлекательнее товара не существует\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nНу и тут какие то еще вкусности про товар";
 
 		SpannableStringBuilder str = new SpannableStringBuilder("Общее\n"
@@ -76,68 +80,6 @@ public class ItemActivity extends BaseActivity
 				SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 		txtProperty.setText(str);
-	}
-
-	View insertPhoto(String path)
-	{
-		Bitmap bm = decodeSampledBitmapFromUri(path, 220, 220);
-
-		LinearLayout layout = new LinearLayout(getApplicationContext());
-		layout.setLayoutParams(new LayoutParams(250, 250));
-		layout.setGravity(Gravity.CENTER);
-
-		ImageView imageView = new ImageView(getApplicationContext());
-		imageView.setLayoutParams(new LayoutParams(220, 220));
-		imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-		imageView.setImageBitmap(bm);
-
-		layout.addView(imageView);
-		return layout;
-	}
-
-	public Bitmap decodeSampledBitmapFromUri(String path, int reqWidth,
-			int reqHeight)
-	{
-		Bitmap bm = null;
-
-		// First decode with inJustDecodeBounds=true to check dimensions
-		final BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
-		BitmapFactory.decodeFile(path, options);
-
-		// Calculate inSampleSize
-		options.inSampleSize = calculateInSampleSize(options, reqWidth,
-				reqHeight);
-
-		// Decode bitmap with inSampleSize set
-		options.inJustDecodeBounds = false;
-		bm = BitmapFactory.decodeFile(path, options);
-
-		return bm;
-	}
-
-	public int calculateInSampleSize(
-
-	BitmapFactory.Options options, int reqWidth, int reqHeight)
-	{
-		// Raw height and width of image
-		final int height = options.outHeight;
-		final int width = options.outWidth;
-		int inSampleSize = 1;
-
-		if (height > reqHeight || width > reqWidth)
-		{
-			if (width > height)
-			{
-				inSampleSize = Math.round((float) height / (float) reqHeight);
-			}
-			else
-			{
-				inSampleSize = Math.round((float) width / (float) reqWidth);
-			}
-		}
-
-		return inSampleSize;
 	}
 
 	public void onBarButtonClick(View view)

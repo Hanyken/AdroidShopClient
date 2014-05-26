@@ -12,4 +12,6 @@
     <string name="count">Количество:</string>
     <string name="order_button">В корзину</string>
     
+    <string name="overview_add_message">Ваше сообщение будет опубликовано после модерации.</string>
+    
 </resources>

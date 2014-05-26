@@ -5,6 +5,7 @@ import android.util.EventLogTags.Description;
 public class Overview
 {
 	private long _itemId;
+	private boolean _isCurrentUser;
 	private double _rating;
 	private String _description;
 	
@@ -41,5 +42,13 @@ public class Overview
 	{
 		_rating = rating;
 		_description = description;
+	}
+	public boolean getIsCurrentUser()
+	{
+		return _isCurrentUser;
+	}
+	public void setIsCurrentUser(boolean isCurrentUser)
+	{
+		_isCurrentUser = isCurrentUser;
 	}
 }

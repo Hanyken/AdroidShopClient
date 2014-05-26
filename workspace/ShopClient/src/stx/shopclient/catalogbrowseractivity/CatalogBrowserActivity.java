@@ -58,7 +58,7 @@ public class CatalogBrowserActivity extends BaseActivity implements
 		//_nodeNameTextView.setText(_rootNodeName);
 
 		_listView = (ListView) view.findViewById(R.id.listView);
-		_adapter = new ListAdapter();
+		_adapter = new ListAdapter(_rootNodeId);
 		_listView.setOnScrollListener(_adapter);
 		_listView.setOnItemClickListener(this);
 
@@ -81,13 +81,15 @@ public class CatalogBrowserActivity extends BaseActivity implements
 		List<CatalogNode> _nodes;
 		List<CatalogItem> _items;
 
-		public ListAdapter() {
+		public ListAdapter(long nodeId) {
 			super(_listView);
 
 			_nodes = new ArrayList<CatalogNode>();
 			_items = new ArrayList<CatalogItem>();
-
-			generateData();
+			
+			_nodes.addAll(Repository.getIntent().getCatalogManager().getNodes(nodeId));
+			_items.addAll(Repository.getIntent().getItemsManager().getItems(nodeId));
+			//generateData();
 
 			setLoading(false);
 		}
@@ -205,7 +207,7 @@ public class CatalogBrowserActivity extends BaseActivity implements
 				CatalogItem item = new CatalogItem();
 				item.setName("Товар " + Integer.toString(i));
 				item.setRating(random.nextInt(5));
-				_items.add(item);
+				//_items.add(item);
 			}
 
 			return false;
@@ -238,7 +240,7 @@ public class CatalogBrowserActivity extends BaseActivity implements
 			
 			Intent intent = new Intent(this, ItemActivity.class);
 			intent.putExtra("ItemTitle", item.getName());
-			intent.putExtra(ItemActivity.ITEM_ID_EXTRA_KEY, "123");
+			intent.putExtra(ItemActivity.ITEM_ID_EXTRA_KEY, item.getId());
 			startActivity(intent);
 		}
 	}

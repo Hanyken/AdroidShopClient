@@ -32,7 +32,7 @@ public class Repository
 		_OrderManager = new OrdersManager();
 		_PropertiesManager = new PropertiesManager();
 		_OverviewsManager = new OverviewsManager();
-		_ItemsManager = new ItemsManager(_OverviewsManager);
+		_ItemsManager = new ItemsManager(_OverviewsManager, _PropertiesManager);
 		_CatalogManager = new CatalogManager(_ItemsManager);
 	}
 	
