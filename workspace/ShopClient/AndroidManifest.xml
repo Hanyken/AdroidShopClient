@@ -73,6 +73,14 @@
             android:label="@string/app_name">
             
         </activity>
+        <activity android:name="stx.shopclient.messagesactivity.MessagesListActivity"
+            android:label="@string/app_name">
+            
+        </activity>
+        <activity android:name="stx.shopclient.messagesactivity.MessageActivity"
+            android:label="@string/app_name">
+            
+        </activity>
     </application>
 
 </manifest>

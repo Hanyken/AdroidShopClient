@@ -6,6 +6,7 @@ public class MainMenuItem {
 	public static final int CART_MENU_ITEM_ID = 3;
 	public static final int SEARCH_MENU_ITEM_ID = 4;
 	public static final int DISCOUNT_CARDS_MENU_ITEM_ID = 5;
+	public static final int MESSAGES_MENU_ITEM = 6;
 	
 	private int _id;
 	private String _name;

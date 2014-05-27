@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import stx.shopclient.R;
+import stx.shopclient.entity.Message;
 import stx.shopclient.repository.Repository;
 import android.content.Context;
 import android.graphics.Color;
@@ -21,6 +22,7 @@ public class MainMenuListAdapter extends BaseAdapter
 	Context _context;
 
 	MainMenuItem _cartMenuItem;
+	MainMenuItem _messagesMenuItem;
 
 	public MainMenuListAdapter(Context context)
 	{
@@ -61,6 +63,12 @@ public class MainMenuListAdapter extends BaseAdapter
 		item.setIconId(R.drawable.img_discount);
 		_menuItems.add(item);
 
+		_messagesMenuItem = new MainMenuItem();
+		_messagesMenuItem.setId(MainMenuItem.MESSAGES_MENU_ITEM);
+		_messagesMenuItem.setName("Сообщения");
+		_messagesMenuItem.setHasIcon(true);
+		_menuItems.add(_messagesMenuItem);
+
 		item = new MainMenuItem();
 		item.setId(MainMenuItem.SETTINGS_MENU_ITEM_ID);
 		item.setName("Настройки");
@@ -72,6 +80,15 @@ public class MainMenuListAdapter extends BaseAdapter
 	{
 		_cartMenuItem.setCount(Repository.getIntent().getOrderManager()
 				.getOrderItemsCount());
+
+		int unreadMessages = 0;
+		for (Message m : Repository.getIntent().getMessagesManager()
+				.getMessages())
+		{
+			if(!m.isRead())
+				unreadMessages++;
+		}
+		_messagesMenuItem.setCount(unreadMessages);		
 	}
 
 	@Override

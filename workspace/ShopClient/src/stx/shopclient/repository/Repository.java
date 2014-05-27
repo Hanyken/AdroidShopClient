@@ -18,6 +18,7 @@ public class Repository
 	private OverviewsManager _OverviewsManager;
 	private ItemsManager _ItemsManager;
 	private PropertiesManager _PropertiesManager;
+	private MessagesManager _MessagesManager;
 	
 	private Repository()
 	{
@@ -27,6 +28,7 @@ public class Repository
 		_OverviewsManager = new OverviewsManager();
 		_ItemsManager = new ItemsManager(_OverviewsManager, _PropertiesManager);
 		_CatalogManager = new CatalogManager(_ItemsManager);
+		_MessagesManager = new MessagesManager();
 	}
 	
 	
@@ -55,5 +57,8 @@ public class Repository
 	{
 		return _OverviewsManager;
 	}
-	
+	public MessagesManager getMessagesManager()
+	{
+		return _MessagesManager;
+	}
 }

@@ -5,6 +5,7 @@ import stx.shopclient.discountactivity.DiscountListActivity;
 import stx.shopclient.mainactivity.MainActivity;
 import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.mainmenu.MainMenuListAdapter;
+import stx.shopclient.messagesactivity.MessagesListActivity;
 import stx.shopclient.searchactivity.SearchActivity;
 import android.app.ActionBar;
 import android.content.Intent;
@@ -45,32 +46,32 @@ public class BaseActivity extends FragmentActivity
 		_drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		_drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener()
 		{
-			
+
 			@Override
 			public void onDrawerStateChanged(int arg0)
 			{
-				
+
 			}
-			
+
 			@Override
 			public void onDrawerSlide(View arg0, float arg1)
 			{
-				
+
 			}
-			
+
 			@Override
 			public void onDrawerOpened(View arg0)
 			{
 				_mainMenuListAdapter.notifyDataSetChanged();
 			}
-			
+
 			@Override
 			public void onDrawerClosed(View arg0)
 			{
-				
+
 			}
 		});
-		
+
 		ListView _menuList = (ListView) findViewById(R.id.mainMenuList);
 
 		_mainMenuListAdapter = new MainMenuListAdapter(this);
@@ -93,19 +94,27 @@ public class BaseActivity extends FragmentActivity
 		{
 			Intent intent = new Intent(this, MainActivity.class);
 			NavUtils.navigateUpTo(this, intent);
-		} else if (item.getId() == MainMenuItem.SEARCH_MENU_ITEM_ID)
+		}
+		else if (item.getId() == MainMenuItem.SEARCH_MENU_ITEM_ID)
 		{
 			Intent intent = new Intent(this, SearchActivity.class);
 			intent.putExtra(SearchActivity.TITLE_EXTRA_KEY,
 					getSearchActivityTitle());
 			startActivity(intent);
-		} else if (item.getId() == MainMenuItem.CART_MENU_ITEM_ID)
+		}
+		else if (item.getId() == MainMenuItem.CART_MENU_ITEM_ID)
 		{
 			Intent intent = new Intent(this, CartActivity.class);
 			startActivity(intent);
-		} else if (item.getId() == MainMenuItem.DISCOUNT_CARDS_MENU_ITEM_ID)
+		}
+		else if (item.getId() == MainMenuItem.DISCOUNT_CARDS_MENU_ITEM_ID)
 		{
 			Intent intent = new Intent(this, DiscountListActivity.class);
+			startActivity(intent);
+		}
+		else if (item.getId() == MainMenuItem.MESSAGES_MENU_ITEM)
+		{
+			Intent intent = new Intent(this, MessagesListActivity.class);
 			startActivity(intent);
 		}
 	}

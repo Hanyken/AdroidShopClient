@@ -9,6 +9,7 @@ public class Message
 	private String _title;
 	private String _text;
 	private GregorianCalendar _createDate;
+	private boolean _isRead;
 	
 	public long getId()
 	{
@@ -49,5 +50,13 @@ public class Message
 	public void setCreateDate(GregorianCalendar createDate)
 	{
 		_createDate = createDate;
+	}
+	public boolean isRead()
+	{
+		return _isRead;
+	}
+	public void setRead(boolean isRead)
+	{
+		_isRead = isRead;
 	}
 }
