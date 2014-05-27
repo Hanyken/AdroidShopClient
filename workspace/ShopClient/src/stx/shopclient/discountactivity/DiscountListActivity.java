@@ -3,7 +3,11 @@ package stx.shopclient.discountactivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +23,7 @@ import stx.shopclient.entity.Discount;
 
 public class DiscountListActivity extends BaseActivity implements
 		OnItemClickListener, SearchView.OnQueryTextListener, SearchView.OnCloseListener {
-	ListView _listView;
+	PullToRefreshListView _listView;
 
 	List<Discount> _discountList = new ArrayList<Discount>();
 	List<Discount> _discountFilteredList = new ArrayList<Discount>();
@@ -76,11 +80,45 @@ public class DiscountListActivity extends BaseActivity implements
 		View view = getLayoutInflater().inflate(
 				R.layout.discount_list_activity, parent, false);
 
-		_listView = (ListView) view.findViewById(R.id.listView);
+		_listView = (PullToRefreshListView) view.findViewById(R.id.listView);
 		_listView.setOnItemClickListener(this);
 		_listView.setAdapter(_adapter);
+		
+		_listView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>()
+		{
+
+			@Override
+			public void onRefresh(PullToRefreshBase<ListView> refreshView)
+			{
+				new RefreshTask().execute();
+			}
+		});
 
 		return view;
+	}
+	
+	class RefreshTask extends AsyncTask<Void, Void, Void>
+	{
+
+		@Override
+		protected Void doInBackground(Void... params)
+		{
+			try
+			{
+				Thread.sleep(2000);
+			} catch (InterruptedException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void result)
+		{
+			_listView.onRefreshComplete();
+		}
 	}
 
 	@Override
@@ -137,7 +175,7 @@ public class DiscountListActivity extends BaseActivity implements
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int index, long arg3) {
-		Discount disc = _discountFilteredList.get(index);
+		Discount disc = _discountFilteredList.get(index - 1);
 		SelectedDiscount = disc;
 		Intent intent = new Intent(this, DiscountActivity.class);
 
