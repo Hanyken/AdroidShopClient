@@ -190,6 +190,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 
 		Intent intent = new Intent(this, ItemActivity.class);
 		intent.putExtra(ItemActivity.ITEM_ID_EXTRA_KEY, item.item.getId());
+		intent.putExtra(ItemActivity.ITEM_BUY_EXTRA_KEY, false);
 		intent.putExtra("ItemTitle", item.item.getName());
 		startActivity(intent);
 	}

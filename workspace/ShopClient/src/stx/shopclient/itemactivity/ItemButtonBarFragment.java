@@ -68,6 +68,12 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 		lblRepost.setText(String.format("%d", value));
 	}
 
+	public void setCanBuy(boolean value)
+	{
+		btnOrder.setEnabled(value);
+	}
+	
+	
 	@Override
 	public void onClick(View view)
 	{

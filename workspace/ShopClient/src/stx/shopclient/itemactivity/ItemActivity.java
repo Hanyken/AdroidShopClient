@@ -20,6 +20,7 @@ public class ItemActivity extends BaseActivity
 	private CatalogItem _Item;
 
 	public static final String ITEM_ID_EXTRA_KEY = "ItemID";
+	public static final String ITEM_BUY_EXTRA_KEY = "CanBuyItem";
 
 	LinearLayout myGallery;
 
@@ -58,7 +59,7 @@ public class ItemActivity extends BaseActivity
 				.getItemPrice(itemId));
 		buttonBar.setRating(_Item.getRating());
 		buttonBar.setOverviewCount(_Item.getOverviewsCount());
-		buttonBar.setRepostCount(0);
+		buttonBar.setCanBuy(intent.getBooleanExtra(ITEM_BUY_EXTRA_KEY, true));
 
 		setProperty(txtProperty);
 		getActionBar().setTitle(itemTitle);
