@@ -1,13 +1,25 @@
 package stx.shopclient.entity;
 
-import android.util.EventLogTags.Description;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class Overview
 {
+	private int _rowNumber;
 	private long _itemId;
 	private boolean _isCurrentUser;
 	private double _rating;
 	private String _description;
+	private Date _createDate;
+	
+	public int getRowNumber()
+	{
+		return _rowNumber;
+	}
+	public void setRowNumber(int rowNumber)
+	{
+		_rowNumber = rowNumber;
+	}
 	
 	public long getItemId()
 	{
@@ -51,4 +63,13 @@ public class Overview
 	{
 		_isCurrentUser = isCurrentUser;
 	}
+	public Date getCreateDate()
+	{
+		return _createDate;
+	}
+	public void setCreateDate(Date createDate)
+	{
+		_createDate = createDate;
+	}
+	
 }

@@ -5,6 +5,9 @@ import stx.shopclient.R;
 import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.orderactivity.OrderActivity;
 import stx.shopclient.overviewactivity.OverviewActivity;
+import stx.shopclient.parsers.ItemParser;
+import stx.shopclient.parsers.OverviewParser;
+import stx.shopclient.parsers.PropertyParser;
 import stx.shopclient.repository.Repository;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -30,6 +33,15 @@ public class ItemActivity extends BaseActivity
 		View view = getLayoutInflater().inflate(R.layout.item_activity, parent,
 				false);
 
+		//OverviewParser parser = new OverviewParser();
+		//parser.getOverview(OverviewParser.TEST);
+		
+		//ItemParser parser = new ItemParser();
+		//parser.getItems(ItemParser.TEST);
+		
+		//PropertyParser parser = new PropertyParser();
+		//parser.getItemProperties(PropertyParser.TEST);
+		
 		Intent intent = getIntent();
 
 		Long itemId = 0l;
