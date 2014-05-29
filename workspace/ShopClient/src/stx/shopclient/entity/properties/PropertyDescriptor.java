@@ -5,6 +5,9 @@ public abstract class PropertyDescriptor {
 	private String _name;
 	private String _title;
 	private Boolean _required;
+	private Integer _order;
+	private boolean _multiselect;
+	private boolean _quickSearch;
 	
 	public abstract void clear();
 	
@@ -33,5 +36,23 @@ public abstract class PropertyDescriptor {
 	}
 	public void setRequired(Boolean required){
 		_required = required;
+	}
+	public Integer getOrder(){
+		return _order;
+	}
+	public void setOrder(Integer order){
+		_order = order;
+	}
+	public Boolean getMultiselect(){
+		return _multiselect;
+	}
+	public void setMultiselect(Boolean multiselect){
+		_multiselect = multiselect;
+	}
+	public Boolean getQuickSearch(){
+		return _quickSearch;
+	}
+	public void setQuickSearch(Boolean quickSearch){
+		_quickSearch = quickSearch;
 	}
 }

@@ -3,6 +3,7 @@ package stx.shopclient.repository;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import stx.shopclient.entity.KeyValue;
 import stx.shopclient.entity.Order;
 import stx.shopclient.entity.OrderProperty;
 

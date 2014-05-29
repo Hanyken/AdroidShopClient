@@ -2,7 +2,10 @@ package stx.shopclient.parsers;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -16,18 +19,55 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-public class BaseParser
+import android.util.Log;
+
+public abstract class BaseParser<T>
 {
 
-	private final SimpleDateFormat dateParser = new SimpleDateFormat(
-			"yyyy-MM-dd'T'HH:mm:ss");
+	private final DateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+			//new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+	private final DateFormat timeParser = new SimpleDateFormat("HH:mm:ss");
 
 	public BaseParser()
 	{
+	}
+	
+	public abstract T getElement(Element e);
 
+	protected abstract String getElementName();
+
+	
+	
+	public Collection<T> getElements(String xmlString)
+	{
+		Document doc = getDomElement(xmlString);
+		NodeList nl = doc.getElementsByTagName(getElementName());
+		return getElements(nl);
 	}
 
-	public Document getDomElement(String xml)
+	public Collection<T> getElements(NodeList nl)
+	{
+		ArrayList<T> items = new ArrayList<T>();
+		for (int i = 0; i < nl.getLength(); i++)
+		{
+			try
+			{
+				Element e = (Element) nl.item(i);
+				items.add(getElement(e));
+			}
+			catch (Exception ex)
+			{
+				Log.w("MyException", ex.getMessage());
+			}
+		}
+
+		return items;
+	}
+
+	
+	
+	
+	protected Document getDomElement(String xml)
 	{
 		Document doc = null;
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -60,50 +100,67 @@ public class BaseParser
 
 	}
 
-	public String getValue(Element item, String str)
+	protected String getValue(Element item, String str)
 	{
 		NodeList n = item.getElementsByTagName(str);
 		return this.getElementValue(n.item(0));
 	}
 
-	public Boolean getValueBool(Element item, String str)
+	protected Boolean getValueBool(Element item, String str)
 	{
 		String value = getValue(item, str);
 		return ("1".equals(value));
 	}
 
-	public Integer getValueInt(Element item, String str)
+	protected Integer getValueInt(Element item, String str)
 	{
 		String value = getValue(item, str);
 		return Integer.parseInt(value);
 	}
 
-	public Long getValueLong(Element item, String str)
+	protected Long getValueLong(Element item, String str)
 	{
 		String value = getValue(item, str);
 		return Long.parseLong(value);
 	}
 
-	public Double getValueDouble(Element item, String str)
+	protected Double getValueDouble(Element item, String str)
 	{
 		String value = getValue(item, str);
 		return Double.parseDouble(value);
 	}
 
-	public Date getValueDate(Element item, String str)
+	protected Date getValueDate(Element item, String str)
 	{
+		Date date = null;
 		try
 		{
 			String value = getValue(item, str);
-			return dateParser.parse(value);
+			date = dateParser.parse(value);
 		}
 		catch (Exception ex)
 		{
-			return null;
+			Log.w("Date", ex.getMessage());
 		}
+		return date;
+	}
+	
+	protected Date getValueTime(Element item, String str)
+	{
+		Date date = null;
+		try
+		{
+			String value = getValue(item, str);
+			date = timeParser.parse(value);
+		}
+		catch (Exception ex)
+		{
+			Log.w("Time", ex.getMessage());
+		}
+		return date;
 	}
 
-	public final String getElementValue(Node elem)
+	protected final String getElementValue(Node elem)
 	{
 		Node child;
 		if (elem != null)
@@ -123,7 +180,7 @@ public class BaseParser
 		return "";
 	}
 
-	public NodeList getChildElements(Node elem)
+	protected NodeList getChildElements(Node elem)
 	{
 		if (elem != null)
 		{

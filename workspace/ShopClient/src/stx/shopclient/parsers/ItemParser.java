@@ -1,19 +1,12 @@
 package stx.shopclient.parsers;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
-import android.util.Log;
 
 import stx.shopclient.entity.CatalogItem;
 
-public class ItemParser extends BaseParser
+public class ItemParser extends BaseParser<CatalogItem>
 {
-	public static String TEST;
+	public String TEST;
 	private final String ITEM_NAME = "Item";
 	private final String NUMBER_NAME = "RowNum";
 	private final String ID_NAME = "Id";
@@ -24,11 +17,12 @@ public class ItemParser extends BaseParser
 	private final String CAN_BUBBLE_NAME = "CanBubble";
 	private final String RATING_NAME = "Rating";
 	private final String OVERVIEW_COUNT_NAME = "OverviewsCount";
-	
+	private final String DESCRIPTION_NAME = "Description";
+	/*
 	private final String OVERVIEWS_NAME = "Overviews";
 	private final String PROPERTYES_NAME = "Properties";
 	private final String ORDER_PROPERTYES_NAME = "OrderProperties";
-	
+	*/
 	
 	public ItemParser()
 	{
@@ -49,43 +43,26 @@ public class ItemParser extends BaseParser
 		TEST += "<Enum><Value>3</Value><Name>Зеленый</Name></Enum></Range></Property></OrderProperties></Item></Items>";
 	}
 	
-	public Collection<CatalogItem> getItems(String xmlString)
+	
+	public CatalogItem getElement(Element e)
 	{
-		Document doc = super.getDomElement(xmlString);
-		NodeList nl = doc.getElementsByTagName(ITEM_NAME);
+		CatalogItem item = new CatalogItem();
 
-		return getItems(nl);
+		item.setRowNumber(super.getValueInt(e, NUMBER_NAME));
+		item.setId(Long.parseLong(super.getValue(e, ID_NAME)));
+		item.setName(super.getValue(e, NAME_NAME));
+		item.setCatalogId(super.getValueLong(e, CATALOG_ID_NAME));
+		item.setIsLeaf(super.getValueBool(e, IS_LEAF_NAME));
+		item.setChildCount(super.getValueInt(e, CHILD_COUNT_NAME));
+		item.setCanBubble(super.getValueBool(e, CAN_BUBBLE_NAME));
+		item.setRating(super.getValueDouble(e, RATING_NAME));
+		item.setOverviewsCount(super.getValueInt(e, OVERVIEW_COUNT_NAME));
+		item.setDescription(super.getValue(e, DESCRIPTION_NAME));
+		
+		return item;
 	}
-	public Collection<CatalogItem> getItems(NodeList nl)
+	protected String getElementName()
 	{
-		ArrayList<CatalogItem> items = new ArrayList<CatalogItem>();
-		for (int i = 0; i < nl.getLength(); i++)
-		{
-			try
-			{				
-				Element e = (Element) nl.item(i);
-				CatalogItem item = new CatalogItem();
-
-				item.setRowNumber(super.getValueInt(e, NUMBER_NAME));
-				item.setId(Long.parseLong(super.getValue(e, ID_NAME)));
-				item.setName(NAME_NAME);
-				item.setCatalogId(super.getValueLong(e, CATALOG_ID_NAME));
-				item.setIsLeaf(super.getValueBool(e, IS_LEAF_NAME));
-				item.setChildCount(super.getValueInt(e, CHILD_COUNT_NAME));
-				item.setCanBubble(super.getValueBool(e, CAN_BUBBLE_NAME));
-				item.setRating(super.getValueDouble(e, RATING_NAME));
-				item.setOverviewsCount(super.getValueInt(e, OVERVIEW_COUNT_NAME));
-				
-				
-
-				items.add(item);
-			}
-			catch (Exception ex)
-			{
-				Log.w("MyException", ex.getMessage());
-			}
-		}
-
-		return items;
+		return ITEM_NAME;
 	}
 }

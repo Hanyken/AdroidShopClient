@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import stx.shopclient.R;
 import stx.shopclient.repository.Repository;
 import android.content.Context;
 import android.content.Intent;

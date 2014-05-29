@@ -1,18 +1,23 @@
 package stx.shopclient.itemactivity;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.orderactivity.OrderActivity;
 import stx.shopclient.overviewactivity.OverviewActivity;
-import stx.shopclient.parsers.ItemParser;
-import stx.shopclient.parsers.OverviewParser;
 import stx.shopclient.parsers.PropertyParser;
+import stx.shopclient.parsers.OverviewParser;
 import stx.shopclient.repository.Repository;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -33,14 +38,18 @@ public class ItemActivity extends BaseActivity
 		View view = getLayoutInflater().inflate(R.layout.item_activity, parent,
 				false);
 
+		
 		//OverviewParser parser = new OverviewParser();
-		//parser.getOverview(OverviewParser.TEST);
+		//parser.getElements(parser.TEST);
 		
 		//ItemParser parser = new ItemParser();
-		//parser.getItems(ItemParser.TEST);
+		//parser.getElements(ItemParser.TEST);
 		
 		//PropertyParser parser = new PropertyParser();
-		//parser.getItemProperties(PropertyParser.TEST);
+		//parser.getElements(PropertyParser.TEST);
+		
+		PropertyParser parser = new PropertyParser();
+		parser.getElements(parser.TEST);
 		
 		Intent intent = getIntent();
 

@@ -1,6 +1,8 @@
 package stx.shopclient.entity;
 
-public class CatalogNode {
+public class CatalogNode
+{
+	private int _rowNumber;
 	private long _id;
 	private Long _parentId;
 	private long _catalogId;
@@ -11,66 +13,126 @@ public class CatalogNode {
 	private String _description;
 	private double _minPrice;
 	private double _maxPrice;
+	private String _groupField;
+
+	public int getRowNumber()
+	{
+		return _rowNumber;
+	}
+
+	public void setRowNumber(int rowNumber)
+	{
+		_rowNumber = rowNumber;
+	}
 	
-	public long getId() {
+	public long getId()
+	{
 		return _id;
-	}	
-	public void setId(long id) {
+	}
+
+	public void setId(long id)
+	{
 		_id = id;
-	}	
-	public Long getParentId() {
+	}
+
+	public Long getParentId()
+	{
 		return _parentId;
-	}	
-	public void setParentId(Long parentId) {
+	}
+
+	public void setParentId(Long parentId)
+	{
 		_parentId = parentId;
-	}	
-	public long getCatalogId() {
+	}
+
+	public long getCatalogId()
+	{
 		return _catalogId;
-	}	
-	public void setCatalogId(long catalogId) {
+	}
+
+	public void setCatalogId(long catalogId)
+	{
 		_catalogId = catalogId;
-	}	
-	public String getName() {
+	}
+
+	public String getName()
+	{
 		return _name;
-	}	
-	public void setName(String name) {
+	}
+
+	public void setName(String name)
+	{
 		_name = name;
-	}	
-	public int getCount() {
+	}
+
+	public int getCount()
+	{
 		return _count;
-	}	
-	public void setCount(int count) {
+	}
+
+	public void setCount(int count)
+	{
 		_count = count;
-	}	
-	public boolean isMajor() {
+	}
+
+	public boolean isMajor()
+	{
 		return _isMajor;
-	}	
-	public void setMajor(boolean isMajor) {
+	}
+
+	public void setMajor(boolean isMajor)
+	{
 		_isMajor = isMajor;
-	}	
-	public String getIcon() {
+	}
+
+	public String getIcon()
+	{
 		return _icon;
-	}	
-	public void setIcon(String icon) {
+	}
+
+	public void setIcon(String icon)
+	{
 		_icon = icon;
-	}	
-	public String getDescription() {
+	}
+
+	public String getDescription()
+	{
 		return _description;
-	}	
-	public void setDescription(String description) {
+	}
+
+	public void setDescription(String description)
+	{
 		_description = description;
-	}	
-	public double getMinPrice() {
+	}
+
+	public double getMinPrice()
+	{
 		return _minPrice;
-	}	
-	public void setMinPrice(double minPrice) {
+	}
+
+	public void setMinPrice(double minPrice)
+	{
 		_minPrice = minPrice;
-	}	
-	public double getMaxPrice() {
+	}
+
+	public double getMaxPrice()
+	{
 		return _maxPrice;
-	}	
-	public void setMaxPrice(double maxPrice) {
+	}
+
+	public void setMaxPrice(double maxPrice)
+	{
 		_maxPrice = maxPrice;
 	}
 	
+	public String getGroupField()
+	{
+		return _groupField;
+	}
+
+	public void setGroupField(String groupField)
+	{
+		_groupField = groupField;
+	}
+
 }

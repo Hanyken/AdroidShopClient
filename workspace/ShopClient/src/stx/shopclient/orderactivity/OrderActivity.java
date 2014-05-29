@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
+import stx.shopclient.entity.KeyValue;
 import stx.shopclient.entity.OrderProperty;
 import stx.shopclient.entity.properties.PropertyDescriptor;
 import stx.shopclient.itemactivity.ItemActivity;
