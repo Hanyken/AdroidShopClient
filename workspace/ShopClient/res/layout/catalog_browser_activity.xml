@@ -13,10 +13,10 @@
 <!--         android:textSize="20sp" -->
 <!--         android:textStyle="bold" android:layout_gravity="center_horizontal" /> -->
 
-    <ListView
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
-    </ListView>
+    </com.handmark.pulltorefresh.library.PullToRefreshListView>
 
 </LinearLayout>

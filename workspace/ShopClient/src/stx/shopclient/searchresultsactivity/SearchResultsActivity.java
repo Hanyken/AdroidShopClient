@@ -4,11 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
+
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
@@ -19,14 +25,15 @@ import stx.shopclient.R;
 import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.itemactivity.ItemActivity;
 import stx.shopclient.repository.Repository;
-import stx.shopclient.ui.common.LoadMoreListAdapter;
 
 public class SearchResultsActivity extends BaseActivity implements
 		OnItemClickListener {
 
-	ListView _listView;
+	PullToRefreshListView _listView;
 	ListAdapter _adapter;
 	ProgressBar _progressBar;
+	
+	List<CatalogItem> _items = new ArrayList<CatalogItem>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,55 +45,78 @@ public class SearchResultsActivity extends BaseActivity implements
 
 	@Override
 	protected View createMainView(ViewGroup parent) {
+		generateData();
+		
 		View view = getLayoutInflater().inflate(
 				R.layout.search_results_activity, parent, false);
 
 		_progressBar = new ProgressBar(this);
 
-		_listView = (ListView) view.findViewById(R.id.listView);
+		_listView = (PullToRefreshListView) view.findViewById(R.id.listView);
+		_listView.setMode(Mode.PULL_FROM_END);		
+		_listView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>()
+				{
+
+					@Override
+					public void onRefresh(PullToRefreshBase<ListView> refreshView)
+					{
+						new LoadMoreTask().execute();
+					}
+				});
 		_adapter = new ListAdapter();
-		_listView.setOnScrollListener(_adapter);
 		_listView.setOnItemClickListener(this);
 		
-		showLoadingProgress(true);
 		_listView.setAdapter(_adapter);
-		showLoadingProgress(false);
 
 		return view;
 	}
 
-	void showLoadingProgress(boolean show) {
-		if (show)
-			_listView.addFooterView(_progressBar);
-		else
-			_listView.removeFooterView(_progressBar);
-	}
+	void generateData() {
+		Random random = new Random();
 
-	class ListAdapter extends LoadMoreListAdapter {
-
-		List<CatalogItem> _items;
-
-		public ListAdapter() {
-			super(_listView);
-
-			_items = new ArrayList<CatalogItem>();
-
-			generateData();
-
-			setLoading(false);
+		for (int i = 0; i < 15; i++) {
+			CatalogItem item = new CatalogItem();
+			item.setName("Товар " + Integer.toString(i));
+			/*item.setPrice(random.nextInt(5000));*/
+			item.setRating(random.nextInt(5));
+			_items.add(item);
 		}
+	}
+	
+	class LoadMoreTask extends AsyncTask<Void, Void, Void>
+	{
 
-		void generateData() {
+		@Override
+		protected Void doInBackground(Void... params)
+		{
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 			Random random = new Random();
-
-			for (int i = 0; i < 15; i++) {
+			int size = _items.size();
+			for (int i = size; i < size + 10; i++) {
 				CatalogItem item = new CatalogItem();
 				item.setName("Товар " + Integer.toString(i));
 				/*item.setPrice(random.nextInt(5000));*/
 				item.setRating(random.nextInt(5));
 				_items.add(item);
 			}
+			return null;
 		}
+		
+		@Override
+		protected void onPostExecute(Void result)
+		{
+			_listView.onRefreshComplete();
+			_adapter.notifyDataSetChanged();
+		}
+	}
+	
+	class ListAdapter extends BaseAdapter {
 
 		@Override
 		public int getCount() {
@@ -134,39 +164,6 @@ public class SearchResultsActivity extends BaseActivity implements
 
 			return view;
 		}
-
-		@Override
-		public boolean onLoadMore() {
-			try {
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			Random random = new Random();
-			int size = _items.size();
-			for (int i = size; i < size + 10; i++) {
-				CatalogItem item = new CatalogItem();
-				item.setName("Товар " + Integer.toString(i));
-				/*item.setPrice(random.nextInt(5000));*/
-				item.setRating(random.nextInt(5));
-				_items.add(item);
-			}
-
-			return false;
-		}
-
-		@Override
-		public void onBeforeLoadData() {
-			showLoadingProgress(true);
-		}
-
-		@Override
-		public void onAfterLoadData() {
-			showLoadingProgress(false);
-		}
-
 	}
 
 	@Override

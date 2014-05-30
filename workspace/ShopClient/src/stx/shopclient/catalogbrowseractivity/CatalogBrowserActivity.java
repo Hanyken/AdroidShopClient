@@ -4,11 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
@@ -31,7 +37,7 @@ public class CatalogBrowserActivity extends BaseActivity implements
 	//TextView _nodeNameTextView;
 	long _rootNodeId;
 	String _rootNodeName;
-	ListView _listView;
+	PullToRefreshListView _listView;
 	ListAdapter _adapter;
 	ProgressBar _progressBar;
 
@@ -57,32 +63,58 @@ public class CatalogBrowserActivity extends BaseActivity implements
 		//_nodeNameTextView = (TextView) view.findViewById(R.id.nodeNameTextView);
 		//_nodeNameTextView.setText(_rootNodeName);
 
-		_listView = (ListView) view.findViewById(R.id.listView);
+		_listView = (PullToRefreshListView) view.findViewById(R.id.listView);
+		_listView.setMode(Mode.PULL_FROM_END);
+		
+		_listView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>()
+				{
+
+					@Override
+					public void onRefresh(PullToRefreshBase<ListView> refreshView)
+					{
+						new LoadMoreTask().execute();
+					}
+				});
+		
 		_adapter = new ListAdapter(_rootNodeId);
-		_listView.setOnScrollListener(_adapter);
 		_listView.setOnItemClickListener(this);
 
-		showLoadingProgress(true);
 		_listView.setAdapter(_adapter);
-		showLoadingProgress(false);
 
 		return view;
 	}
+	
+	class LoadMoreTask extends AsyncTask<Void, Void, Void>
+	{
 
-	void showLoadingProgress(boolean show) {
-		if (show)
-			_listView.addFooterView(_progressBar);
-		else
-			_listView.removeFooterView(_progressBar);
+		@Override
+		protected Void doInBackground(Void... params)
+		{
+			try
+			{
+				Thread.sleep(1000);
+			} catch (InterruptedException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void result)
+		{
+			_listView.onRefreshComplete();
+		}
 	}
 
-	class ListAdapter extends LoadMoreListAdapter {
+
+	class ListAdapter extends BaseAdapter {
 
 		List<CatalogNode> _nodes;
 		List<CatalogItem> _items;
 
 		public ListAdapter(long nodeId) {
-			super(_listView);
 
 			_nodes = new ArrayList<CatalogNode>();
 			_items = new ArrayList<CatalogItem>();
@@ -90,8 +122,6 @@ public class CatalogBrowserActivity extends BaseActivity implements
 			_nodes.addAll(Repository.getIntent().getCatalogManager().getNodes(nodeId));
 			_items.addAll(Repository.getIntent().getItemsManager().getItems(nodeId));
 			//generateData();
-
-			setLoading(false);
 		}
 
 		void generateData() {
@@ -191,38 +221,6 @@ public class CatalogBrowserActivity extends BaseActivity implements
 
 			return view;
 		}
-
-		@Override
-		public boolean onLoadMore() {
-			try {
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			Random random = new Random();
-			int size = _items.size();
-			for (int i = size; i < size + 10; i++) {
-				CatalogItem item = new CatalogItem();
-				item.setName("Товар " + Integer.toString(i));
-				item.setRating(random.nextInt(5));
-				//_items.add(item);
-			}
-
-			return false;
-		}
-
-		@Override
-		public void onBeforeLoadData() {
-			showLoadingProgress(true);
-		}
-
-		@Override
-		public void onAfterLoadData() {
-			showLoadingProgress(false);
-		}
-
 	}
 
 	@Override

@@ -73,8 +73,8 @@ public class CatalogItemViewPagerFragment extends Fragment{
 			View view = inflater.inflate(R.layout.main_activity_catalogitems_viewpager_fragment_item, null);
 			
 			// TODO: после этого все уезжает
-			//ImageView imgView = (ImageView)view.findViewById(R.id.imageView);
-			//imgView.setImageBitmap(Repository.getIntent().getImagesManager().getImage(item.getIco()));
+			ImageView imgView = (ImageView)view.findViewById(R.id.imageView);
+			imgView.setImageBitmap(Repository.getIntent().getImagesManager().getImage(item.getIco()));
 			
 			TextView textView = (TextView)view.findViewById(R.id.textView);
 			textView.setText(item.getName());

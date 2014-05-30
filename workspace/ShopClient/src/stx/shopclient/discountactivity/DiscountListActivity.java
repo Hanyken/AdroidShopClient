@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import android.content.Intent;
@@ -81,6 +82,7 @@ public class DiscountListActivity extends BaseActivity implements
 				R.layout.discount_list_activity, parent, false);
 
 		_listView = (PullToRefreshListView) view.findViewById(R.id.listView);
+		//_listView.setMode(Mode.BOTH);
 		_listView.setOnItemClickListener(this);
 		_listView.setAdapter(_adapter);
 		
