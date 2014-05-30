@@ -1,14 +1,13 @@
 package stx.shopclient.itemactivity;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import stx.shopclient.entity.CatalogItem;
+import stx.shopclient.repository.ImagesManager;
 import stx.shopclient.repository.Repository;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,14 +19,17 @@ public class ItemImagePageAdapter extends PagerAdapter implements OnClickListene
 	Context _Context;
 	private long ItemId;
 	private List<String> _Items;
+	private ImagesManager _ImgManager;
+	private CatalogItem _Item;
 
 	public ItemImagePageAdapter(Context context, long itemId)
 	{
 		_Context = context;
 		ItemId = itemId;
+		_Item = Repository.getIntent().getItemsManager().getItem(itemId);
 		_Items = new ArrayList<String>();
-		_Items.addAll(Repository.getIntent().getImagesManager()
-				.getItemImages(itemId));
+		_ImgManager = Repository.getIntent().getImagesManager();
+		_Items.addAll(_Item.getImages());
 	}
 
 	@Override
@@ -47,17 +49,7 @@ public class ItemImagePageAdapter extends PagerAdapter implements OnClickListene
 	{
 		ImageView view = new ImageView(_Context);
 		view.setTag(position);
-		try
-		{
-			File filePath = new File(_Items.get(position));
-			if (filePath.exists())
-			{
-				Bitmap bitmap = BitmapFactory.decodeFile(filePath.getAbsolutePath());
-				view.setImageBitmap(bitmap);
-			}
-		}
-		catch (Exception ex)
-		{	}
+		view.setImageBitmap(_ImgManager.getImage(_Items.get(position)));
 		
 		view.setOnClickListener(this);
 		container.addView(view);

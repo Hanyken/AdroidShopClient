@@ -1,8 +1,12 @@
 package stx.shopclient.parsers;
 
+import java.util.Collection;
+
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import stx.shopclient.entity.CatalogNode;
+import stx.shopclient.entity.properties.PropertyDescriptor;
 
 public class NodeParser extends BaseParser<CatalogNode>
 {
@@ -19,6 +23,8 @@ public class NodeParser extends BaseParser<CatalogNode>
 	private final String MAX_PRICE_NAME = "MaxPrice";
 	private final String MIN_PRICE_NAME = "MinPrice";
 	private final String DESCRIPTION_NAME = "Description";
+	private final String SEARCH_PROPERTIES_NAME = "SearchProperties";
+	private final String PROPERTY_NAME = "Property";
 	
 	public NodeParser()
 	{
@@ -30,7 +36,7 @@ public class NodeParser extends BaseParser<CatalogNode>
 		CatalogNode item = new CatalogNode();
 
 		item.setRowNumber(super.getValueInt(e, NUMBER_NAME));
-		item.setId(Long.parseLong(super.getValue(e, ID_NAME)));
+		item.setId(super.getValueLong(e, ID_NAME));
 		item.setCatalogId(super.getValueLong(e, CATALOG_ID_NAME));
 		item.setName(super.getValue(e, NAME_NAME));
 		item.setMajor(super.getValueBool(e, IS_MAJOR_NAME));
@@ -40,6 +46,15 @@ public class NodeParser extends BaseParser<CatalogNode>
 		item.setMaxPrice(super.getValueDouble(e, MAX_PRICE_NAME));
 		item.setMinPrice(super.getValueDouble(e, MIN_PRICE_NAME));
 		item.setDescription(super.getValue(e, DESCRIPTION_NAME));
+		
+		NodeList nl = e.getElementsByTagName(SEARCH_PROPERTIES_NAME);
+		if (nl.getLength() > 0)
+		{
+			NodeList propertiesList = ((Element)nl.item(0)).getElementsByTagName(PROPERTY_NAME); 
+			PropertyParser parser = new PropertyParser();
+			Collection<PropertyDescriptor> properties = parser.getElements(propertiesList);
+			item.setProperties(properties);
+		}
 		
 		return item;
 	}

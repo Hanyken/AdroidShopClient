@@ -1,6 +1,9 @@
 package stx.shopclient.entity;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 public class Catalog
 {
@@ -9,7 +12,10 @@ public class Catalog
 	private String _description;
 	private Date _lastModification;
 	private int _nodeCount;
+	private List<CatalogNode> _nodes = new ArrayList<CatalogNode>();
 
+	
+	
 	public long getId()
 	{
 		return _id;
@@ -59,5 +65,16 @@ public class Catalog
 	public void setNodeCount(int nodeCount)
 	{
 		_nodeCount = nodeCount;
+	}
+	
+	public Collection<CatalogNode> getNodes()
+	{
+		return _nodes;
+	}
+
+	public void setNodes(Collection<CatalogNode> nodes)
+	{
+		_nodes.clear();
+		_nodes.addAll(nodes);
 	}
 }

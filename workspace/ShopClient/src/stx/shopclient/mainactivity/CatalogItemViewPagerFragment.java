@@ -6,7 +6,9 @@ import java.util.List;
 import stx.shopclient.R;
 import stx.shopclient.R.id;
 import stx.shopclient.R.layout;
+import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.itemactivity.ItemActivity;
+import stx.shopclient.repository.Repository;
 import stx.shopclient.ui.common.GridPagerAdapter;
 
 import com.viewpagerindicator.CirclePageIndicator;
@@ -20,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,21 +36,8 @@ public class CatalogItemViewPagerFragment extends Fragment{
 		ViewPager viewPager = (ViewPager)view.findViewById(R.id.product_viewpager);
 		CirclePageIndicator pageIndicator = (CirclePageIndicator)view.findViewById(R.id.page_indicator);
 		
-		List<String> list = new ArrayList<String>();
-		list.add("test1");
-		list.add("test2");
-		list.add("test3");
-		list.add("test4");
-		list.add("test5");
-		list.add("test6");
-		list.add("test1");
-		list.add("test1");
-		list.add("test2");
-		list.add("test3");
-		list.add("test4");
-		list.add("test5");
-		list.add("test6");
-		list.add("test1");
+		List<CatalogItem> list = new ArrayList<CatalogItem>();
+		list.addAll(Repository.getIntent().getItemsManager().getFavorits());
 		
 		
 		TestGridAdapter adapter = new TestGridAdapter(this.getActivity(), list);
@@ -58,35 +48,39 @@ public class CatalogItemViewPagerFragment extends Fragment{
 		return view;
 	}
 	
-	private class TestGridAdapter extends GridPagerAdapter<String> {
+	private class TestGridAdapter extends GridPagerAdapter<CatalogItem> {
 		Context _context;
 		
-        public TestGridAdapter(Context context, List<String> list) {
+        public TestGridAdapter(Context context, List<CatalogItem> list) {
             super(list, context);
             
             _context = context;
         }
         
         @Override
-        protected void onItemClick(String item) {
+        protected void onItemClick(CatalogItem item) {
         	 Intent intent = new Intent(_context, ItemActivity.class);    
-        	 intent.putExtra("ItemTitle",item);
-        	 intent.putExtra("ItemID","123");
+        	 intent.putExtra("ItemTitle", item.getName());
+        	 intent.putExtra("ItemID", item.getId());
         	 
         	 startActivity(intent);
         }
 
 		@Override
-		protected View createItemView(String item) {
+		protected View createItemView(CatalogItem item) {
 			
 			LayoutInflater inflater = (LayoutInflater)_context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View view = inflater.inflate(R.layout.main_activity_catalogitems_viewpager_fragment_item, null);
 			
+			// TODO: после этого все уезжает
+			//ImageView imgView = (ImageView)view.findViewById(R.id.imageView);
+			//imgView.setImageBitmap(Repository.getIntent().getImagesManager().getImage(item.getIco()));
+			
 			TextView textView = (TextView)view.findViewById(R.id.textView);
-			textView.setText(item);
+			textView.setText(item.getName());
 			
 			RatingBar ratingBar = (RatingBar)view.findViewById(R.id.ratingBar);
-			ratingBar.setRating(3.5f);
+			ratingBar.setRating((float)item.getRating());
 			
 			return view;
 		}

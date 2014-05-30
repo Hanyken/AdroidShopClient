@@ -21,10 +21,6 @@
         <item name="android:textSize">10sp</item>
     </style>
     
-    <style name="TransparentActivity" parent="@android:style/Theme.Translucent.NoTitleBar">
-        <item name="android:background">@color/image_fon</item>
-    </style>
-    
     
     <style name="ButtonComment">
         <item name="android:background">@drawable/stl_comment_button</item>

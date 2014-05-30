@@ -61,8 +61,7 @@
             android:label="@string/order_activity_name">
             
         </activity>
-        <activity android:name="stx.shopclient.itemactivity.ItemImageActivity"
-            android:theme="@style/TransparentActivity">
+        <activity android:name="stx.shopclient.itemactivity.ItemImageActivity">
             
         </activity>
         <activity android:name="stx.shopclient.discountactivity.DiscountListActivity"

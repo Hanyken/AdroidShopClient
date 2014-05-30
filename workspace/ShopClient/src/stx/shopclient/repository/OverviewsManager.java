@@ -2,7 +2,6 @@ package stx.shopclient.repository;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Random;
 
 import stx.shopclient.entity.Overview;;
 
@@ -46,7 +45,11 @@ public class OverviewsManager
 		}
 		else
 		{
-			addOverview(itemId, rating, description, true);
+			item = new Overview();
+			item.setDescription(description);
+			item.setRating(rating);
+			item.setIsCurrentUser(true);
+			add(item, itemId);
 		}
 	}
 	public Overview getUserOverview(long itemId)
@@ -63,35 +66,10 @@ public class OverviewsManager
 		return item;
 	}
 	
-	public void initOverviews(long itemId)
+	public void add(Overview item, long itemId)
 	{
-		Random rand = new Random();
-		
-		addOverview(itemId, rand.nextDouble() * 5, "Тут какой то коментарий №1", false);
-		addOverview(itemId, rand.nextDouble() * 5, "Тут какой то коментарий №2", false);
-		addOverview(itemId, rand.nextDouble() * 5, "Тут какой то коментарий №3", false);
-		addOverview(itemId, rand.nextDouble() * 5, "Тут какой то коментарий №4", false);
-		addOverview(itemId, rand.nextDouble() * 5, "Тут какой то коментарий №5", false);
+		item.setItemId(itemId);
+		_Items.add(item);
 	}
-	private void addOverview(long itemId, double rating, String description, boolean isCurrentUser)
-	{
-		Overview overview = new Overview();
-		overview.setItemId(itemId);
-		overview.setRating(rating);
-		overview.setDescription(description);
-		overview.setIsCurrentUser(isCurrentUser);
-		_Items.add(overview);
-	}
-	public int getOverviewsCount(long itemId)
-	{
-		return getOverviews(itemId).size();
-	}
-	public double getAvgRating(long itemId)
-	{
-		double value = 0;
-		for(Overview el : getOverviews(itemId))
-			value += el.getRating();
-		
-		return value / _Items.size();
-	}
+	
 }

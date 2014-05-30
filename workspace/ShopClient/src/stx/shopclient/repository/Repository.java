@@ -1,5 +1,7 @@
 package stx.shopclient.repository;
 
+import stx.shopclient.loaders.CatalogFileLoader;
+
 
 public class Repository
 {
@@ -29,6 +31,9 @@ public class Repository
 		_ItemsManager = new ItemsManager(_OverviewsManager, _PropertiesManager);
 		_CatalogManager = new CatalogManager(_ItemsManager);
 		_MessagesManager = new MessagesManager();
+		
+		CatalogFileLoader catalogLoader = new CatalogFileLoader(_CatalogManager);
+		catalogLoader.Load();
 	}
 	
 	

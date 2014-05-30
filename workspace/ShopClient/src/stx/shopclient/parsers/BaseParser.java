@@ -1,6 +1,9 @@
 package stx.shopclient.parsers;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -24,21 +27,26 @@ import android.util.Log;
 public abstract class BaseParser<T>
 {
 
-	private final DateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-			//new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+	private final DateFormat dateParser = new SimpleDateFormat(
+			"yyyy-MM-dd'T'HH:mm:ss");
+	// new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 	private final DateFormat timeParser = new SimpleDateFormat("HH:mm:ss");
 
 	public BaseParser()
-	{
-	}
-	
+	{}
+
 	public abstract T getElement(Element e);
 
 	protected abstract String getElementName();
 
-	
-	
-	public Collection<T> getElements(String xmlString)
+	public Collection<T> parseFile(String filePath)
+	{
+		Document doc = getDomElementFromFile(filePath);
+		NodeList nl = doc.getElementsByTagName(getElementName());
+		return getElements(nl);
+	}
+
+	public Collection<T> parseString(String xmlString)
 	{
 		Document doc = getDomElement(xmlString);
 		NodeList nl = doc.getElementsByTagName(getElementName());
@@ -64,9 +72,6 @@ public abstract class BaseParser<T>
 		return items;
 	}
 
-	
-	
-	
 	protected Document getDomElement(String xml)
 	{
 		Document doc = null;
@@ -75,13 +80,41 @@ public abstract class BaseParser<T>
 		dbf.setCoalescing(true);
 		try
 		{
-
 			DocumentBuilder db = dbf.newDocumentBuilder();
 
 			InputSource is = new InputSource();
+			// is.setEncoding("UTF-8");
 			is.setCharacterStream(new StringReader(xml));
 			doc = db.parse(is);
 
+		}
+		catch (ParserConfigurationException e)
+		{
+			return null;
+		}
+		catch (SAXException e)
+		{
+			return null;
+		}
+		catch (IOException e)
+		{
+			return null;
+		}
+
+		return doc;
+
+	}
+
+	protected Document getDomElementFromFile(String path)
+	{
+		Document doc = null;
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+
+		dbf.setCoalescing(true);
+		try
+		{
+			DocumentBuilder db = dbf.newDocumentBuilder();
+			doc = db.parse(new FileInputStream(path), "UTF-8");
 		}
 		catch (ParserConfigurationException e)
 		{
@@ -115,18 +148,24 @@ public abstract class BaseParser<T>
 	protected Integer getValueInt(Element item, String str)
 	{
 		String value = getValue(item, str);
+		if (value.equals(null) || value == null || value.equals(""))
+			value = "0";
 		return Integer.parseInt(value);
 	}
 
 	protected Long getValueLong(Element item, String str)
 	{
 		String value = getValue(item, str);
+		if (value.equals(null) || value == null || value.equals(""))
+			value = "0";
 		return Long.parseLong(value);
 	}
 
 	protected Double getValueDouble(Element item, String str)
 	{
 		String value = getValue(item, str);
+		if (value.equals(null) || value == null || value.equals(""))
+			value = "0";
 		return Double.parseDouble(value);
 	}
 
@@ -144,7 +183,7 @@ public abstract class BaseParser<T>
 		}
 		return date;
 	}
-	
+
 	protected Date getValueTime(Element item, String str)
 	{
 		Date date = null;

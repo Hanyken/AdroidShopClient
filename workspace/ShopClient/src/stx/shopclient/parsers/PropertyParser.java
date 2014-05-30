@@ -83,10 +83,10 @@ public class PropertyParser extends BaseParser<PropertyDescriptor>
 					Element el = (Element) nl2.item(0);
 					GregorianCalendar max = new GregorianCalendar();
 					max.setTime(super.getValueDate(el, MAX_NAME));
-					((DatePropertyDescriptor) item).setCurrentMaxValue(max);
+					((DatePropertyDescriptor) item).setMaxValue(max);
 					GregorianCalendar min = new GregorianCalendar();
 					min.setTime(super.getValueDate(el, MIN_NAME));
-					((DatePropertyDescriptor) item).setCurrentMinValue(min);
+					((DatePropertyDescriptor) item).setMinValue(min);
 				}
 			}
 			else
@@ -98,10 +98,10 @@ public class PropertyParser extends BaseParser<PropertyDescriptor>
 					{
 						Element el = (Element) nl3.item(0);
 						((NumberPropertyDescriptor) item)
-								.setCurrentMaxValue(super.getValueInt(el,
+								.setMaxValue(super.getValueInt(el,
 										MAX_NAME));
 						((NumberPropertyDescriptor) item)
-								.setCurrentMinValue(super.getValueInt(el,
+								.setMinValue(super.getValueInt(el,
 										MIN_NAME));
 					}
 				}
@@ -114,10 +114,10 @@ public class PropertyParser extends BaseParser<PropertyDescriptor>
 						{
 							Element el = (Element) nl4.item(0);
 							((NumberPropertyDescriptor) item)
-									.setCurrentMaxValue(super.getValueDouble(
+									.setMaxValue(super.getValueDouble(
 											el, MAX_NAME));
 							((NumberPropertyDescriptor) item)
-									.setCurrentMinValue(super.getValueDouble(
+									.setMinValue(super.getValueDouble(
 											el, MIN_NAME));
 						}
 					}

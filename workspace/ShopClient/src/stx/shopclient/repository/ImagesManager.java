@@ -1,35 +1,33 @@
 package stx.shopclient.repository;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Environment;
 
 public class ImagesManager 
 {
-	private ArrayList<String> _Items;
 	
 	public ImagesManager()
 	{
-		_Items = new ArrayList<String>();
-		
-		_Items.add("/sdcard/StxImages/1.jpg");
-		_Items.add("/sdcard/StxImages/2.jpg");
-		_Items.add("/sdcard/StxImages/3.jpg");
-		_Items.add("/sdcard/StxImages/4.jpg");
-		_Items.add("/sdcard/StxImages/5.jpg");
 	}
 	
-	public Collection<String> getItemImages(long itemId)
+	
+	public Bitmap getImage(String imgKey)
 	{
-		return _Items;
+		Bitmap bmp = null;
+		try
+		{
+			File filePath = new File(getImagePath(imgKey));
+			if (filePath.exists())
+			{
+				bmp = BitmapFactory.decodeFile(filePath.getAbsolutePath());
+			}
+		}
+		catch (Exception ex)
+		{	}
+		return bmp;
 	}
-	
-	
-	
 	
 	
 	public Bitmap decodeSampledBitmapFromUri(String path, int reqWidth, int reqHeight)
@@ -50,6 +48,10 @@ public class ImagesManager
 		bm = BitmapFactory.decodeFile(path, options);
 
 		return bm;
+	}
+	public String getImagePath(String imgKey)
+	{
+		return "/sdcard/StxData/Images/"+imgKey;
 	}
 
 	public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight)

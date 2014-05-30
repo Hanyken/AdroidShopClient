@@ -1,7 +1,19 @@
 package stx.shopclient.entity;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import stx.shopclient.entity.properties.EnumPropertyDescriptor;
+import stx.shopclient.entity.properties.EnumPropertyDescriptor.EnumValue;
+import stx.shopclient.entity.properties.NumberPropertyDescriptor;
+import stx.shopclient.entity.properties.PropertyDescriptor;
+
 public class CatalogItem
 {
+	public static final String PRICE_PROPERTY_NAME = "Price";
+	public static final String IMAGES_PROPERTY_NAME = "Images";
+	
 	private long _rowNumber;
 	private long _id;
 	private String _name;
@@ -14,6 +26,10 @@ public class CatalogItem
 	
 	private String _description;
 	private long _nodeId;
+	
+	private List<Overview> _overviews = new ArrayList<Overview>();
+	private List<PropertyDescriptor> _properties = new ArrayList<PropertyDescriptor>();
+	private List<PropertyDescriptor> _orderProperties = new ArrayList<PropertyDescriptor>();
 
 	public long getRowNumber()
 	{
@@ -98,18 +114,108 @@ public class CatalogItem
 		_overviewsCount = overviewsCount;
 	}
 
-	
-	
-
 	public String getDescription()
 	{
-		return _description;
+		if (_description == null || _description.equals(""))
+			return "Нет описания";
+		else
+			return _description;
 	}
 
 	public void setDescription(String description)
 	{
 		_description = description;
 	}
+	
+	public Collection<Overview> getOverviews()
+	{
+		return _overviews;
+	}
+	public void setOverviews(Collection<Overview> overviews)
+	{
+		_overviews.clear();
+		_overviews.addAll(overviews);
+	}
+	
+	public Collection<PropertyDescriptor> getProperties()
+	{
+		return _properties;
+	}
+	public void setProperties(Collection<PropertyDescriptor> properties)
+	{
+		_properties.clear();
+		_properties.addAll(properties);
+	}
+	
+	public Collection<PropertyDescriptor> getOrderProperties()
+	{
+		return _orderProperties;
+	}
+	public void setOrderProperties(Collection<PropertyDescriptor> orderProperties)
+	{
+		_orderProperties.clear();
+		_orderProperties.addAll(orderProperties);
+	}
+	
+	public Double getPrice()
+	{
+		Double price = 0d;
+		for(PropertyDescriptor prop : _properties)
+		{
+			if (prop.getName().equals(PRICE_PROPERTY_NAME) && (prop instanceof NumberPropertyDescriptor))
+			{
+				price = ((NumberPropertyDescriptor)prop).getCurrentMaxValue();
+				break;
+			}
+		}
+		return price;
+	}
+	
+	public Collection<String> getImages()
+	{
+		ArrayList<String> items = new ArrayList<String>();
+		for(PropertyDescriptor prop : _properties)
+		{
+			if (prop.getName().equals(IMAGES_PROPERTY_NAME) && (prop instanceof EnumPropertyDescriptor))
+			{
+				for(EnumValue value : ((EnumPropertyDescriptor)prop).getValues())
+					items.add(value.getValue());
+				break;
+			}
+		}
+		return items;
+	}
+	
+	public String getIco()
+	{
+		String ico = null;
+		for(PropertyDescriptor prop : _properties)
+		{
+			if (prop.getName().equals(IMAGES_PROPERTY_NAME) && (prop instanceof EnumPropertyDescriptor))
+			{
+				for(EnumValue value : ((EnumPropertyDescriptor)prop).getValues())
+				{
+					ico = value.getValue();
+					break;
+				}
+				break;
+			}
+		}
+		return ico;
+	}
+	
+	public String getPropertyString()
+	{
+		StringBuilder sb = new StringBuilder();
+		for(PropertyDescriptor prop : this.getProperties())
+		{
+			if (!prop.getName().equals(PRICE_PROPERTY_NAME) && !prop.getName().equals(IMAGES_PROPERTY_NAME))
+				sb.append("\t"+prop.getTitle() + " - " + prop.getStringValue()+"\n");
+		}
+		return sb.toString();
+	}
+	
+	
 	
 	public long getNodeId()
 	{

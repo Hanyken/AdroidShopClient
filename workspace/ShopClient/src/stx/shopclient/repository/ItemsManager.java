@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import stx.shopclient.entity.CatalogItem;
+import stx.shopclient.entity.Overview;
 
 public class ItemsManager
 {
@@ -16,8 +17,6 @@ public class ItemsManager
 		_Items = new ArrayList<CatalogItem>();
 		_OverviewsManager = overviewsManager;
 		_PropertiesManager = propertiesManager;
-		
-		addItem(0, 0, 123, "Тестовый элемент");
 	}
 	
 	public CatalogItem getItem(long itemId)
@@ -44,65 +43,25 @@ public class ItemsManager
 			}
 		}
 		
-		
 		return items;
 	}
 	
-	public void initItems(long nodeId, long catalogId)
-	{		
-		addItem(nodeId, catalogId, (nodeId * 10 + 1), "Тут каке то имя первого item'а");
-		
-		addItem(nodeId, catalogId, (nodeId * 10 + 2), "Тут каке то имя второго item'а");
-		
-		addItem(nodeId, catalogId, (nodeId * 10 + 2), "Тут каке то имя третьего item'а");
-	}
-	private void addItem(long nodeId, long catalogId, long itemId, String itemName)
+	public Collection<CatalogItem> getFavorits()
 	{
-		_OverviewsManager.initOverviews(itemId);
-		_PropertiesManager.initItemProperties(itemId);
-		
-		CatalogItem item = new CatalogItem();
-		item.setId(itemId);
-		item.setRowNumber(item.getId());
-		item.setName(itemName);
-		item.setCatalogId(catalogId);
-		item.setIsLeaf(false);
-		item.setChildCount(0);
-		item.setCanBubble(false);
-		item.setDescription(itemName);//-------
-		item.setRating(_OverviewsManager.getAvgRating(itemId));
-		item.setOverviewsCount(_OverviewsManager.getOverviewsCount(item.getId()));
-		
+		return _Items;
+	}
+	
+	
+	
+	
+	public void add(CatalogItem item, long nodeId)
+	{
 		item.setNodeId(nodeId);
-		
 		_Items.add(item);
-	}
-	public double getMaxPrice(long nodeId)
-	{
-		double value = Double.MIN_VALUE;
-		Collection<CatalogItem> items = getItems(nodeId);
-		for(CatalogItem el : items)
+		for(Overview el : item.getOverviews())
 		{
-			double tmpValue = _PropertiesManager.getItemPrice(el.getId());
-			if (tmpValue > value)
-				value = tmpValue;
+			_OverviewsManager.add(el, item.getId());
 		}
-		return Math.round(value);
 	}
-	public double getMinPrice(long nodeId)
-	{
-		double value = Double.MAX_VALUE;
-		Collection<CatalogItem> items = getItems(nodeId);
-		for(CatalogItem el : items)
-		{
-			double tmpValue = _PropertiesManager.getItemPrice(el.getId());
-			if (tmpValue < value)
-				value = tmpValue;
-		}
-		return Math.round(value);
-	}
-	public int getCountItems(long nodeId)
-	{
-		return getItems(nodeId).size();
-	}
+
 }

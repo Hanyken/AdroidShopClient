@@ -1,5 +1,11 @@
 package stx.shopclient.entity;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import stx.shopclient.entity.properties.PropertyDescriptor;
+
 public class CatalogNode
 {
 	private int _rowNumber;
@@ -14,6 +20,8 @@ public class CatalogNode
 	private double _minPrice;
 	private double _maxPrice;
 	private String _groupField;
+	
+	private List<PropertyDescriptor> _properties = new ArrayList<PropertyDescriptor>();
 
 	public int getRowNumber()
 	{
@@ -135,4 +143,14 @@ public class CatalogNode
 		_groupField = groupField;
 	}
 
+	public Collection<PropertyDescriptor> getProperties()
+	{
+		return _properties;
+	}
+
+	public void setProperties(Collection<PropertyDescriptor> properties)
+	{
+		_properties.clear();
+		_properties.addAll(properties);
+	}
 }

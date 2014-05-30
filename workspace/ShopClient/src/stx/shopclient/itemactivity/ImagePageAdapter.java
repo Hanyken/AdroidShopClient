@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import stx.shopclient.R;
+import stx.shopclient.entity.CatalogItem;
+import stx.shopclient.repository.ImagesManager;
 import stx.shopclient.repository.Repository;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -17,18 +19,21 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-public class ImagePageAdapter extends PagerAdapter implements OnClickListener
+public class ImagePageAdapter extends PagerAdapter
 {
 	Context _Context;
 	private List<String> _Items;
+	private ImagesManager _ImgManager;
+	private CatalogItem _Item;
 
 	public ImagePageAdapter(Context context, long itemId)
 	{
 		_Context = context;
+		_Item = Repository.getIntent().getItemsManager().getItem(itemId);
 		_Items = new ArrayList<String>();
-		_Items.addAll(Repository.getIntent().getImagesManager()
-				.getItemImages(itemId));
-
+		_ImgManager = Repository.getIntent().getImagesManager();
+		//_Items.addAll(_ImgManager.getItemImages(itemId));
+		_Items.addAll(_Item.getImages());
 	}
 
 	@Override
@@ -47,33 +52,10 @@ public class ImagePageAdapter extends PagerAdapter implements OnClickListener
 	public Object instantiateItem(ViewGroup container, int position)
 	{
 		ImageView view = new ImageView(_Context);
-		try
-		{
-			//File filePath = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "1.png");
-			File filePath = new File(_Items.get(position));
-			//String path = filePath.getAbsolutePath();
-			if (filePath.exists())
-			{
-			//_Context.openFileInput(filePath.getAbsolutePath());
-			//String filePath = _Items.get(position);
-			//File file = new File(Environment.getExternalStorageDirectory(), filePath);
-			Bitmap bitmap = BitmapFactory.decodeFile(filePath.getAbsolutePath());
-			view.setImageBitmap(bitmap);
-			//view.setImageURI(Uri.fromFile(file));
-			//view.setImageResource(R.drawable.ic_launcher);
-			view.setOnClickListener(this);
-			}
-		}
-		catch (Exception ex)
-		{
-			if (ex.getMessage() != null)
-			{
-				
-			}
-		}
-
+		view.setTag(position);
+		view.setImageBitmap(_ImgManager.getImage(_Items.get(position)));
+		
 		container.addView(view);
-
 		return view;
 	}
 
@@ -81,11 +63,5 @@ public class ImagePageAdapter extends PagerAdapter implements OnClickListener
 	public void destroyItem(ViewGroup container, int position, Object view)
 	{
 		container.removeView((View) view);
-	}
-
-	@Override
-	public void onClick(View v)
-	{
-		((ItemImageActivity) _Context).onImageClick(v);
 	}
 }

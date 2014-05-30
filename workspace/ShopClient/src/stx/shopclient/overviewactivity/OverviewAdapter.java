@@ -16,6 +16,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 import stx.shopclient.R;
+import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.entity.Overview;
 import stx.shopclient.repository.OverviewsManager;
 import stx.shopclient.repository.Repository;
@@ -23,6 +24,7 @@ import stx.shopclient.repository.Repository;
 public class OverviewAdapter extends BaseAdapter implements OnScrollListener
 {
 	private ArrayList<Overview> _Items;
+	private CatalogItem _Item;
 	private LayoutInflater _Inflater;
 	private ListView _ListView;
 	private boolean _Loading;
@@ -39,6 +41,7 @@ public class OverviewAdapter extends BaseAdapter implements OnScrollListener
 		_Items = new ArrayList<Overview>();
 		_ListView = listView;
 		_ItemId = itemId;
+		_Item = Repository.getIntent().getItemsManager().getItem(itemId);
 	}
 
 	@Override
@@ -70,7 +73,7 @@ public class OverviewAdapter extends BaseAdapter implements OnScrollListener
 		TextView txtOverview = (TextView) view.findViewById(R.id.txtOverview);
 		RatingBar rtgRating = (RatingBar)view.findViewById(R.id.rtgRating);
 
-		txtOverview.setText("Тут какой то охренно длинный коментарий с описанием самого лучшего товара на планете\n"+item.getDescription());
+		txtOverview.setText(item.getDescription());
 		
 		rtgRating.setRating((float)item.getRating());
 
@@ -89,7 +92,7 @@ public class OverviewAdapter extends BaseAdapter implements OnScrollListener
 		
 		int size = _Items.size();
 		OverviewsManager manager = Repository.getIntent().getOverviewsManager();
-		int count = manager.getOverviewsCount(_ItemId);
+		int count = _Item.getOverviewsCount();
 		
 		if (size >= count)
 		{
