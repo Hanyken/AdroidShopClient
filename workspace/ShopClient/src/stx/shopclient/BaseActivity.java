@@ -2,11 +2,13 @@ package stx.shopclient;
 
 import stx.shopclient.cartactivity.CartActivity;
 import stx.shopclient.discountactivity.DiscountListActivity;
+import stx.shopclient.loginactivity.LoginActivity;
 import stx.shopclient.mainactivity.MainActivity;
 import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.mainmenu.MainMenuListAdapter;
 import stx.shopclient.messagesactivity.MessagesListActivity;
 import stx.shopclient.searchactivity.SearchActivity;
+import stx.shopclient.settings.UserAccount;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -35,6 +37,15 @@ public class BaseActivity extends FragmentActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		if (!checkUserAccount())
+		{
+			Intent intent = new Intent(this, LoginActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);			
+			finish();
+		}
+
 		super.onCreate(savedInstanceState);
 
 		ActionBar actionBar = getActionBar();
@@ -86,6 +97,15 @@ public class BaseActivity extends FragmentActivity
 		{
 			_mainViewContainer.addView(mainView);
 		}
+	}
+
+	protected boolean checkUserAccount()
+	{
+		UserAccount.load(this);
+		if (UserAccount.getLogin() == null || UserAccount.getLogin().equals(""))
+			return false;
+		else
+			return true;
 	}
 
 	protected void onMainMenuItemClick(MainMenuItem item)
