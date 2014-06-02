@@ -10,6 +10,7 @@ import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.itemactivity.ItemActivity;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.ui.common.GridPagerAdapter;
+import stx.shopclient.utils.ImageDownloadTask;
 
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -74,7 +75,8 @@ public class CatalogItemViewPagerFragment extends Fragment{
 			
 			// TODO: после этого все уезжает
 			ImageView imgView = (ImageView)view.findViewById(R.id.imageView);
-			imgView.setImageBitmap(Repository.getIntent().getImagesManager().getImage(item.getIco()));
+			//imgView.setImageBitmap(Repository.getIntent().getImagesManager().getImage(item.getIco()));
+			ImageDownloadTask.startNew(imgView, "file://" + Repository.getIntent().getImagesManager().getImagePath(item.getIco()));
 			
 			TextView textView = (TextView)view.findViewById(R.id.textView);
 			textView.setText(item.getName());

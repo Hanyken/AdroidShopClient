@@ -5,6 +5,7 @@ import stx.shopclient.mainactivity.MainActivity;
 import stx.shopclient.settings.UserAccount;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +22,7 @@ public class LoginActivity extends Activity
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.login_activity);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		
 		getActionBar().setTitle("¬ход");
 
@@ -51,6 +53,7 @@ public class LoginActivity extends Activity
 			Intent intent = new Intent(this, MainActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);	
 			startActivity(intent);			
 			finish();
 		}

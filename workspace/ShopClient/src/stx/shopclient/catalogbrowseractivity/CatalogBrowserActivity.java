@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
@@ -27,6 +28,7 @@ import stx.shopclient.entity.CatalogNode;
 import stx.shopclient.itemactivity.ItemActivity;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.ui.common.LoadMoreListAdapter;
+import stx.shopclient.utils.ImageDownloadTask;
 
 public class CatalogBrowserActivity extends BaseActivity implements
 		OnItemClickListener {
@@ -171,6 +173,9 @@ public class CatalogBrowserActivity extends BaseActivity implements
 			nameTextView.setText(item.getName());
 			descriptionTextView.setText(Double.toString(Repository.getIntent().getPropertiesManager().getItemPrice(item.getId()))
 					+ " рублей");
+			
+			ImageView imgView = (ImageView)view.findViewById(R.id.imageView);			
+			ImageDownloadTask.startNew(imgView, "file://" + Repository.getIntent().getImagesManager().getImagePath(item.getIco()));
 
 			ratingBar.setRating((float) item.getRating());
 		}

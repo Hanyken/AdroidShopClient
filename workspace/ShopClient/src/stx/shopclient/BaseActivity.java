@@ -9,7 +9,9 @@ import stx.shopclient.mainmenu.MainMenuListAdapter;
 import stx.shopclient.messagesactivity.MessagesListActivity;
 import stx.shopclient.searchactivity.SearchActivity;
 import stx.shopclient.settings.UserAccount;
+import stx.shopclient.settingsactivity.SettingsActivity;
 import android.app.ActionBar;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -36,17 +38,19 @@ public class BaseActivity extends FragmentActivity
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
-	{
+	{		
+		super.onCreate(savedInstanceState);
+		
 		if (!checkUserAccount())
 		{
 			Intent intent = new Intent(this, LoginActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			startActivity(intent);			
 			finish();
+			return;
 		}
-
-		super.onCreate(savedInstanceState);
 
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
@@ -135,6 +139,11 @@ public class BaseActivity extends FragmentActivity
 		else if (item.getId() == MainMenuItem.MESSAGES_MENU_ITEM)
 		{
 			Intent intent = new Intent(this, MessagesListActivity.class);
+			startActivity(intent);
+		}
+		else if (item.getId() == MainMenuItem.SETTINGS_MENU_ITEM_ID)
+		{
+			Intent intent = new Intent(this, SettingsActivity.class);
 			startActivity(intent);
 		}
 	}
