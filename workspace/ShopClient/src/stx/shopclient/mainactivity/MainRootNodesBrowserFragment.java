@@ -56,6 +56,10 @@ public class MainRootNodesBrowserFragment extends Fragment implements
 		tabHost.addTab(spec);
 
 		tabHost.setCurrentTab(0);
+		
+		tabHost.getTabWidget().setStripEnabled(true);
+		tabHost.getTabWidget().setLeftStripDrawable(R.drawable.tab);
+		tabHost.getTabWidget().setRightStripDrawable(R.drawable.tab);
 
 		loadDataFromDatabase();
 

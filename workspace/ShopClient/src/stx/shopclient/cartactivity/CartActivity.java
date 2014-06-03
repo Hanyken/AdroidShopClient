@@ -28,6 +28,7 @@ import stx.shopclient.itemactivity.ItemActivity;
 import stx.shopclient.order_properties_activity.OrderPropertiesActivity;
 import stx.shopclient.repository.ItemsManager;
 import stx.shopclient.repository.Repository;
+import stx.shopclient.utils.ImageDownloadTask;
 
 public class CartActivity extends BaseActivity implements OnItemClickListener
 {
@@ -136,6 +137,9 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 			TextView descrTextView = (TextView) view
 					.findViewById(R.id.descriptionTextView);
 			descrTextView.setText("1 רע.");
+			
+			ImageView imgView = (ImageView)view.findViewById(R.id.imageView);
+			ImageDownloadTask.startNew(imgView, "file://" + Repository.getIntent().getImagesManager().getImagePath(item.item.getIco()));
 
 			Button menuButton = (Button) view.findViewById(R.id.menuButton);
 

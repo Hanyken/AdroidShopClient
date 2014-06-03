@@ -14,6 +14,8 @@ import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
@@ -54,11 +56,13 @@ public class BaseActivity extends FragmentActivity
 
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#7593B3")));		
 
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		setContentView(R.layout.base_activity);
+		setContentView(R.layout.base_activity);		
 
 		_drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		_drawerLayout.getRootView().setBackgroundColor(Color.WHITE);
 		_drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener()
 		{
 
