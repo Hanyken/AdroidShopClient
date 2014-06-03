@@ -1,21 +1,14 @@
 package stx.shopclient.itemactivity;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import stx.shopclient.R;
 import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.repository.ImagesManager;
 import stx.shopclient.repository.Repository;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Environment;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 

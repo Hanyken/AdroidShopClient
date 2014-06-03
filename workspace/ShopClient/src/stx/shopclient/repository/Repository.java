@@ -19,16 +19,14 @@ public class Repository
 	private CatalogManager _CatalogManager;
 	private OverviewsManager _OverviewsManager;
 	private ItemsManager _ItemsManager;
-	private PropertiesManager _PropertiesManager;
 	private MessagesManager _MessagesManager;
 	
 	private Repository()
 	{
 		_ImagesManager = new ImagesManager();
 		_OrderManager = new OrdersManager();
-		_PropertiesManager = new PropertiesManager();
 		_OverviewsManager = new OverviewsManager();
-		_ItemsManager = new ItemsManager(_OverviewsManager, _PropertiesManager);
+		_ItemsManager = new ItemsManager(_OverviewsManager);
 		_CatalogManager = new CatalogManager(_ItemsManager);
 		_MessagesManager = new MessagesManager();
 		
@@ -45,10 +43,6 @@ public class Repository
 	public ItemsManager getItemsManager()
 	{
 		return _ItemsManager;
-	}
-	public PropertiesManager getPropertiesManager()
-	{
-		return _PropertiesManager;
 	}
 	public OrdersManager getOrderManager()
 	{

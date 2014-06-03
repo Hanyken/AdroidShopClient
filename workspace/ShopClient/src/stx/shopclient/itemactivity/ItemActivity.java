@@ -3,12 +3,14 @@ package stx.shopclient.itemactivity;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.entity.CatalogItem;
+import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.orderactivity.OrderActivity;
 import stx.shopclient.overviewactivity.OverviewActivity;
 import stx.shopclient.repository.Repository;
-import android.content.ClipData.Item;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
@@ -25,17 +27,20 @@ public class ItemActivity extends BaseActivity
 	public static final String ITEM_BUY_EXTRA_KEY = "CanBuyItem";
 
 	LinearLayout myGallery;
-
+	
 	@Override
 	protected View createMainView(ViewGroup parent)
 	{
 		View view = getLayoutInflater().inflate(R.layout.item_activity, parent,
 				false);
-
+		
 		Intent intent = getIntent();
-
-		Long itemId = 0l;
-		itemId = intent.getLongExtra(ITEM_ID_EXTRA_KEY, 0);
+		
+		CatalogSettings settings = Repository.getIntent().getCatalogManager().getSettings();
+		
+		getActionBar().setBackgroundDrawable(new ColorDrawable(settings.getBackground()));
+		
+		Long itemId = intent.getLongExtra(ITEM_ID_EXTRA_KEY, 0);
 		
 		_Item = Repository.getIntent().getItemsManager().getItem(itemId);
 
@@ -61,8 +66,6 @@ public class ItemActivity extends BaseActivity
 	public void setProperty(TextView txtProperty)
 	{
 		String description = _Item.getDescription() + "\n\n\n";
-		// String text =
-		// "\t-Клевость - самый клевый\n\t-Привлекательность - привлекательнее товара не существует\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nНу и тут какие то еще вкусности про товар";
 		String text = _Item.getPropertyString();
 
 		String firstTitle = "Общее\n\n\t";
@@ -97,7 +100,6 @@ public class ItemActivity extends BaseActivity
 			sendIntent.setAction(Intent.ACTION_SEND);
 			sendIntent.setType("text/plain");
 			sendIntent.putExtra(Intent.EXTRA_TEXT, _Item.getName());
-			// TODO сделать передачу картинки
 			sendIntent.setType("image/jpeg");
 			sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://"+Repository.getIntent().getImagesManager().getImagePath(_Item.getIco())));
 			startActivity(sendIntent);

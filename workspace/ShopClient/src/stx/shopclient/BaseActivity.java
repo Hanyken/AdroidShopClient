@@ -2,11 +2,13 @@ package stx.shopclient;
 
 import stx.shopclient.cartactivity.CartActivity;
 import stx.shopclient.discountactivity.DiscountListActivity;
+import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.loginactivity.LoginActivity;
 import stx.shopclient.mainactivity.MainActivity;
 import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.mainmenu.MainMenuListAdapter;
 import stx.shopclient.messagesactivity.MessagesListActivity;
+import stx.shopclient.repository.Repository;
 import stx.shopclient.searchactivity.SearchActivity;
 import stx.shopclient.settings.UserAccount;
 import stx.shopclient.settingsactivity.SettingsActivity;
@@ -14,6 +16,10 @@ import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
@@ -38,16 +44,16 @@ public class BaseActivity extends FragmentActivity
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
-	{		
+	{
 		super.onCreate(savedInstanceState);
-		
+
 		if (!checkUserAccount())
 		{
 			Intent intent = new Intent(this, LoginActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-			startActivity(intent);			
+			startActivity(intent);
 			finish();
 			return;
 		}
@@ -119,33 +125,41 @@ public class BaseActivity extends FragmentActivity
 			Intent intent = new Intent(this, MainActivity.class);
 			NavUtils.navigateUpTo(this, intent);
 		}
-		else if (item.getId() == MainMenuItem.SEARCH_MENU_ITEM_ID)
-		{
-			Intent intent = new Intent(this, SearchActivity.class);
-			intent.putExtra(SearchActivity.TITLE_EXTRA_KEY,
-					getSearchActivityTitle());
-			startActivity(intent);
-		}
-		else if (item.getId() == MainMenuItem.CART_MENU_ITEM_ID)
-		{
-			Intent intent = new Intent(this, CartActivity.class);
-			startActivity(intent);
-		}
-		else if (item.getId() == MainMenuItem.DISCOUNT_CARDS_MENU_ITEM_ID)
-		{
-			Intent intent = new Intent(this, DiscountListActivity.class);
-			startActivity(intent);
-		}
-		else if (item.getId() == MainMenuItem.MESSAGES_MENU_ITEM)
-		{
-			Intent intent = new Intent(this, MessagesListActivity.class);
-			startActivity(intent);
-		}
-		else if (item.getId() == MainMenuItem.SETTINGS_MENU_ITEM_ID)
-		{
-			Intent intent = new Intent(this, SettingsActivity.class);
-			startActivity(intent);
-		}
+		else
+			if (item.getId() == MainMenuItem.SEARCH_MENU_ITEM_ID)
+			{
+				Intent intent = new Intent(this, SearchActivity.class);
+				intent.putExtra(SearchActivity.TITLE_EXTRA_KEY,
+						getSearchActivityTitle());
+				startActivity(intent);
+			}
+			else
+				if (item.getId() == MainMenuItem.CART_MENU_ITEM_ID)
+				{
+					Intent intent = new Intent(this, CartActivity.class);
+					startActivity(intent);
+				}
+				else
+					if (item.getId() == MainMenuItem.DISCOUNT_CARDS_MENU_ITEM_ID)
+					{
+						Intent intent = new Intent(this,
+								DiscountListActivity.class);
+						startActivity(intent);
+					}
+					else
+						if (item.getId() == MainMenuItem.MESSAGES_MENU_ITEM)
+						{
+							Intent intent = new Intent(this,
+									MessagesListActivity.class);
+							startActivity(intent);
+						}
+						else
+							if (item.getId() == MainMenuItem.SETTINGS_MENU_ITEM_ID)
+							{
+								Intent intent = new Intent(this,
+										SettingsActivity.class);
+								startActivity(intent);
+							}
 	}
 
 	protected String getSearchActivityTitle()
@@ -183,6 +197,7 @@ public class BaseActivity extends FragmentActivity
 			return super.onOptionsItemSelected(item);
 		}
 	}
+
 
 	class MainMenuOnClickListener implements OnItemClickListener
 	{

@@ -10,13 +10,11 @@ public class ItemsManager
 {
 	private ArrayList<CatalogItem> _Items;
 	private OverviewsManager _OverviewsManager;
-	private PropertiesManager _PropertiesManager;
 	
-	public ItemsManager(OverviewsManager overviewsManager, PropertiesManager propertiesManager)
+	public ItemsManager(OverviewsManager overviewsManager)
 	{
 		_Items = new ArrayList<CatalogItem>();
 		_OverviewsManager = overviewsManager;
-		_PropertiesManager = propertiesManager;
 	}
 	
 	public CatalogItem getItem(long itemId)

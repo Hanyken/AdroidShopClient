@@ -4,7 +4,7 @@
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="AppBaseTheme" parent="android:Theme.Light">
+    <style name="AppBaseTheme" parent="android:Theme.Holo">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
@@ -16,7 +16,7 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
-
+    
     <style name="MainRootNodesBrowserGrid">
         <item name="android:textSize">10sp</item>
     </style>
@@ -31,5 +31,16 @@
     <style name="ButtonBack">
         <item name="android:background">@drawable/stl_back_button</item>
     </style>
+    
+    <style name="ItemActivityStyle" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/AppActionBar</item>
+    </style>
+    <style name="AppActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">@color/mainBackground</item>
+        <item name="android:titleTextStyle">@style/AppTitleTextStyle</item>
+    </style>
+    <style name="AppTitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+    <item name="android:textColor">@color/mainTextColor</item>
+  </style>
     
 </resources>
