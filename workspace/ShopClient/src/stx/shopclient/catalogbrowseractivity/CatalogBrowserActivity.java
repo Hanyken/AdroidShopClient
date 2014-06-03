@@ -171,8 +171,7 @@ public class CatalogBrowserActivity extends BaseActivity implements
 			RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingBar);
 
 			nameTextView.setText(item.getName());
-			descriptionTextView.setText(Double.toString(Repository.getIntent().getPropertiesManager().getItemPrice(item.getId()))
-					+ " рублей");
+			descriptionTextView.setText(Double.toString(item.getPrice()) + " рублей");
 			
 			ImageView imgView = (ImageView)view.findViewById(R.id.imageView);			
 			ImageDownloadTask.startNew(imgView, "file://" + Repository.getIntent().getImagesManager().getImagePath(item.getIco()));

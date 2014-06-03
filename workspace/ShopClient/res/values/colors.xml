@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="image_fon">#FF000000</color>
+    
+    <color name="mainBackground">#FF7595B3</color>
+    <color name="mainTextColor">#FFFFFFFF</color>
+    
 </resources>

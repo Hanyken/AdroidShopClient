@@ -5,13 +5,13 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="16"
+        android:minSdkVersion="17"
         android:targetSdkVersion="19" />
-    
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.INTERNET" />
-    
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -28,66 +28,66 @@
         </activity>
         <activity
             android:name="stx.shopclient.itemactivity.ItemActivity"
+            android:label="@string/app_name"
+            android:theme="@style/ItemActivityStyle" >
+        </activity>
+        <activity
+            android:name="stx.shopclient.catalogbrowseractivity.CatalogBrowserActivity"
             android:label="@string/app_name" >
         </activity>
-        <activity android:name="stx.shopclient.catalogbrowseractivity.CatalogBrowserActivity"
-            android:label="@string/app_name">
-            
+        <activity
+            android:name="stx.shopclient.searchactivity.SearchActivity"
+            android:label="@string/app_name" >
         </activity>
-        <activity android:name="stx.shopclient.searchactivity.SearchActivity"
-            android:label="@string/app_name">
-            
+        <activity
+            android:name="stx.shopclient.searchactivity.DateRangeSelectActivity"
+            android:label="@string/app_name" >
         </activity>
-        <activity android:name="stx.shopclient.searchactivity.DateRangeSelectActivity"
-            android:label="@string/app_name">
-            
+        <activity
+            android:name="stx.shopclient.searchresultsactivity.SearchResultsActivity"
+            android:label="@string/app_name" >
         </activity>
-        <activity android:name="stx.shopclient.searchresultsactivity.SearchResultsActivity"
-            android:label="@string/app_name">
-            
+        <activity
+            android:name="stx.shopclient.cartactivity.CartActivity"
+            android:label="@string/app_name" >
         </activity>
-        <activity android:name="stx.shopclient.cartactivity.CartActivity"
-            android:label="@string/app_name">
-            
+        <activity
+            android:name="stx.shopclient.overviewactivity.OverviewActivity"
+            android:label="@string/app_name" >
         </activity>
-        <activity android:name="stx.shopclient.overviewactivity.OverviewActivity"
-            android:label="@string/app_name">
-            
+        <activity
+            android:name="stx.shopclient.order_properties_activity.OrderPropertiesActivity"
+            android:label="@string/app_name" >
         </activity>
-        <activity android:name="stx.shopclient.order_properties_activity.OrderPropertiesActivity"
-            android:label="@string/app_name">
-            
+        <activity
+            android:name="stx.shopclient.orderactivity.OrderActivity"
+            android:label="@string/order_activity_name" >
         </activity>
-        <activity android:name="stx.shopclient.orderactivity.OrderActivity"
-            android:label="@string/order_activity_name">
-            
+        <activity android:name="stx.shopclient.itemactivity.ItemImageActivity" >
         </activity>
-        <activity android:name="stx.shopclient.itemactivity.ItemImageActivity">
-            
+        <activity
+            android:name="stx.shopclient.discountactivity.DiscountListActivity"
+            android:label="@string/app_name" >
         </activity>
-        <activity android:name="stx.shopclient.discountactivity.DiscountListActivity"
-            android:label="@string/app_name">
-            
+        <activity
+            android:name="stx.shopclient.discountactivity.DiscountActivity"
+            android:label="@string/app_name" >
         </activity>
-        <activity android:name="stx.shopclient.discountactivity.DiscountActivity"
-            android:label="@string/app_name">
-            
+        <activity
+            android:name="stx.shopclient.messagesactivity.MessagesListActivity"
+            android:label="@string/app_name" >
         </activity>
-        <activity android:name="stx.shopclient.messagesactivity.MessagesListActivity"
-            android:label="@string/app_name">
-            
+        <activity
+            android:name="stx.shopclient.messagesactivity.MessageActivity"
+            android:label="@string/app_name" >
         </activity>
-        <activity android:name="stx.shopclient.messagesactivity.MessageActivity"
-            android:label="@string/app_name">
-            
+        <activity
+            android:name="stx.shopclient.loginactivity.LoginActivity"
+            android:label="@string/app_name" >
         </activity>
-        <activity android:name="stx.shopclient.loginactivity.LoginActivity"
-            android:label="@string/app_name">
-            
-        </activity>
-        <activity android:name="stx.shopclient.settingsactivity.SettingsActivity"
-            android:label="@string/app_name">
-            
+        <activity
+            android:name="stx.shopclient.settingsactivity.SettingsActivity"
+            android:label="@string/app_name" >
         </activity>
     </application>
 

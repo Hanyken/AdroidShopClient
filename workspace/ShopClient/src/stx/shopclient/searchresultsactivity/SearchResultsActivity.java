@@ -143,8 +143,7 @@ public class SearchResultsActivity extends BaseActivity implements
 			RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingBar);
 
 			nameTextView.setText(item.getName());
-			descriptionTextView.setText(Double.toString(Repository.getIntent().getPropertiesManager().getItemPrice(item.getId()))
-					+ " рублей");
+			descriptionTextView.setText(Double.toString(item.getPrice()) + " рублей");
 
 			ratingBar.setRating((float) item.getRating());
 		}
