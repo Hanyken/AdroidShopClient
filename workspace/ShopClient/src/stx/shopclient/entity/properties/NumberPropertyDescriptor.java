@@ -1,7 +1,7 @@
 package stx.shopclient.entity.properties;
 
 public class NumberPropertyDescriptor extends PropertyDescriptor {
-	public static final String TYPE_STRING = "Number";
+	public static final String TYPE_STRING = "Numeric";
 
 	private double _minValue;
 	private double _maxValue;

@@ -21,13 +21,7 @@
         <item name="android:textSize">10sp</item>
     </style>
     
-    
-    <style name="ButtonComment">
-        <item name="android:background">@drawable/stl_comment_button</item>
-    </style>
-    <style name="ButtonRepost">
-        <item name="android:background">@drawable/stl_repost_button</item>
-    </style>
+   
     <style name="ButtonBack">
         <item name="android:background">@drawable/stl_back_button</item>
     </style>

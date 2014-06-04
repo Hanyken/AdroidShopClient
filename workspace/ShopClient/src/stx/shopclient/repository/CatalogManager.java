@@ -3,6 +3,7 @@ package stx.shopclient.repository;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import android.app.Application;
 import android.graphics.Color;
 
 import stx.shopclient.entity.Catalog;
@@ -33,6 +34,12 @@ public class CatalogManager
 		item.setItemPanelColor(Color.rgb(235, 235, 235));
 		item.setRatingColor(Color.rgb(255, 149, 0));
 		item.setForegroundColor(Color.WHITE);
+		item.setPressedColor(item.getRatingColor());
+		item.setDisableColor(item.getItemPanelColor());
+		// TODO: Загрузку картинок надо переделать т.к. они берутся пока что из ресурсов
+		//item.setShareImg("Share.png");
+		//item.setShareImgPress("SharePress.png");
+		item.setCountButtonLableColor(Color.rgb(125, 125, 125));
 		return item;
 	}
 	

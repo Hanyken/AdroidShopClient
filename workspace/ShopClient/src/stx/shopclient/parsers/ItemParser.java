@@ -88,7 +88,7 @@ public class ItemParser extends BaseParser<CatalogItem>
 		if (opNl.getLength() > 0)
 		{
 			NodeList itemsList = ((Element)opNl.item(0)).getElementsByTagName(PROPERTY_NAME); 
-			PropertyParser parser = new PropertyParser();
+			PropertyParser parser = new PropertyParser(false);
 			Collection<PropertyDescriptor> items = parser.getElements(itemsList);
 			item.setOrderProperties(items);
 		}

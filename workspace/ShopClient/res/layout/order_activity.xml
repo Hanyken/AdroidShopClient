@@ -8,9 +8,9 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/buttonbar_margion_big"
-        android:layout_marginRight="@dimen/buttonbar_margion_big"
-        android:layout_marginBottom="@dimen/buttonbar_margion_big">
+        android:layout_marginLeft="@dimen/margion_big"
+        android:layout_marginRight="@dimen/margion_big"
+        android:layout_marginBottom="@dimen/margion_big">
         
         <TextView
             android:id="@+id/lblItemName" 
@@ -36,8 +36,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="right"
-        android:layout_marginTop="@dimen/buttonbar_margion_big"
-        android:layout_marginRight="@dimen/buttonbar_margion_big">
+        android:layout_marginTop="@dimen/margion_big"
+        android:layout_marginRight="@dimen/margion_big">
         
         <TextView 
             android:layout_width="wrap_content"
@@ -48,7 +48,7 @@
             android:id="@+id/txtCount"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/buttonbar_margion_big"
+            android:layout_marginLeft="@dimen/margion_big"
             android:inputType="numberSigned"/>
         
     </LinearLayout>

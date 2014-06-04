@@ -10,14 +10,15 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:layout_marginBottom="@dimen/margion_big">
         
 	    <LinearLayout
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_marginTop="@dimen/buttonbar_margion_big"
+	        android:layout_marginTop="@dimen/margion_big"
 	        android:orientation="horizontal" 
-	        android:layout_marginRight="@dimen/buttonbar_margion_big"
+	        android:layout_marginRight="@dimen/margion_big"
 	        android:layout_gravity="right">
 	
 	        <TextView
@@ -31,7 +32,7 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_gravity="end"
-	            android:layout_marginLeft="@dimen/buttonbar_margion_big"
+	            android:layout_marginLeft="@dimen/margion_big"
 	            style="?android:attr/ratingBarStyleIndicator"
 	            android:isIndicator="false" />
 	    </LinearLayout>
@@ -54,8 +55,8 @@
 	            android:layout_width="0dp"
 	            android:layout_height="wrap_content"
 	            android:layout_weight="1"
-	            android:layout_marginLeft="@dimen/buttonbar_margion_big"
-	            android:layout_marginRight="@dimen/buttonbar_margion_small"
+	            android:layout_marginLeft="@dimen/margion_big"
+	            android:layout_marginRight="@dimen/margion_small"
 	            android:text="OK"/>
 	        
 	        <Button 
@@ -63,19 +64,24 @@
 	            android:layout_width="0dp"
 	            android:layout_height="wrap_content"
 	            android:layout_weight="1"
-	            android:layout_marginLeft="@dimen/buttonbar_margion_small"
-	            android:layout_marginRight="@dimen/buttonbar_margion_big"
+	            android:layout_marginLeft="@dimen/margion_small"
+	            android:layout_marginRight="@dimen/margion_big"
 	            android:text="Cancel"/>
 	        
 	    </LinearLayout>
 
     </LinearLayout>
     
-    
+    <!--  
     <ListView
         android:id="@+id/lstMain"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" 
         android:layout_marginTop="@dimen/buttonbar_margion_big"/>
+        -->
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/lstMain"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
 
 </LinearLayout>

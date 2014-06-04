@@ -133,6 +133,12 @@ public abstract class BaseParser<T>
 
 	}
 
+	protected boolean getExistsValue(Element item, String str)
+	{
+		String value = getValue(item, str);
+		return !value.equals(null) && value != null && !value.equals("");
+	}
+	
 	protected String getValue(Element item, String str)
 	{
 		NodeList n = item.getElementsByTagName(str);

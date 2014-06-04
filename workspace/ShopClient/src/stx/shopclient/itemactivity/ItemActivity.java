@@ -8,7 +8,6 @@ import stx.shopclient.orderactivity.OrderActivity;
 import stx.shopclient.overviewactivity.OverviewActivity;
 import stx.shopclient.repository.Repository;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;

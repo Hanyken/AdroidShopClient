@@ -6,9 +6,11 @@
 
     <dimen name="btnOrder_width">120dp</dimen>
     <dimen name="btnOrder_height">40dp</dimen>
-    <dimen name="buttonbar_margion_big">10dp</dimen>
-    <dimen name="buttonbar_margion_small">3dp</dimen>
+    <dimen name="margion_big">10dp</dimen>
+    <dimen name="margion_small">3dp</dimen>
+    <dimen name="buttonbar_margion_big">20dp</dimen>
+    <dimen name="buttonbar_margion_small">8dp</dimen>
+    <dimen name="buttonbar_text_size">16dp</dimen>
     
-    <dimen name="top_panel_width">48dp</dimen>
     
 </resources>

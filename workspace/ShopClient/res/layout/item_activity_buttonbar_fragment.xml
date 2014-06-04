@@ -22,8 +22,9 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentRight="true" 
-	        android:layout_marginTop="@dimen/buttonbar_margion_big"
-	        android:layout_marginBottom="@dimen/buttonbar_margion_big">
+	        android:layout_centerVertical="true"
+	        android:layout_marginTop="@dimen/margion_big"
+	        android:layout_marginBottom="@dimen/margion_big">
 	
 	        
 	        
@@ -32,14 +33,15 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_marginLeft="@dimen/buttonbar_margion_big"
-	            android:layout_gravity="center_vertical"/>
+	            android:layout_gravity="center_vertical"
+	            android:textSize="@dimen/buttonbar_text_size"
+	            />
 	        
 	        <Button
 	            android:id="@+id/btnOverview"
-	            android:layout_width="40dp"
-	            android:layout_height="40dp"
-	            android:layout_marginLeft="@dimen/buttonbar_margion_small"
-	            style="@style/ButtonComment"/>
+	            android:layout_width="35dp"
+	            android:layout_height="35dp"
+	            android:layout_marginLeft="@dimen/buttonbar_margion_small"/>
 	
 	        
 	        
@@ -48,24 +50,30 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_marginLeft="@dimen/buttonbar_margion_big"
-	            android:layout_gravity="center_vertical"/>
+	            android:layout_gravity="center_vertical"
+	            android:textSize="@dimen/buttonbar_text_size"/>
 	        
 	        <Button
 	            android:id="@+id/btnShare"
-	            android:layout_width="40dp"
-	            android:layout_height="40dp"
+	            android:layout_width="35dp"
+	            android:layout_height="35dp"
 	            android:layout_marginLeft="@dimen/buttonbar_margion_small"
-	            android:layout_marginRight="@dimen/buttonbar_margion_big"
-	            style="@style/ButtonRepost"/>
+	            android:layout_marginRight="@dimen/buttonbar_margion_big"/>
 	        
 	    </LinearLayout>
 
 	</RelativeLayout>
 	
+	<LinearLayout 
+	    android:id="@+id/llAnalogs"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical"/>
+	
 	<RelativeLayout 
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
-	    android:layout_marginTop="@dimen/buttonbar_margion_big">
+	    android:layout_marginTop="@dimen/margion_big">
 	    
 	    <TextView 
 	        android:id="@+id/lblPrice"

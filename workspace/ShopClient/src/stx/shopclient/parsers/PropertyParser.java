@@ -35,21 +35,23 @@ public class PropertyParser extends BaseParser<PropertyDescriptor>
 
 	private final String ENUM_NAME = "Enum";
 
-	public static final String DATE_TYPE = "Date";
 	public static final String TIME_TYPE = "Time";
 	public static final String INTEGER_TYPE = "Integer";
-	public static final String NUMERIC_TYPE = "Numeric";
-	public static final String ENUM_TYPE = "Enum";
-	public static final String STRING_TYPE = "String";
-	public static final String BOOL_TYPE = "Boolean";
 	public static final String ARRAY_TYPE = "Array";
 
+	private boolean _rangeNeeded = true;
+	
 	public PropertyParser()
 	{
 		TEST = "<OrderProperties><Property><Name>OrderDate</Name><Type>Date</Type><Title>Дата для заказа</Title><Order>1</Order><Required>1</Required><Value><Max>2014-01-01T00:00:00</Max><Min>2014-12-31T00:00:00</Min></Value></Property>";
 		TEST += "<Property><Name>Count</Name><Type>Numeric</Type><Title>Количество</Title><Order>2</Order><Required>1</Required><Value><Max>1.00000</Max><Min>8.00000</Min></Value></Property>";
 		TEST += "<Property><Name>Comment</Name><Type>String</Type><Title>Коментарий</Title><Order>3</Order><Required>0</Required></Property>";
 		TEST += "<Property><Name>Color</Name><Type>Enum</Type><Title>Цвет</Title><Order>4</Order><Required>0</Required><Range><Enum><Value>1</Value><Name>Синий</Name></Enum><Enum><Value>2</Value><Name>Красный</Name></Enum><Enum><Value>3</Value><Name>Зеленый</Name></Enum></Range></Property></OrderProperties>";
+	}
+	public PropertyParser(boolean rangeNeeded)
+	{
+		this();
+		_rangeNeeded = rangeNeeded;
 	}
 
 	public PropertyDescriptor getElement(Element e)
@@ -58,7 +60,7 @@ public class PropertyParser extends BaseParser<PropertyDescriptor>
 
 		PropertyDescriptor item = null;
 
-		if (propType.equals(DATE_TYPE))
+		if (propType.equals(DatePropertyDescriptor.TYPE_STRING))
 		{
 			item = new DatePropertyDescriptor();
 			NodeList nl1 = e.getElementsByTagName(VALUE_NAME);
@@ -103,10 +105,12 @@ public class PropertyParser extends BaseParser<PropertyDescriptor>
 						((NumberPropertyDescriptor) item)
 								.setMinValue(super.getValueInt(el,
 										MIN_NAME));
+						
+							((NumberPropertyDescriptor) item).setRange(_rangeNeeded);
 					}
 				}
 				else
-					if (propType.equals(NUMERIC_TYPE))
+					if (propType.equals(NumberPropertyDescriptor.TYPE_STRING))
 					{
 						item = new NumberPropertyDescriptor();
 						NodeList nl4 = e.getElementsByTagName(VALUE_NAME);
@@ -119,10 +123,12 @@ public class PropertyParser extends BaseParser<PropertyDescriptor>
 							((NumberPropertyDescriptor) item)
 									.setMinValue(super.getValueDouble(
 											el, MIN_NAME));
+							
+								((NumberPropertyDescriptor) item).setRange(_rangeNeeded);
 						}
 					}
 					else
-						if (propType.equals(ENUM_TYPE))
+						if (propType.equals(EnumPropertyDescriptor.TYPE_STRING))
 						{
 							item = new EnumPropertyDescriptor();
 							NodeList nl5 = e.getElementsByTagName(RANGE_NAME);
@@ -146,7 +152,7 @@ public class PropertyParser extends BaseParser<PropertyDescriptor>
 								}
 							}
 						else
-							if (propType.equals(BOOL_TYPE))
+							if (propType.equals(BooleanPropertyDescriptor.TYPE_STRING))
 							{
 								item = new BooleanPropertyDescriptor();
 							}

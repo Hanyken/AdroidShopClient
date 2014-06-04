@@ -14,15 +14,15 @@
             android:id="@+id/frgImages"
             android:name="stx.shopclient.itemactivity.ItemImageFragment"
             android:layout_width="fill_parent"
-            android:layout_height="100dp" 
-            android:layout_marginTop="@dimen/buttonbar_margion_big"/>
+            android:layout_height="180dp" 
+            android:layout_marginTop="@dimen/margion_big"/>
 
         <fragment
             android:id="@+id/frgButtonBar"
             android:name="stx.shopclient.itemactivity.ItemButtonBarFragment"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/buttonbar_margion_big" />
+            android:layout_marginTop="@dimen/margion_big" />
 
         <TextView
             android:id="@+id/txtProperty"

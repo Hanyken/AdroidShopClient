@@ -3,6 +3,7 @@ package stx.shopclient.itemactivity;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import stx.shopclient.R;
+import stx.shopclient.repository.Repository;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -27,6 +28,8 @@ public class ItemImageFragment extends Fragment
 		pageIndicator = (CirclePageIndicator) view
 				.findViewById(R.id.page_indicator);
 		
+		pageIndicator.setFillColor(Repository.getIntent().getCatalogManager().getSettings().getBackground());
+		
 		return view;
 	}
 
@@ -36,5 +39,9 @@ public class ItemImageFragment extends Fragment
 
 		viewPager.setAdapter(adapter);
 		pageIndicator.setViewPager(viewPager);
+		if (adapter.getCount() < 2)
+		{
+			pageIndicator.setVisibility(View.GONE);
+		}
 	}
 }

@@ -7,7 +7,6 @@ import java.util.List;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import stx.shopclient.entity.CatalogItemProperty;
 import stx.shopclient.entity.properties.BooleanPropertyDescriptor;
 import stx.shopclient.entity.properties.DatePropertyDescriptor;
 import stx.shopclient.entity.properties.EnumPropertyDescriptor;
@@ -26,7 +25,7 @@ public class ItemPropertyParser extends BaseParser<PropertyDescriptor>
 	private final String TITLE_NAME = "Title";
 	//private final String SEARCHABLE_NAME = "Searchable";
 	//private final String QUICK_SEARCHABLE_NAME = "QuickSearch";
-	private final String SHORT_LIST_NAME = "ShortList";
+	//private final String SHORT_LIST_NAME = "ShortList";
 	private final String ORDER_NAME = "Order";
 	private final String VALUE_NAME = "Value";
 	private final String RANGE_NAME = "Range";
@@ -48,7 +47,7 @@ public class ItemPropertyParser extends BaseParser<PropertyDescriptor>
 
 		PropertyDescriptor item = null;
 
-		if (propType.equals(PropertyParser.DATE_TYPE))
+		if (propType.equals(DatePropertyDescriptor.TYPE_STRING))
 		{
 			item = new DatePropertyDescriptor();
 			GregorianCalendar val = new GregorianCalendar();
@@ -70,13 +69,13 @@ public class ItemPropertyParser extends BaseParser<PropertyDescriptor>
 					((NumberPropertyDescriptor) item).setCurrentMaxValue(super.getValueInt(e, VALUE_NAME));
 				}
 				else
-					if (propType.equals(PropertyParser.NUMERIC_TYPE))
+					if (propType.equals(NumberPropertyDescriptor.TYPE_STRING))
 					{
 						item = new NumberPropertyDescriptor();
 						((NumberPropertyDescriptor) item).setCurrentMaxValue(super.getValueDouble(e, VALUE_NAME));
 					}
 					else
-						if (propType.equals(PropertyParser.ENUM_TYPE))
+						if (propType.equals(EnumPropertyDescriptor.TYPE_STRING))
 						{
 							item = new EnumPropertyDescriptor();
 							((EnumPropertyDescriptor) item).setValues(getEnumList(e));
@@ -88,7 +87,7 @@ public class ItemPropertyParser extends BaseParser<PropertyDescriptor>
 								((EnumPropertyDescriptor) item).setValues(getArrayList(e));
 							}
 						else
-							if (propType.equals(PropertyParser.BOOL_TYPE))
+							if (propType.equals(BooleanPropertyDescriptor.TYPE_STRING))
 							{
 								item = new BooleanPropertyDescriptor();
 							}

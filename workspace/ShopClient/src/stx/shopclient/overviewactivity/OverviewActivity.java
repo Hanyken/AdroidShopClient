@@ -1,15 +1,23 @@
 package stx.shopclient.overviewactivity;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
+import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.entity.Overview;
 import stx.shopclient.itemactivity.ItemActivity;
 import stx.shopclient.repository.Repository;
+import stx.shopclient.styles.ColorButtonDrawable;
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,10 +46,11 @@ public class OverviewActivity extends BaseActivity implements OnClickListener
 		View view = getLayoutInflater().inflate(R.layout.overview_activity,
 				parent, false);
 
+		CatalogSettings settings = Repository.getIntent().getCatalogManager().getSettings();
 		Intent intent = getIntent();
 		_ItemId = intent.getLongExtra(ItemActivity.ITEM_ID_EXTRA_KEY, 0);
 		
-		ListView lstMain = (ListView) view.findViewById(R.id.lstMain);
+		PullToRefreshListView lstMain = (PullToRefreshListView) view.findViewById(R.id.lstMain);
 
 		llOverview = (LinearLayout) view.findViewById(R.id.llOverviw);
 		txtOverview = (TextView)view.findViewById(R.id.txtOverview);
@@ -52,12 +61,24 @@ public class OverviewActivity extends BaseActivity implements OnClickListener
 		btnOk.setOnClickListener(this);
 		btnCancel.setOnClickListener(this);
 		
-		OverviewAdapter adapter = new OverviewAdapter(this, lstMain, _ItemId);
+		btnOk.setBackground(getBueButtonDrawable(settings));
+		btnCancel.setBackground(getBueButtonDrawable(settings));
+		
+		final OverviewAdapter adapter = new OverviewAdapter(this, lstMain, _ItemId);
 
 		lstMain.setAdapter(adapter);
-		lstMain.setOnScrollListener(adapter);
+		lstMain.setOnRefreshListener(new OnRefreshListener<ListView>()
+		{
+			@Override
+			public void onRefresh(PullToRefreshBase<ListView> refreshView)
+			{
+				adapter.RefreshData();
+			}
+			
+		});
 		
 		readUserOverview();
+		
 		
 		return view;
 	}
@@ -67,6 +88,11 @@ public class OverviewActivity extends BaseActivity implements OnClickListener
 	{
 		menu.clear();
 		MenuItem commentItem = menu.add(0, MI_COMMENT, 0, "Коментарий");
+		/*
+		CatalogSettings settings = Repository.getIntent().getCatalogManager().getSettings();
+		Bitmap bmp = settings.getImageFromPath(getResources(), "Comment"); //BitmapFactory.decodeResource(getResources(), R.drawable.img_share);
+		Drawable normal = new ImageButtonDrawable(bmp);
+		*/
 		commentItem.setIcon(R.drawable.img_comment);
 		commentItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		
@@ -175,4 +201,19 @@ public class OverviewActivity extends BaseActivity implements OnClickListener
 		txtOverview.setText(item.getDescription());
 		rtgRaiting.setRating((float)item.getRating());
 	}
+
+
+	private Drawable getBueButtonDrawable(CatalogSettings settings)
+	{
+		StateListDrawable drawable = new StateListDrawable();
+		Drawable normal = new ColorButtonDrawable(settings.getBackground());
+		Drawable press = new ColorButtonDrawable(settings.getPressedColor());
+		Drawable disable = new ColorButtonDrawable(settings.getDisableColor());
+
+		drawable.addState(new int[] { android.R.attr.state_pressed }, press);
+		drawable.addState(new int[] { -android.R.attr.state_enabled }, disable);
+		drawable.addState(new int[0], normal);
+		return drawable;
+	}
+
 }

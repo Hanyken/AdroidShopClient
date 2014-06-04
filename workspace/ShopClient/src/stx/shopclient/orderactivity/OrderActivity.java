@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -15,11 +17,13 @@ import android.widget.Toast;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.entity.CatalogItem;
+import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.entity.KeyValue;
 import stx.shopclient.entity.OrderProperty;
 import stx.shopclient.entity.properties.PropertyDescriptor;
 import stx.shopclient.itemactivity.ItemActivity;
 import stx.shopclient.repository.Repository;
+import stx.shopclient.styles.ColorButtonDrawable;
 import stx.shopclient.ui.common.properties.PropertiesList;
 
 public class OrderActivity extends BaseActivity implements OnClickListener
@@ -41,6 +45,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener
 		Intent intent = getIntent();
 		ItemId = intent.getLongExtra(ItemActivity.ITEM_ID_EXTRA_KEY, 0);
 		
+		CatalogSettings settings = Repository.getIntent().getCatalogManager().getSettings();
 		CatalogItem item = Repository.getIntent().getItemsManager().getItem(ItemId);
 		
 		lblItemName = (TextView) view.findViewById(R.id.lblItemName);
@@ -54,6 +59,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener
 		lblItemName.setText(item.getName());
 
 		btnOrder.setOnClickListener(this);
+		btnOrder.setBackground(getBueButtonDrawable(settings));
 		
 		plProperies.setAllowClear(false);
 		
@@ -80,5 +86,19 @@ public class OrderActivity extends BaseActivity implements OnClickListener
 		Repository.getIntent().getOrderManager().addOrderItem(ItemId, items);
 		Toast.makeText(this, "Товар добавлен в карзину",Toast.LENGTH_SHORT).show();
 		finish();
+	}
+	
+	
+	private Drawable getBueButtonDrawable(CatalogSettings settings)
+	{
+		StateListDrawable drawable = new StateListDrawable();
+		Drawable normal = new ColorButtonDrawable(settings.getBackground());
+		Drawable press = new ColorButtonDrawable(settings.getPressedColor());
+		Drawable disable = new ColorButtonDrawable(settings.getDisableColor());
+
+		drawable.addState(new int[] { android.R.attr.state_pressed }, press);
+		drawable.addState(new int[] { -android.R.attr.state_enabled }, disable);
+		drawable.addState(new int[0], normal);
+		return drawable;
 	}
 }

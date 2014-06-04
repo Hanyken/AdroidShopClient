@@ -5,6 +5,7 @@ import java.util.List;
 
 public class EnumPropertyDescriptor extends PropertyDescriptor {
 	public static final String TYPE_STRING = "Enum";
+	public static final String SEPARATE_STRING = "|";
 
 	private List<EnumValue> _values = new ArrayList<EnumValue>();
 	private List<EnumValue> _currentValues = new ArrayList<EnumValue>();
@@ -61,8 +62,15 @@ public class EnumPropertyDescriptor extends PropertyDescriptor {
 
 	@Override
 	public String getStringValue() {
+		String value = "";
 		if (_currentValues != null && _currentValues.size() > 0)
-			return _currentValues.get(0).getValue();
-		return null;
+		{
+			for(EnumValue el : _currentValues)
+			{
+				if (!value.equals("")) value +=SEPARATE_STRING;
+				value += el.getValue();
+			}
+		}
+		return value;
 	}
 }

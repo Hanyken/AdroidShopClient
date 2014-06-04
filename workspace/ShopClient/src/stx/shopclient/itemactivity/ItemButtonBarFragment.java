@@ -1,28 +1,30 @@
 package stx.shopclient.itemactivity;
 
 import java.text.DecimalFormat;
+import java.util.Collection;
 
 import stx.shopclient.R;
+import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.repository.Repository;
-import android.annotation.SuppressLint;
+import stx.shopclient.styles.ColorButtonDrawable;
+import stx.shopclient.styles.ImageButtonDrawable;
 import android.app.Fragment;
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.Paint;
+import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 
 public class ItemButtonBarFragment extends Fragment implements OnClickListener
 {
@@ -35,6 +37,8 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 	private Button btnShare;
 	private Button btnOrder;
 	
+	private LinearLayout llAnalogs;
+
 	CatalogSettings settings;
 
 	@Override
@@ -53,6 +57,8 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 		btnShare = (Button) view.findViewById(R.id.btnShare);
 		btnOrder = (Button) view.findViewById(R.id.btnOrder);
 
+		llAnalogs = (LinearLayout) view.findViewById(R.id.llAnalogs);
+		
 		setThems(view);
 
 		btnShare.setOnClickListener(this);
@@ -64,20 +70,24 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 
 	private void setThems(View view)
 	{
-		settings = Repository.getIntent().getCatalogManager()
-				.getSettings();
+		settings = Repository.getIntent().getCatalogManager().getSettings();
 
 		RelativeLayout rlButtonPanel = (RelativeLayout) view
 				.findViewById(R.id.rlButtonPanel);
-		
+
 		rlButtonPanel.setBackgroundColor(settings.getItemPanelColor());
-		//btnOrder.setBackgroundColor(settings.getBackground());
 		btnOrder.setTextColor(settings.getForegroundColor());
-		btnOrder.setBackground(new ButtonDrawble());
-		//button = new Button(newContext);
+		btnOrder.setBackground(getBueButtonDrawable());
+
+		btnShare.setBackground(getShareButtonDrawable());
+		btnOverview.setBackground(getCommentButtonDrawable());
+		
+		lblOverview.setTextColor(settings.getCountButtonLableColor());
+		lblRepost.setTextColor(settings.getCountButtonLableColor());
 		
 		LayerDrawable stars = (LayerDrawable) rtbRating.getProgressDrawable();
-		stars.getDrawable(2).setColorFilter(settings.getRatingColor(), PorterDuff.Mode.SRC_ATOP);
+		stars.getDrawable(2).setColorFilter(settings.getRatingColor(),
+				PorterDuff.Mode.SRC_ATOP);
 	}
 
 	public void setPrice(double value)
@@ -106,44 +116,56 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 		btnOrder.setEnabled(value);
 	}
 
+	public void setAnalogs(Collection<Collection<CatalogItem>> analogs)
+	{
+		
+	}
+	
 	@Override
 	public void onClick(View view)
 	{
 		((ItemActivity) getActivity()).onBarButtonClick(view);
 	}
+
 	
-	class ButtonDrawble extends Drawable
+	
+	
+	private Drawable getBueButtonDrawable()
 	{
+		StateListDrawable drawable = new StateListDrawable();
+		Drawable normal = new ColorButtonDrawable(settings.getBackground());
+		Drawable press = new ColorButtonDrawable(settings.getPressedColor());
+		Drawable disable = new ColorButtonDrawable(settings.getDisableColor());
 
-		@Override
-		public void draw(Canvas canvas)
-		{
-			canvas.drawColor(settings.getBackground());
-			Paint p = new Paint();
-			p.setColor(getResources().getColor(android.R.color.black));
-			canvas.drawRect(1, 1, 2, canvas.getHeight(), p);
-			canvas.drawRect(1, canvas.getHeight()-2, canvas.getWidth(), canvas.getHeight(), p);
-		}
+		drawable.addState(new int[] { android.R.attr.state_pressed }, press);
+		drawable.addState(new int[] { -android.R.attr.state_enabled }, disable);
+		drawable.addState(new int[0], normal);
+		return drawable;
+	}
+	
+	private Drawable getShareButtonDrawable()
+	{
+		StateListDrawable drawable = new StateListDrawable();
+		Bitmap bmp = settings.getImageFromPath(getResources(), "Share"); //BitmapFactory.decodeResource(getResources(), R.drawable.img_share);
+		Drawable normal = new ImageButtonDrawable(bmp);
+		Bitmap bmpPress = settings.getImageFromPath(getResources(), "SharePress"); //BitmapFactory.decodeResource(getResources(), R.drawable.img_share_press);
+		Drawable press = new ImageButtonDrawable(bmpPress);
 
-		@Override
-		public int getOpacity()
-		{
-			// TODO Auto-generated method stub
-			return 0;
-		}
+		drawable.addState(new int[] { android.R.attr.state_pressed }, press);
+		drawable.addState(new int[0], normal);
+		return drawable;
+	}
+	
+	private Drawable getCommentButtonDrawable()
+	{
+		StateListDrawable drawable = new StateListDrawable();
+		Bitmap bmp = settings.getImageFromPath(getResources(), "Comment"); //BitmapFactory.decodeResource(getResources(), R.drawable.img_share);
+		Drawable normal = new ImageButtonDrawable(bmp);
+		Bitmap bmpPress = settings.getImageFromPath(getResources(), "CommentPress"); //BitmapFactory.decodeResource(getResources(), R.drawable.img_share_press);
+		Drawable press = new ImageButtonDrawable(bmpPress);
 
-		@Override
-		public void setAlpha(int alpha)
-		{
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void setColorFilter(ColorFilter cf)
-		{
-			
-		}
-		
+		drawable.addState(new int[] { android.R.attr.state_pressed }, press);
+		drawable.addState(new int[0], normal);
+		return drawable;
 	}
 }

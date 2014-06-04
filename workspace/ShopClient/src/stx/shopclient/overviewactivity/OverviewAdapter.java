@@ -3,45 +3,37 @@ package stx.shopclient.overviewactivity;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+
 import android.content.Context;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.AbsListView.OnScrollListener;
 import stx.shopclient.R;
 import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.entity.Overview;
 import stx.shopclient.repository.OverviewsManager;
 import stx.shopclient.repository.Repository;
 
-public class OverviewAdapter extends BaseAdapter implements OnScrollListener
+public class OverviewAdapter extends BaseAdapter
 {
 	private ArrayList<Overview> _Items;
 	private CatalogItem _Item;
 	private LayoutInflater _Inflater;
-	private ListView _ListView;
-	private boolean _Loading;
-	private boolean _LoadNeeded;
-	private ProgressBar _progressBar;
-	private long _ItemId;
+	private PullToRefreshListView _listView;
 
-	public OverviewAdapter(Context context, ListView listView, long itemId)
+	public OverviewAdapter(Context context, PullToRefreshListView lstView, long itemId)
 	{
-		_LoadNeeded = true;
-		_progressBar = new ProgressBar(context);
-		_Inflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		_listView = lstView;
+		_Inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		_Items = new ArrayList<Overview>();
-		_ListView = listView;
-		_ItemId = itemId;
 		_Item = Repository.getIntent().getItemsManager().getItem(itemId);
+		
+		_Items.addAll(onLoadMore());
 	}
 
 	@Override
@@ -80,75 +72,45 @@ public class OverviewAdapter extends BaseAdapter implements OnScrollListener
 		return view;
 	}
 
-	public Collection<Overview> onLoadMore()
-	{
-		try
-		{
-		Thread.sleep(1000);
-		}
-		catch(Exception ex){}
-		
+	private Collection<Overview> onLoadMore()
+	{		
 		ArrayList<Overview> items = new ArrayList<Overview>();
 		
 		int size = _Items.size();
 		OverviewsManager manager = Repository.getIntent().getOverviewsManager();
 		int count = _Item.getOverviewsCount();
 		
-		if (size >= count)
+		if (size < count)
 		{
-			_LoadNeeded = false;
-		}
-		else
-		{
-			items.addAll(manager.getOverviews(_ItemId));
+			items.addAll(manager.getOverviews(_Item.getId()));
 		}
 		
 		return items;
 	}
 
-	@Override
-	public void onScroll(AbsListView view, int firstVisibleItem,
-			int visibleItemCount, int totalItemCount)
+	public void RefreshData()
 	{
-		if (!_Loading && _LoadNeeded)
+		new AsyncTask<Void, Void, Collection<Overview>>()
 		{
-			if ((firstVisibleItem + visibleItemCount) >= getCount())
+			@Override
+			protected Collection<Overview> doInBackground(Void... params)
 			{
-				_Loading = true;
-				_ListView.addFooterView(_progressBar);
-				new AsyncTask<Void, Void, Collection<Overview>>()
+				try
 				{
-					@Override
-					protected Collection<Overview> doInBackground(Void... params)
-					{
-						return onLoadMore();
-					}
-					@Override
-					protected void onPostExecute(Collection<Overview> result)
-					{
-						_Items.addAll(result);
-						_ListView.post(new Runnable()
-						{
-							@Override
-							public void run()
-							{
-								try
-								{
-								_ListView.removeFooterView(_progressBar);
-								}
-								catch(Exception ex){}
-								notifyDataSetChanged();
-								_Loading = false;	
-							}
-						});
-					}
-				}.execute();
+				Thread.sleep(1000);
+				}
+				catch(Exception ex){}
+				
+				return onLoadMore();
 			}
-		}
+			@Override
+			protected void onPostExecute(Collection<Overview> result)
+			{
+				_Items.addAll(result);
+				_listView.onRefreshComplete();
+				notifyDataSetChanged();
+			}
+		}.execute();
 	}
-
-	@Override
-	public void onScrollStateChanged(AbsListView view, int scrollState)
-	{}
-
+	
 }
