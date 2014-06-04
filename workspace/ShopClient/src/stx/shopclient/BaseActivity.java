@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
@@ -31,6 +32,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.ScrollView;
 
 public class BaseActivity extends FragmentActivity
@@ -203,5 +205,12 @@ public class BaseActivity extends FragmentActivity
 			_drawerLayout.closeDrawer(Gravity.LEFT);
 			onMainMenuItemClick(item);
 		}
+	}
+	
+	public static void setRatingBarColor(RatingBar ratingBar, int color)
+	{
+		LayerDrawable stars = (LayerDrawable) ratingBar
+				.getProgressDrawable();
+		stars.getDrawable(2).setColorFilter(color, android.graphics.PorterDuff.Mode.SRC_ATOP);
 	}
 }

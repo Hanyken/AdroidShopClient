@@ -3,6 +3,7 @@ package stx.shopclient.mainactivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.R.id;
 import stx.shopclient.R.layout;
@@ -104,12 +105,9 @@ public class CatalogItemViewPagerFragment extends Fragment
 			RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingBar);
 			ratingBar.setRating((float) item.getRating());
 
-			LayerDrawable stars = (LayerDrawable) ratingBar
-					.getProgressDrawable();
-			stars.getDrawable(2).setColorFilter(
-					Repository.getIntent().getCatalogManager().getSettings()
-							.getRatingColor(), Mode.SRC_ATOP);
-
+			BaseActivity.setRatingBarColor(ratingBar, Repository.getIntent().getCatalogManager().getSettings()
+							.getRatingColor());
+			
 			return view;
 		}
 

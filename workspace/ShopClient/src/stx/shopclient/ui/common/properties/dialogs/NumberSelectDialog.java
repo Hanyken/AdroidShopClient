@@ -14,7 +14,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 public class NumberSelectDialog extends DialogFragment implements
-		View.OnFocusChangeListener {
+		View.OnFocusChangeListener
+{
 	DialogResultProcessor _resultProcessor;
 	NumberPropertyDescriptor _property;
 	private View _itemView;
@@ -22,24 +23,29 @@ public class NumberSelectDialog extends DialogFragment implements
 	EditText _numberFromEditText;
 	EditText _numberToEditText;
 
-	public void setResultProcessor(DialogResultProcessor processor) {
+	public void setResultProcessor(DialogResultProcessor processor)
+	{
 		_resultProcessor = processor;
 	}
 
 	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
+	public Dialog onCreateDialog(Bundle savedInstanceState)
+	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
 		builder.setTitle(_property.getTitle());
 
-		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+		builder.setPositiveButton("OK", new DialogInterface.OnClickListener()
+		{
 
 			@Override
-			public void onClick(DialogInterface dialog, int which) {
+			public void onClick(DialogInterface dialog, int which)
+			{
 
 				if (_numberFromEditText.getText().length() != 0
 						&& (!_property.isRange() || _numberToEditText.getText()
-								.length() != 0)) {
+								.length() != 0))
+				{
 
 					double val1 = Double.parseDouble(_numberFromEditText
 							.getText().toString());
@@ -49,7 +55,8 @@ public class NumberSelectDialog extends DialogFragment implements
 					if (val1 > _property.getMaxValue())
 						val1 = _property.getMaxValue();
 
-					if (_property.isRange()) {
+					if (_property.isRange())
+					{
 						double val2 = Double.parseDouble(_numberToEditText
 								.getText().toString());
 
@@ -60,7 +67,8 @@ public class NumberSelectDialog extends DialogFragment implements
 
 						_property.setCurrentMinValue(val1 < val2 ? val1 : val2);
 						_property.setCurrentMaxValue(val1 > val2 ? val1 : val2);
-					} else
+					}
+					else
 						_property.setCurrentMinValue(val1);
 
 					_property.setCurrentValueDefined(true);
@@ -71,10 +79,12 @@ public class NumberSelectDialog extends DialogFragment implements
 		});
 
 		builder.setNegativeButton("Отмена",
-				new DialogInterface.OnClickListener() {
+				new DialogInterface.OnClickListener()
+				{
 
 					@Override
-					public void onClick(DialogInterface dialog, int which) {
+					public void onClick(DialogInterface dialog, int which)
+					{
 						_resultProcessor.onNegativeDialogResult(_itemView);
 					}
 				});
@@ -84,7 +94,8 @@ public class NumberSelectDialog extends DialogFragment implements
 		return builder.create();
 	}
 
-	View createContentView() {
+	View createContentView()
+	{
 		View view = getActivity().getLayoutInflater().inflate(
 				R.layout.search_activity_number_dialog, null);
 
@@ -95,22 +106,24 @@ public class NumberSelectDialog extends DialogFragment implements
 		_numberFromEditText.setOnFocusChangeListener(this);
 		_numberToEditText.setOnFocusChangeListener(this);
 
-		if (!_property.isRange()) {
+		if (!_property.isRange())
+		{
 			_numberToEditText.setVisibility(View.GONE);
 			_numberFromEditText.setHint("");
 		}
 
-		if (_property.isCurrentValueDefined()) {
-			_numberFromEditText.setText(Double.toString(_property
-					.getCurrentMinValue()));
-			_numberToEditText.setText(Double.toString(_property
-					.getCurrentMaxValue()));
+		if (_property.isCurrentValueDefined())
+		{
+			setEditTextValue(_numberFromEditText, _property.getCurrentMinValue());			
+			setEditTextValue(_numberToEditText, _property.getCurrentMaxValue());			
 		}
 
-		_numberFromEditText.post(new Runnable() {
+		_numberFromEditText.post(new Runnable()
+		{
 
 			@Override
-			public void run() {
+			public void run()
+			{
 				_numberFromEditText.requestFocusFromTouch();
 
 				InputMethodManager imm = (InputMethodManager) getActivity()
@@ -123,27 +136,41 @@ public class NumberSelectDialog extends DialogFragment implements
 		return view;
 	}
 
-	public NumberPropertyDescriptor getProperty() {
+	public NumberPropertyDescriptor getProperty()
+	{
 		return _property;
 	}
 
-	public void setProperty(NumberPropertyDescriptor property) {
+	public void setProperty(NumberPropertyDescriptor property)
+	{
 		_property = property;
 	}
 
-	public View getItemView() {
+	public View getItemView()
+	{
 		return _itemView;
 	}
 
-	public void setItemView(View itemView) {
+	public void setItemView(View itemView)
+	{
 		_itemView = itemView;
 	}
 
+	void setEditTextValue(EditText edit, double value)
+	{
+		if(_property.isFloat())
+			edit.setText(Double.toString(value));
+		else
+			edit.setText(Integer.toString((int)value));
+	}
+
 	@Override
-	public void onFocusChange(View v, boolean hasFocus) {
+	public void onFocusChange(View v, boolean hasFocus)
+	{
 		if (!hasFocus
 				&& (v.equals(_numberFromEditText) || v
-						.equals(_numberToEditText))) {
+						.equals(_numberToEditText)))
+		{
 
 			EditText edit = (EditText) v;
 
@@ -152,10 +179,13 @@ public class NumberSelectDialog extends DialogFragment implements
 
 			double val = Double.parseDouble(edit.getText().toString());
 
-			if (val < _property.getMinValue()) {
-				edit.setText(Double.toString(_property.getMinValue()));
-			} else if (val > _property.getMaxValue()) {
-				edit.setText(Double.toString(_property.getMaxValue()));
+			if (val < _property.getMinValue())
+			{
+				setEditTextValue(edit, _property.getMinValue());
+			}
+			else if (val > _property.getMaxValue())
+			{
+				setEditTextValue(edit, _property.getMaxValue());				
 			}
 		}
 	}

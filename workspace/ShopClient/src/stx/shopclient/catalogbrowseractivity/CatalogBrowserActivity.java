@@ -9,6 +9,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import android.content.Intent;
+import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -169,6 +170,9 @@ public class CatalogBrowserActivity extends BaseActivity implements
 			TextView descriptionTextView = (TextView) view
 					.findViewById(R.id.descriptionTextView);
 			RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingBar);
+			
+			BaseActivity.setRatingBarColor(ratingBar, Repository.getIntent().getCatalogManager().getSettings()
+					.getRatingColor());
 
 			nameTextView.setText(item.getName());
 			descriptionTextView.setText(Double.toString(item.getPrice()) + " рублей");

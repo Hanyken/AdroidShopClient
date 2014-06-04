@@ -141,6 +141,9 @@ public class SearchResultsActivity extends BaseActivity implements
 			TextView descriptionTextView = (TextView) view
 					.findViewById(R.id.descriptionTextView);
 			RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingBar);
+			
+			BaseActivity.setRatingBarColor(ratingBar, Repository.getIntent().getCatalogManager().getSettings()
+					.getRatingColor());
 
 			nameTextView.setText(item.getName());
 			descriptionTextView.setText(Double.toString(item.getPrice()) + " рублей");
