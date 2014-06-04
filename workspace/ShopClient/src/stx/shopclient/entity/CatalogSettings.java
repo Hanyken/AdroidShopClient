@@ -10,7 +10,6 @@ public class CatalogSettings
 	private int _foregroundColor;
 	private int _nodeIconBackgroundColor = Color.parseColor("#1B86F4");
 	
-	
 	public int getBackground()
 	{
 		return _background;

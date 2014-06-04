@@ -1,69 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/stx.shopclient"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <TabHost
-        android:id="@+id/tabhost"
+    <com.astuetz.PagerSlidingTabStrip
+        android:id="@+id/tabs"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="48dip"
+        app:pstsShouldExpand="true" />
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp" >
 
         <LinearLayout
+            android:id="@+id/popularLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical" >
+            android:layout_height="match_parent" >
 
-            <TabWidget
-                android:id="@android:id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                 >
-				
-            </TabWidget>
-
-            <FrameLayout
-                android:id="@android:id/tabcontent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" >
-
-                <LinearLayout
-                    android:id="@+id/popularLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-
-                    <fragment
-                        android:id="@+id/popularViewPager"
-                        android:name="stx.shopclient.mainactivity.CatalogItemViewPagerFragment"
-                        android:layout_width="fill_parent"
-                        android:layout_height="110dp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/favoritesLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-
-                    <fragment
-                        android:id="@+id/favoritesViewPager"
-                        android:name="stx.shopclient.mainactivity.CatalogItemViewPagerFragment"
-                        android:layout_width="fill_parent"
-                        android:layout_height="110dp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/recentLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-
-                    <fragment
-                        android:id="@+id/recentViewPager"
-                        android:name="stx.shopclient.mainactivity.CatalogItemViewPagerFragment"
-                        android:layout_width="fill_parent"
-                        android:layout_height="110dp" />
-                </LinearLayout>
-            </FrameLayout>
+            <fragment
+                android:id="@+id/popularViewPager"
+                android:name="stx.shopclient.mainactivity.CatalogItemViewPagerFragment"
+                android:layout_width="fill_parent"
+                android:layout_height="130dp" />
         </LinearLayout>
-    </TabHost>
+
+        <LinearLayout
+            android:id="@+id/favoritesLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <fragment
+                android:id="@+id/favoritesViewPager"
+                android:name="stx.shopclient.mainactivity.CatalogItemViewPagerFragment"
+                android:layout_width="fill_parent"
+                android:layout_height="130dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/recentLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <fragment
+                android:id="@+id/recentViewPager"
+                android:name="stx.shopclient.mainactivity.CatalogItemViewPagerFragment"
+                android:layout_width="fill_parent"
+                android:layout_height="120dp" />
+        </LinearLayout>
+    </FrameLayout>
 
 </LinearLayout>
