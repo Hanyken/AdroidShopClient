@@ -7,6 +7,7 @@ import stx.shopclient.mainactivity.MainActivity;
 import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.mainmenu.MainMenuListAdapter;
 import stx.shopclient.messagesactivity.MessagesListActivity;
+import stx.shopclient.repository.Repository;
 import stx.shopclient.searchactivity.SearchActivity;
 import stx.shopclient.settings.UserAccount;
 import stx.shopclient.settingsactivity.SettingsActivity;
@@ -56,7 +57,7 @@ public class BaseActivity extends FragmentActivity
 
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#7593B3")));		
+		actionBar.setBackgroundDrawable(new ColorDrawable(Repository.getIntent().getCatalogManager().getSettings().getBackground()));
 
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setContentView(R.layout.base_activity);		
