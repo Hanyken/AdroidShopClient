@@ -4,7 +4,11 @@ import stx.shopclient.R;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+<<<<<<< .mine
 
+=======
+
+>>>>>>> .theirs
 public class CatalogSettings
 {
 	private int _background;

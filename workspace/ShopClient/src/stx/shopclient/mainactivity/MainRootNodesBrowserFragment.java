@@ -10,6 +10,11 @@ import stx.shopclient.entity.CatalogNode;
 import stx.shopclient.repository.Repository;
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RoundRectShape;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -22,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridLayout;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TabHost;
@@ -95,7 +101,7 @@ public class MainRootNodesBrowserFragment extends Fragment implements
 					gridLayout, false);
 
 			itemView.setTag(node);
-			itemView.setOnClickListener(this);
+			itemView.setOnClickListener(this);			
 
 			gridLayout.addView(itemView);
 
@@ -103,11 +109,14 @@ public class MainRootNodesBrowserFragment extends Fragment implements
 					.getLayoutParams();
 			params.width = (int) (outMetrics.widthPixels / gridLayout
 					.getColumnCount());
-			params.setGravity(Gravity.CENTER);
-			itemView.setLayoutParams(params);
+			params.setGravity(Gravity.TOP);
+			itemView.setLayoutParams(params);			
 
 			TextView textView = (TextView) itemView.findViewById(R.id.textView);
-
+			
+			ImageView imgView = (ImageView)itemView.findViewById(R.id.imageView);
+			imgView.setBackground(getNodeIconBackground());			
+			
 			textView.setText(node.getName());
 		}
 	}
@@ -135,9 +144,23 @@ public class MainRootNodesBrowserFragment extends Fragment implements
 			nameTextView.setText(node.getName());
 
 			descriptionTextView.setText(getDescriptionForListItem(node));
+			
+			ImageView imgView = (ImageView)itemView.findViewById(R.id.imageView);
+			imgView.setBackground(getNodeIconBackground());
 
 			linearLayout.addView(itemView);
 		}
+	}
+	
+	public Drawable getNodeIconBackground()
+	{
+		float radius = 20.0f;
+		float[] rads = new float[] {radius, radius, radius, radius, radius, radius, radius, radius};
+	    RoundRectShape shape = new RoundRectShape(rads, null, null);
+	    ShapeDrawable drawable = new ShapeDrawable(shape);
+	    drawable.getPaint().setColor(Repository.getIntent().getCatalogManager().getSettings().getNodeIconBackgroundColor()); 
+
+	    return drawable;
 	}
 
 	String getDescriptionForListItem(CatalogNode node) {
