@@ -81,6 +81,10 @@ public class MainRootNodesBrowserFragment extends Fragment implements
 		// _nodes = generateData();
 		_nodes = new ArrayList<CatalogNode>();
 		_nodes.addAll(Repository.getIntent().getCatalogManager().getNodes());
+		_nodes.addAll(Repository.getIntent().getCatalogManager().getNodes());
+		_nodes.addAll(Repository.getIntent().getCatalogManager().getNodes());
+		_nodes.addAll(Repository.getIntent().getCatalogManager().getNodes());
+		_nodes.addAll(Repository.getIntent().getCatalogManager().getNodes());
 	}
 
 	void loadGrid(View view)

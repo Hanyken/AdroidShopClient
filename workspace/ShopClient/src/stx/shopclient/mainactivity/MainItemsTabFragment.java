@@ -28,6 +28,8 @@ public class MainItemsTabFragment extends Fragment
 
 		View view = getActivity().getLayoutInflater().inflate(
 				R.layout.main_activity_items_tabs_fragment, container, false);
+		
+		view.setBackgroundColor(Color.WHITE);
 
 		PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) view
 				.findViewById(R.id.tabs);
