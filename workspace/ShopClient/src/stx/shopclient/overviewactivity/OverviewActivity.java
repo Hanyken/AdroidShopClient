@@ -1,6 +1,7 @@
 package stx.shopclient.overviewactivity;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
@@ -16,7 +17,9 @@ import android.animation.Animator.AnimatorListener;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,7 +54,8 @@ public class OverviewActivity extends BaseActivity implements OnClickListener
 		_ItemId = intent.getLongExtra(ItemActivity.ITEM_ID_EXTRA_KEY, 0);
 		
 		PullToRefreshListView lstMain = (PullToRefreshListView) view.findViewById(R.id.lstMain);
-
+		lstMain.setMode(Mode.PULL_FROM_END);
+		
 		llOverview = (LinearLayout) view.findViewById(R.id.llOverviw);
 		txtOverview = (TextView)view.findViewById(R.id.txtOverview);
 		rtgRaiting = (RatingBar)view.findViewById(R.id.rtgRating);
@@ -60,6 +64,10 @@ public class OverviewActivity extends BaseActivity implements OnClickListener
 		Button btnCancel = (Button)view.findViewById(R.id.btnCancel);
 		btnOk.setOnClickListener(this);
 		btnCancel.setOnClickListener(this);
+		
+		LayerDrawable stars = (LayerDrawable) rtgRaiting.getProgressDrawable();
+		stars.getDrawable(2).setColorFilter(settings.getRatingColor(),
+				PorterDuff.Mode.SRC_ATOP);
 		
 		btnOk.setBackground(getBueButtonDrawable(settings));
 		btnCancel.setBackground(getBueButtonDrawable(settings));

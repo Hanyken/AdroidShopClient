@@ -26,7 +26,7 @@ import android.widget.TextView;
 public class ItemButtonBarFragment extends Fragment implements OnClickListener
 {
 	private TextView lblPrice;
-	private RatingBar rtbRating;
+	private RatingBar rtgRating;
 	private TextView lblOverview;
 	private TextView lblRepost;
 
@@ -44,7 +44,7 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 				container, false);
 
 		lblPrice = (TextView) view.findViewById(R.id.lblPrice);
-		rtbRating = (RatingBar) view.findViewById(R.id.rtbRating);
+		rtgRating = (RatingBar) view.findViewById(R.id.rtgRating);
 		lblOverview = (TextView) view.findViewById(R.id.lblOverview);
 		lblRepost = (TextView) view.findViewById(R.id.lblShare);
 
@@ -78,7 +78,7 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 		lblOverview.setTextColor(settings.getCountButtonLableColor());
 		lblRepost.setTextColor(settings.getCountButtonLableColor());
 		
-		LayerDrawable stars = (LayerDrawable) rtbRating.getProgressDrawable();
+		LayerDrawable stars = (LayerDrawable) rtgRating.getProgressDrawable();
 		stars.getDrawable(2).setColorFilter(settings.getRatingColor(),
 				PorterDuff.Mode.SRC_ATOP);
 	}
@@ -91,7 +91,7 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 
 	public void setRating(double value)
 	{
-		rtbRating.setRating((float) value);
+		rtgRating.setRating((float) value);
 	}
 
 	public void setOverviewCount(int value)

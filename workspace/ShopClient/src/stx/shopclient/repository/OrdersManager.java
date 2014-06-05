@@ -66,6 +66,20 @@ public class OrdersManager
 		return _Orders.size();
 	}
 
+	public boolean existsItem(long itemId)
+	{
+		boolean flag = false;
+		for(Order el : _Orders)
+		{
+			if (el.getItemId() == itemId)
+			{
+				flag = true;
+				break;
+			}
+		}
+		return flag;
+	}
+	
 	public Collection<OrderProperty> getOrderProperties(long orderId)
 	{
 		ArrayList<OrderProperty> items = new ArrayList<OrderProperty>();

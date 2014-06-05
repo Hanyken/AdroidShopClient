@@ -6,6 +6,8 @@ import java.util.Collection;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import stx.shopclient.R;
 import stx.shopclient.entity.CatalogItem;
+import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.entity.Overview;
 import stx.shopclient.repository.OverviewsManager;
 import stx.shopclient.repository.Repository;
@@ -25,9 +28,11 @@ public class OverviewAdapter extends BaseAdapter
 	private CatalogItem _Item;
 	private LayoutInflater _Inflater;
 	private PullToRefreshListView _listView;
-
+	private CatalogSettings settings;
+	
 	public OverviewAdapter(Context context, PullToRefreshListView lstView, long itemId)
 	{
+		settings = Repository.getIntent().getCatalogManager().getSettings();
 		_listView = lstView;
 		_Inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		_Items = new ArrayList<Overview>();
@@ -65,6 +70,10 @@ public class OverviewAdapter extends BaseAdapter
 		TextView txtOverview = (TextView) view.findViewById(R.id.txtOverview);
 		RatingBar rtgRating = (RatingBar)view.findViewById(R.id.rtgRating);
 
+		LayerDrawable stars = (LayerDrawable) rtgRating.getProgressDrawable();
+		stars.getDrawable(2).setColorFilter(settings.getRatingColor(),
+				PorterDuff.Mode.SRC_ATOP);
+		
 		txtOverview.setText(item.getDescription());
 		
 		rtgRating.setRating((float)item.getRating());

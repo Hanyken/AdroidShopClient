@@ -5,6 +5,7 @@ import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.repository.ItemsManager;
 import stx.shopclient.repository.Repository;
+import stx.shopclient.utils.ImageDownloadTask;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -77,7 +78,7 @@ public class ItemAnalogsFragment extends Fragment implements OnClickListener
 		{
 			CatalogItem entity = manager.getItem(id);
 			
-			View itemView = inflater.inflate(R.layout.main_activity_rootnodes_browser_griditem, view, false);
+			View itemView = inflater.inflate(R.layout.item_activity_analog_fragment_item, view, false);
 
 			itemView.setTag(id);
 			itemView.setOnClickListener(this);
@@ -90,12 +91,15 @@ public class ItemAnalogsFragment extends Fragment implements OnClickListener
 			params.setGravity(Gravity.TOP);
 			itemView.setLayoutParams(params);
 
-			TextView textView = (TextView) itemView.findViewById(R.id.textView);
+			TextView textView = (TextView) itemView.findViewById(R.id.lblTitle);
 
 			ImageView imgView = (ImageView) itemView
-					.findViewById(R.id.imageView);
+					.findViewById(R.id.imgIco);
 			
-			imgView.setImageBitmap(Repository.getIntent().getImagesManager().getImage(entity.getIco()));
+			ImageDownloadTask.startNew(imgView,
+					"file://"
+							+ Repository.getIntent().getImagesManager()
+									.getImagePath(entity.getIco()));
 			
 			textView.setText(entity.getName());
 		}
