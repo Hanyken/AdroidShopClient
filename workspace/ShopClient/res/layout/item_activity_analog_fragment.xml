@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+    
+    <TextView
+        android:id="@+id/lblTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/analog_title_width"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/margion_big" 
+        />
+    
+    <GridLayout
+            android:id="@+id/glList"
+            style="@style/MainRootNodesBrowserGrid"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:columnCount="3" />
+    
+    <LinearLayout 
+        android:id="@+id/llSeparate"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/analog_separate_width"
+        android:orientation="vertical"/>
+
+</LinearLayout>

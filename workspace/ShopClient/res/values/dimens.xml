@@ -12,5 +12,8 @@
     <dimen name="buttonbar_margion_small">8dp</dimen>
     <dimen name="buttonbar_text_size">16dp</dimen>
     
+    <dimen name="analog_title_width">35dp</dimen>
+    <dimen name="analog_separate_width">1dp</dimen>
+    
     
 </resources>

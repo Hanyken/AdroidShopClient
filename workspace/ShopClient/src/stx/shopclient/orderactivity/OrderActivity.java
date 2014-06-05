@@ -60,6 +60,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener
 
 		btnOrder.setOnClickListener(this);
 		btnOrder.setBackground(getBueButtonDrawable(settings));
+		btnOrder.setTextColor(settings.getForegroundColor());
 		
 		plProperies.setAllowClear(false);
 		

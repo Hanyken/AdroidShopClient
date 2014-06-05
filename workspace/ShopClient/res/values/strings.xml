@@ -6,6 +6,7 @@
     <string name="action_settings">Settings</string>
 
     <string name="order_activity_name">Заказать</string>
+    <string name="comment_activity_name">Коментарии</string>
     
     <string name="comment">Коментарий</string>
     <string name="rating">Оценка:</string>

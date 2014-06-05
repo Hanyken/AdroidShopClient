@@ -1,5 +1,7 @@
 package stx.shopclient.itemactivity;
 
+import java.util.Collection;
+
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.entity.CatalogItem;
@@ -55,6 +57,19 @@ public class ItemActivity extends BaseActivity
 		buttonBar.setRating(_Item.getRating());
 		buttonBar.setOverviewCount(_Item.getOverviewsCount());
 		buttonBar.setCanBuy(intent.getBooleanExtra(ITEM_BUY_EXTRA_KEY, true));
+		
+		Collection<CatalogItem> analogs = Repository.getIntent().getItemsManager().getItems(_Item.getNodeId());
+		long[] ids = new long[analogs.size() - 1];
+		int i = 0;
+		for(CatalogItem el : analogs)
+		{
+			if (el.getId() != itemId)
+			{
+				ids[i] = el.getId();
+				i++;
+			}
+		}
+		buttonBar.addAnalogs("Попробуйте так же", ids);
 
 		setProperty(txtProperty);
 		getActionBar().setTitle(_Item.getName());

@@ -1,10 +1,8 @@
 package stx.shopclient.itemactivity;
 
 import java.text.DecimalFormat;
-import java.util.Collection;
 
 import stx.shopclient.R;
-import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.styles.ColorButtonDrawable;
@@ -21,7 +19,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -36,8 +33,6 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 	private Button btnOverview;
 	private Button btnShare;
 	private Button btnOrder;
-	
-	private LinearLayout llAnalogs;
 
 	CatalogSettings settings;
 
@@ -56,8 +51,6 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 		btnOverview = (Button) view.findViewById(R.id.btnOverview);
 		btnShare = (Button) view.findViewById(R.id.btnShare);
 		btnOrder = (Button) view.findViewById(R.id.btnOrder);
-
-		llAnalogs = (LinearLayout) view.findViewById(R.id.llAnalogs);
 		
 		setThems(view);
 
@@ -116,9 +109,10 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 		btnOrder.setEnabled(value);
 	}
 
-	public void setAnalogs(Collection<Collection<CatalogItem>> analogs)
+	public void addAnalogs(String title, long[] ids)
 	{
-		
+		Fragment analogFragment = ItemAnalogsFragment.getIntent(title, ids);
+		getFragmentManager().beginTransaction().add(R.id.llAnalogs, analogFragment).commit();
 	}
 	
 	@Override

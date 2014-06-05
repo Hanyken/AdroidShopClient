@@ -53,7 +53,7 @@
         </activity>
         <activity
             android:name="stx.shopclient.overviewactivity.OverviewActivity"
-            android:label="@string/app_name" >
+            android:label="@string/comment_activity_name" >
         </activity>
         <activity
             android:name="stx.shopclient.order_properties_activity.OrderPropertiesActivity"
