@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
+import stx.shopclient.entity.AnalogGroup;
 import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.orderactivity.OrderActivity;
@@ -27,7 +28,7 @@ public class ItemActivity extends BaseActivity
 	public static final String ITEM_ID_EXTRA_KEY = "ItemID";
 	public static final String ITEM_BUY_EXTRA_KEY = "CanBuyItem";
 
-	LinearLayout myGallery;
+	private ItemButtonBarFragment buttonBar;
 	
 	@Override
 	protected View createMainView(ViewGroup parent)
@@ -47,7 +48,7 @@ public class ItemActivity extends BaseActivity
 
 		ItemImageFragment imageFragment = (ItemImageFragment) getFragmentManager()
 				.findFragmentById(R.id.frgImages);
-		ItemButtonBarFragment buttonBar = (ItemButtonBarFragment) getFragmentManager()
+		buttonBar = (ItemButtonBarFragment) getFragmentManager()
 				.findFragmentById(R.id.frgButtonBar);
 		TextView txtProperty = (TextView) view.findViewById(R.id.txtProperty);
 
@@ -56,27 +57,27 @@ public class ItemActivity extends BaseActivity
 		buttonBar.setPrice(_Item.getPrice());
 		buttonBar.setRating(_Item.getRating());
 		buttonBar.setOverviewCount(_Item.getOverviewsCount());
-		buttonBar.setCanBuy(intent.getBooleanExtra(ITEM_BUY_EXTRA_KEY, true));
+		//buttonBar.setCanBuy(intent.getBooleanExtra(ITEM_BUY_EXTRA_KEY, true));
 		
-		Collection<CatalogItem> analogs = Repository.getIntent().getItemsManager().getItems(_Item.getNodeId());
-		long[] ids = new long[analogs.size() - 1];
-		int i = 0;
-		for(CatalogItem el : analogs)
+		Collection<AnalogGroup> groups = Repository.getIntent().getItemsManager().getAnalogs(itemId);
+		for(AnalogGroup el : groups)
 		{
-			if (el.getId() != itemId)
-			{
-				ids[i] = el.getId();
-				i++;
-			}
+			buttonBar.addAnalogs(el.getName(), el.getIds());	
 		}
-		buttonBar.addAnalogs("Попробуйте так же", ids);
 
 		setProperty(txtProperty);
 		getActionBar().setTitle(_Item.getName());
 
 		return view;
 	}
-
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		buttonBar.setCanBuy(!Repository.getIntent().getOrderManager().existsItem(_Item.getId()));
+	}
+	
+	
 	public void setProperty(TextView txtProperty)
 	{
 		String description = _Item.getDescription() + "\n\n\n";
