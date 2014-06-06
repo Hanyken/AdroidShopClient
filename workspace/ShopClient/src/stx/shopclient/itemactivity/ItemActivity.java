@@ -7,6 +7,8 @@ import stx.shopclient.R;
 import stx.shopclient.entity.AnalogGroup;
 import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.entity.CatalogSettings;
+import stx.shopclient.loaders.LoginLoader;
+import stx.shopclient.loaders.OnLoadChange;
 import stx.shopclient.orderactivity.OrderActivity;
 import stx.shopclient.overviewactivity.OverviewActivity;
 import stx.shopclient.repository.Repository;
@@ -18,10 +20,12 @@ import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class ItemActivity extends BaseActivity
+import stx.shopclient.entity.Token;
+
+public class ItemActivity extends BaseActivity implements OnLoadChange<Token>
 {
 	private CatalogItem _Item;
 
@@ -35,6 +39,11 @@ public class ItemActivity extends BaseActivity
 	{
 		View view = getLayoutInflater().inflate(R.layout.item_activity, parent,
 				false);
+		
+		/*
+		LoginLoader loader = new LoginLoader(this);
+		loader.Login();
+		*/
 		
 		Intent intent = getIntent();
 		
@@ -128,5 +137,10 @@ public class ItemActivity extends BaseActivity
 			startActivity(orderIntent);
 			break;
 		}
+	}
+	@Override
+	public void onChange(Collection<Token> args)
+	{
+		Toast.makeText(this, "!!!", Toast.LENGTH_SHORT).show();
 	}
 }
