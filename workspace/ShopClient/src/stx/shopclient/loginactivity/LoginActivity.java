@@ -27,7 +27,6 @@ public class LoginActivity extends Activity
 		getActionBar().setTitle("¬ход");
 
 		Button loginButton = (Button) findViewById(R.id.loginButton);
-
 		loginButton.setOnClickListener(new View.OnClickListener()
 		{
 
@@ -35,6 +34,17 @@ public class LoginActivity extends Activity
 			public void onClick(View v)
 			{
 				loginButtonClick();
+			}
+		});
+		
+		Button registerButton = (Button)findViewById(R.id.registerButton);
+		registerButton.setOnClickListener(new View.OnClickListener()
+		{
+			
+			@Override
+			public void onClick(View arg0)
+			{
+				registerButtonClick();
 			}
 		});
 
@@ -57,5 +67,11 @@ public class LoginActivity extends Activity
 			startActivity(intent);			
 			finish();
 		}
+	}
+	
+	void registerButtonClick()
+	{
+		Intent intent = new Intent(this, RegisterActivity.class);		
+		startActivity(intent);
 	}
 }

@@ -89,6 +89,10 @@
             android:name="stx.shopclient.settingsactivity.SettingsActivity"
             android:label="@string/app_name" >
         </activity>
+        <activity
+            android:name="stx.shopclient.loginactivity.RegisterActivity"
+            android:label="@string/app_name" >
+        </activity>
     </application>
 
 </manifest>

@@ -15,7 +15,7 @@ import android.widget.ImageView;
 public class ImageDownloadTask extends AsyncTask<String, Void, Bitmap>
 {
 	ImageView _view;
-	
+
 	static Map<String, Bitmap> Cache = new HashMap<String, Bitmap>();
 
 	public ImageDownloadTask(ImageView view)
@@ -25,6 +25,15 @@ public class ImageDownloadTask extends AsyncTask<String, Void, Bitmap>
 
 	public static void startNew(ImageView view, String url)
 	{
+		synchronized (Cache)
+		{
+			if (Cache.containsKey(url))
+			{
+				view.setImageBitmap(Cache.get(url));
+				return;
+			}
+		}
+
 		new ImageDownloadTask(view).execute(url);
 	}
 
@@ -32,15 +41,15 @@ public class ImageDownloadTask extends AsyncTask<String, Void, Bitmap>
 	protected Bitmap doInBackground(String... params)
 	{
 		String urlString = params[0];
-		
+
 		synchronized (Cache)
 		{
-			if(Cache.containsKey(urlString))
+			if (Cache.containsKey(urlString))
 				return Cache.get(urlString);
-		}		
+		}
 
 		InputStream stream = null;
-		
+
 		try
 		{
 			Thread.sleep(700);
@@ -58,12 +67,12 @@ public class ImageDownloadTask extends AsyncTask<String, Void, Bitmap>
 			URLConnection connection = url.openConnection();
 			stream = connection.getInputStream();
 			Bitmap result = BitmapFactory.decodeStream(stream);
-			
+
 			synchronized (Cache)
 			{
 				Cache.put(urlString, result);
 			}
-			
+
 			return result;
 		}
 		catch (Exception e)
@@ -79,7 +88,7 @@ public class ImageDownloadTask extends AsyncTask<String, Void, Bitmap>
 					stream.close();
 				}
 				catch (IOException e)
-				{					
+				{
 					e.printStackTrace();
 				}
 		}
