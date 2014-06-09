@@ -114,6 +114,20 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="Отчество" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:text="Дата рождения"
+                android:textSize="10sp" />
+
+            <stx.shopclient.ui.common.StxDatePicker
+                android:id="@+id/birthdayPicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+            </stx.shopclient.ui.common.StxDatePicker>
         </LinearLayout>
     </ScrollView>
 

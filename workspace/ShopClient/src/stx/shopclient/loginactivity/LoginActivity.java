@@ -67,10 +67,10 @@ public class LoginActivity extends Activity
 	{
 		if (!_loginEdit.getText().toString().equals(""))
 		{
-			InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(_loginEdit.getWindowToken(), 0);
 			imm.hideSoftInputFromWindow(_passwordEdit.getWindowToken(), 0);
-			
+
 			dialog = ProgressDialog.show(LoginActivity.this, "Вход", "", true);
 
 			DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
@@ -106,9 +106,16 @@ public class LoginActivity extends Activity
 		@Override
 		protected Token doInBackground(Void... params)
 		{
-			WebClient client = new WebClient(LoginActivity.this);
+			try
+			{
+				WebClient client = new WebClient(LoginActivity.this);
 
-			return client.login(login, password, width, height);
+				return client.login(login, password, width, height);
+			}
+			catch (Throwable ex)
+			{
+				return null;
+			}
 		}
 
 		@Override
@@ -121,7 +128,8 @@ public class LoginActivity extends Activity
 			if (result == null || result.getToken() == null
 					|| result.getToken().equals(""))
 			{
-				Toast.makeText(LoginActivity.this, "Ошибка входа", Toast.LENGTH_LONG).show();
+				Toast.makeText(LoginActivity.this, "Ошибка входа",
+						Toast.LENGTH_LONG).show();
 				return;
 			}
 
