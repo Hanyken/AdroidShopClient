@@ -1,6 +1,7 @@
 package stx.shopclient.settings;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 
 public class ServerSettings
@@ -32,21 +33,21 @@ public class ServerSettings
 		_urlReserve = urlReserve;
 	}
 	
-	public static void load(Activity activity)
+	public static void load(Context context)
 	{
-		SharedPreferences pref = activity.getSharedPreferences(PREF_NAME,
+		SharedPreferences pref = context.getSharedPreferences(PREF_NAME,
 				Activity.MODE_PRIVATE);
 
 		if (pref != null)
 		{
-			setUrl(pref.getString(URL_KEY, null));
-			setUrlReserve(pref.getString(URL_RESERVE_KEY, null));
+			setUrl(pref.getString(URL_KEY, DEFAULT_URL));
+			setUrlReserve(pref.getString(URL_RESERVE_KEY, DEFAULT_RESERVE_URL));
 		}
 	}
 
-	public static void save(Activity activity)
+	public static void save(Context context)
 	{
-		SharedPreferences pref = activity.getSharedPreferences(PREF_NAME,
+		SharedPreferences pref = context.getSharedPreferences(PREF_NAME,
 				Activity.MODE_PRIVATE);
 		
 		SharedPreferences.Editor editor = pref.edit();
