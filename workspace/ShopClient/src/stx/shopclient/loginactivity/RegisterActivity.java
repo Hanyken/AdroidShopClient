@@ -7,6 +7,8 @@ import stx.shopclient.entity.Token;
 import stx.shopclient.mainactivity.MainActivity;
 import stx.shopclient.settings.UserAccount;
 import stx.shopclient.ui.common.StxDatePicker;
+import stx.shopclient.utils.StringUtils;
+import stx.shopclient.webservice.ServiceResponseCode;
 import stx.shopclient.webservice.WebClient;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -17,7 +19,9 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -73,14 +77,16 @@ public class RegisterActivity extends Activity
 	void registerButtonClick()
 	{
 		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
-		
+		imm.hideSoftInputFromWindow(getWindow().getCurrentFocus()
+				.getWindowToken(), 0);
+
 		if (_loginEdit.getText().toString().equals(""))
 		{
 			showErrorMessage("¬ведите логин");
 			return;
 		}
-		if (_passwordEditText.getText().toString().equals("") || _password2EditText.getText().toString().equals(""))
+		if (_passwordEditText.getText().toString().equals("")
+				|| _password2EditText.getText().toString().equals(""))
 		{
 			showErrorMessage("¬ведите пароль");
 			return;
@@ -89,6 +95,31 @@ public class RegisterActivity extends Activity
 				.equals(_password2EditText.getText().toString()))
 		{
 			showErrorMessage("ѕароль и подтверждение парол€ должны совпадать");
+			return;
+		}
+		if (_firstNameEditText.getText().toString().equals(""))
+		{
+			showErrorMessage("¬ведите им€");
+			return;
+		}
+		if (_lastNameEditText.getText().toString().equals(""))
+		{
+			showErrorMessage("¬ведите фамилию");
+			return;
+		}
+		if (_middleNameEditText.getText().toString().equals(""))
+		{
+			showErrorMessage("¬ведите отчество");
+			return;
+		}
+		if (_phoneNumberEditText.getText().toString().equals(""))
+		{
+			showErrorMessage("¬ведите номер телефона");
+			return;
+		}
+		if (!_birthdayPicker.isDateDefined())
+		{
+			showErrorMessage("¬ведите дату рождени€");
 			return;
 		}
 
@@ -139,16 +170,23 @@ public class RegisterActivity extends Activity
 				DisplayMetrics displayMetrics = getResources()
 						.getDisplayMetrics();
 
+				TelephonyManager mTelephonyMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+				String simNumber = mTelephonyMgr.getSimSerialNumber();
+				if (StringUtils.isNullOrEmpty(simNumber))
+					simNumber = "nosim";
+
 				WebClient client = new WebClient(RegisterActivity.this);
 
-				return client.register(login, password, firstName, middleName,
-						lastName, phoneNumber, null, birthday, null,
-						displayMetrics.widthPixels,
+				Token token = client.register(login, password, firstName,
+						middleName, lastName, phoneNumber, simNumber, birthday,
+						"userAgent", displayMetrics.widthPixels,
 						displayMetrics.heightPixels, null, null, null, null,
 						null);
+				return token;
 			}
 			catch (Throwable ex)
 			{
+				Log.e("register", "error", ex);
 				return null;
 			}
 		}
@@ -160,14 +198,23 @@ public class RegisterActivity extends Activity
 
 			dialog.dismiss();
 
-			if (result == null || result.getToken() == null
-					|| result.getToken().equals(""))
+			if (result == null)
 			{
 				Toast.makeText(RegisterActivity.this, "ќшибка регистрации",
 						Toast.LENGTH_LONG).show();
 				return;
 			}
+			else if (result.getToken() == null || result.getToken().equals(""))
+			{
+				String error = ServiceResponseCode.getMessage(Integer.parseInt(result
+						.getCode()));
+				
+				Toast.makeText(RegisterActivity.this, error,
+						Toast.LENGTH_LONG).show();
+				return;
+			}
 
+			Token.setCurrent(result);
 			UserAccount.setLogin(login);
 			UserAccount.setPassword(password);
 			UserAccount.save(RegisterActivity.this);
@@ -180,6 +227,5 @@ public class RegisterActivity extends Activity
 			startActivity(intent);
 			finish();
 		}
-
 	}
 }

@@ -4,9 +4,9 @@ import stx.shopclient.R;
 import stx.shopclient.entity.Token;
 import stx.shopclient.mainactivity.MainActivity;
 import stx.shopclient.settings.UserAccount;
+import stx.shopclient.webservice.ServiceResponseCode;
 import stx.shopclient.webservice.WebClient;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -125,14 +125,23 @@ public class LoginActivity extends Activity
 
 			dialog.dismiss();
 
-			if (result == null || result.getToken() == null
-					|| result.getToken().equals(""))
+			if (result == null)
 			{
 				Toast.makeText(LoginActivity.this, "Ошибка входа",
 						Toast.LENGTH_LONG).show();
 				return;
 			}
+			else if (result.getToken() == null || result.getToken().equals(""))
+			{
+				String error = ServiceResponseCode.getMessage(Integer.parseInt(result
+						.getCode()));
+				
+				Toast.makeText(LoginActivity.this, error,
+						Toast.LENGTH_LONG).show();
+				return;
+			}
 
+			Token.setCurrent(result);
 			UserAccount.setLogin(login);
 			UserAccount.setPassword(password);
 			UserAccount.save(LoginActivity.this);

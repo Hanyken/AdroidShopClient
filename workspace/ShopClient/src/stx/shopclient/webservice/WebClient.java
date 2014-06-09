@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 
@@ -129,7 +130,7 @@ public class WebClient
 		if (!StringUtils.isNullOrEmpty(simId))
 			args.addParam("simId", simId);
 		if (birthday != null)
-			args.addParam("birthday", birthday.toString());
+			args.addParam("birthday", new SimpleDateFormat("yyyy-MM-dd").format(birthday));
 		if (!StringUtils.isNullOrEmpty(userAgent))
 			args.addParam("userAgent", userAgent);
 		args.addParam("screen_Width", Integer.toString(screenWidth));

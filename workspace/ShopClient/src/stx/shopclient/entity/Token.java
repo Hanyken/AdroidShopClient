@@ -4,6 +4,8 @@ import java.util.Date;
 
 public class Token
 {
+	private static Token current;	
+	
 	private String _code;
 	private String _token;
 	private Date _begDate;
@@ -43,5 +45,13 @@ public class Token
 	public void setInterval(int interval)
 	{
 		_interval = interval;
+	}
+	public static Token getCurrent()
+	{
+		return current;
+	}
+	public static void setCurrent(Token current)
+	{
+		Token.current = current;
 	}
 }
