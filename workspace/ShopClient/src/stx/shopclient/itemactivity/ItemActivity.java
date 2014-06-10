@@ -5,17 +5,19 @@ import java.util.Collection;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.entity.AnalogGroup;
+import stx.shopclient.entity.Catalog;
 import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.entity.CatalogSettings;
-import stx.shopclient.loaders.LoginLoader;
 import stx.shopclient.loaders.OnLoadChange;
 import stx.shopclient.orderactivity.OrderActivity;
 import stx.shopclient.overviewactivity.OverviewActivity;
 import stx.shopclient.repository.Repository;
+import stx.shopclient.webservice.WebClient;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.view.View;
@@ -39,11 +41,6 @@ public class ItemActivity extends BaseActivity implements OnLoadChange<Token>
 	{
 		View view = getLayoutInflater().inflate(R.layout.item_activity, parent,
 				false);
-		
-		/*
-		LoginLoader loader = new LoginLoader(this);
-		loader.Login();
-		*/
 		
 		Intent intent = getIntent();
 		
@@ -76,7 +73,10 @@ public class ItemActivity extends BaseActivity implements OnLoadChange<Token>
 
 		setProperty(txtProperty);
 		getActionBar().setTitle(_Item.getName());
-
+		
+		//CatalogTask task = new CatalogTask();
+		//task.execute();
+		
 		return view;
 	}
 	@Override
@@ -143,4 +143,24 @@ public class ItemActivity extends BaseActivity implements OnLoadChange<Token>
 	{
 		Toast.makeText(this, "!!!", Toast.LENGTH_SHORT).show();
 	}
+	
+	
+	class CatalogTask extends AsyncTask<Void, Void, Catalog>
+	{
+
+		@Override
+		protected Catalog doInBackground(Void... params)
+		{
+			WebClient client = new WebClient(ItemActivity.this);
+			return client.getCatalog(Token.getCurrent(), 1);
+		}
+
+		@Override
+		protected void onPostExecute(Catalog result)
+		{
+			super.onPostExecute(result);
+		}
+		
+	}
+	
 }

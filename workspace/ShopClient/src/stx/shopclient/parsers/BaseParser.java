@@ -2,8 +2,6 @@ package stx.shopclient.parsers;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -27,10 +25,8 @@ import android.util.Log;
 public abstract class BaseParser<T>
 {
 
-	private final DateFormat dateParser = new SimpleDateFormat(
-			"yyyy-MM-dd'T'HH:mm:ss");
-	// new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-	private final DateFormat timeParser = new SimpleDateFormat("HH:mm:ss");
+	public static final DateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd");
+	public static final DateFormat timeParser = new SimpleDateFormat("HH:mm:ss");
 
 	public BaseParser()
 	{}

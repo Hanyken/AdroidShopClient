@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 
@@ -12,8 +11,16 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import stx.shopclient.entity.Catalog;
+import stx.shopclient.entity.CatalogItem;
+import stx.shopclient.entity.CatalogNode;
+import stx.shopclient.entity.Overview;
 import stx.shopclient.entity.Token;
 import stx.shopclient.loaders.HttpArgs;
+import stx.shopclient.parsers.CatalogParser;
+import stx.shopclient.parsers.ItemParser;
+import stx.shopclient.parsers.NodeParser;
+import stx.shopclient.parsers.OverviewParser;
 import stx.shopclient.parsers.TokenParser;
 import stx.shopclient.settings.ServerSettings;
 import stx.shopclient.utils.StringUtils;
@@ -130,11 +137,11 @@ public class WebClient
 		if (!StringUtils.isNullOrEmpty(simId))
 			args.addParam("simId", simId);
 		if (birthday != null)
-			args.addParam("birthday", new SimpleDateFormat("yyyy-MM-dd").format(birthday));
+			args.addParam("birthday", birthday);
 		if (!StringUtils.isNullOrEmpty(userAgent))
 			args.addParam("userAgent", userAgent);
-		args.addParam("screen_Width", Integer.toString(screenWidth));
-		args.addParam("screen_Height", Integer.toString(screenHeight));
+		args.addParam("screen_Width", screenWidth);
+		args.addParam("screen_Height", screenHeight);
 		if (!StringUtils.isNullOrEmpty(operationSystem))
 			args.addParam("OS", operationSystem);
 		if (!StringUtils.isNullOrEmpty(device))
@@ -155,5 +162,185 @@ public class WebClient
 		else
 			return tokens.iterator().next();
 	}
+	
+	public Catalog getCatalog(Token token, long catalogId)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("catalogId", catalogId);
+		
+		String response = request("catalog/get", args, true);
+		Collection<Catalog> catalogs = new CatalogParser().parseString(response);
+		
+		if (catalogs.size() == 0)
+			throw new RuntimeException("No catalog returned");
+		else
+			return catalogs.iterator().next();
+	}
+	
+	public Collection<CatalogNode> getNodes(Token token, long catalogId, int start, int offset)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("catalogId", catalogId);
+		args.addParam("start", start);
+		args.addParam("offset", offset);
+		
+		String response = request("node/get", args, true);
+		Collection<CatalogNode> nodes = new NodeParser().parseString(response);
+		return nodes;
+	}
+	
+	
+	// OrderType
+	// 0 - отсутствует
+    // 1 - по цене по возрастанию
+    // 2 - по цене по убыванию
+    // 3 - по популярности по возрастанию
+    // 4 - по популярности по убыванию
+	public Collection<CatalogItem> getNodeItems(Token token, long catalogNodeId, int start, int offset, int orderType)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("catalogNodeId", catalogNodeId);
+		args.addParam("start", start);
+		args.addParam("offset", offset);
+		args.addParam("orderType", offset);
+		args.addParam("deep", false);
+		args.addParam("filter", "");
+		
+		String response = request("item/get", args, true);
+		Collection<CatalogItem> items = new ItemParser().parseString(response);
+		return items;
+	}
+	
+	public Collection<CatalogItem> quickSearchItems(Token token, long catalogId, String name)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("catalogId", catalogId);
+		args.addParam("name", name);
+		
+		String response = request("item/quick", args, true);
+		Collection<CatalogItem> items = new ItemParser().parseString(response);
+		return items;
+	}
+	
+	// deep : true - включать результат товары из подразделов, false - не включать
+	public Collection<CatalogItem> searchItems(Token token, long catalogNodeId, int start, int offset, int orderType, boolean deep, String filter)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("catalogNodeId", catalogNodeId);
+		args.addParam("start", start);
+		args.addParam("offset", offset);
+		args.addParam("orderType", offset);
+		args.addParam("deep", deep);
+		args.addParam("filter", filter);
+		
+		String response = request("item/get", args, true);
+		Collection<CatalogItem> items = new ItemParser().parseString(response);
+		return items;
+	}
+	
+	public Collection<CatalogItem> getPopular(Token token, long catalogId)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("catalogId", catalogId);
+		
+		String response = request("item/popular", args, true);
+		Collection<CatalogItem> items = new ItemParser().parseString(response);
+		return items;
+	}
+	
+	public Collection<CatalogItem> getLast(Token token, long catalogId)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("catalogId", catalogId);
+		
+		String response = request("item/last", args, true);
+		Collection<CatalogItem> items = new ItemParser().parseString(response);
+		return items;
+	}
+	
+	public Collection<CatalogItem> getFavorite(Token token, long catalogId)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("catalogId", catalogId);
+		
+		String response = request("item/favorite", args, true);
+		Collection<CatalogItem> items = new ItemParser().parseString(response);
+		return items;
+	}	
+	
+	public void addLast(Token token, String list)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("list", list);
+		
+		request("item/lastAdd", args, true);
+	}
+	
+	public void addFavorite(Token token, long itemId)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("itemId", itemId);
+		
+		request("item/favoriteAdd", args, true);
+	}
+	
+	public void delFavorite(Token token, long itemId)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("itemId", itemId);
+		
+		request("item/favoriteDel", args, true);
+	}
+	
+	
+	
+	public Collection<Overview> getOverviews(Token token, long itemId, int start, int offset)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("itemId", itemId);
+		args.addParam("start", start);
+		args.addParam("offset", offset);
+		
+		String response = request("overview/get", args, true);
+		Collection<Overview> items = new OverviewParser().parseString(response);
+		return items;
+	}
+	
+	public Overview getUserOverview(Token token, long itemId)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("itemId", itemId);
+		
+		String response = request("overview/get", args, true);
+		Collection<Overview> items = new OverviewParser().parseString(response);
 
+		if (items.size() == 0)
+			throw new RuntimeException("No overviews returned");
+		else
+			return items.iterator().next();
+	}
+
+	public void editOverview(Token token, long itemId, byte rating, String description)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("itemId", itemId);
+		args.addParam("rating", rating);
+		args.addParam("description", description);
+		
+		request("overview/Edit", args, true);
+	}
 }
