@@ -22,9 +22,9 @@ public class ImagePageAdapter extends PagerAdapter
 	public ImagePageAdapter(Context context, long itemId)
 	{
 		_Context = context;
-		_Item = Repository.getIntent().getItemsManager().getItem(itemId);
+		_Item = Repository.getIntent(_Context).getItemsManager().getItem(itemId);
 		_Items = new ArrayList<String>();
-		_ImgManager = Repository.getIntent().getImagesManager();
+		_ImgManager = Repository.getIntent(_Context).getImagesManager();
 		//_Items.addAll(_ImgManager.getItemImages(itemId));
 		_Items.addAll(_Item.getImages());
 	}

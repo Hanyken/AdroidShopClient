@@ -45,8 +45,8 @@ public class OrderActivity extends BaseActivity implements OnClickListener
 		Intent intent = getIntent();
 		ItemId = intent.getLongExtra(ItemActivity.ITEM_ID_EXTRA_KEY, 0);
 		
-		CatalogSettings settings = Repository.getIntent().getCatalogManager().getSettings();
-		CatalogItem item = Repository.getIntent().getItemsManager().getItem(ItemId);
+		CatalogSettings settings = Repository.getIntent(this).getCatalogManager().getSettings();
+		CatalogItem item = Repository.getIntent(this).getItemsManager().getItem(ItemId);
 		
 		lblItemName = (TextView) view.findViewById(R.id.lblItemName);
 		plProperies = (PropertiesList) view.findViewById(R.id.plProperties);
@@ -64,7 +64,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener
 		
 		plProperies.setAllowClear(false);
 		
-		imgIco.setImageBitmap(Repository.getIntent().getImagesManager().getImage(item.getIco()));
+		imgIco.setImageBitmap(Repository.getIntent(this).getImagesManager().getImage(item.getIco()));
 		
 		properties.addAll(item.getOrderProperties());
 		plProperies.setProperties(properties);
@@ -84,7 +84,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener
 			items.add(item);
 		}
 		
-		Repository.getIntent().getOrderManager().addOrderItem(ItemId, items);
+		Repository.getIntent(this).getOrderManager().addOrderItem(ItemId, items);
 		Toast.makeText(this, "Товар добавлен в карзину",Toast.LENGTH_SHORT).show();
 		finish();
 	}

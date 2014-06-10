@@ -43,7 +43,7 @@ public class ItemAnalogsFragment extends Fragment implements OnClickListener
 		View view = inflater.inflate(R.layout.item_activity_analog_fragment, container, false);
 		
 		Bundle args = getArguments();
-		CatalogSettings settings = Repository.getIntent().getCatalogManager().getSettings();
+		CatalogSettings settings = Repository.getIntent(getActivity()).getCatalogManager().getSettings();
 		
 		TextView lblTitle = (TextView)view.findViewById(R.id.lblTitle);
 		lblTitle.setText(args.getString(TITLE_NAME));
@@ -72,7 +72,7 @@ public class ItemAnalogsFragment extends Fragment implements OnClickListener
 		//float dpWidth = outMetrics.widthPixels / density;
 
 		view.removeAllViews();
-		ItemsManager manager = Repository.getIntent().getItemsManager();
+		ItemsManager manager = Repository.getIntent(getActivity()).getItemsManager();
 		
 		for (long id : ids)
 		{
@@ -98,7 +98,7 @@ public class ItemAnalogsFragment extends Fragment implements OnClickListener
 			
 			ImageDownloadTask.startNew(imgView,
 					"file://"
-							+ Repository.getIntent().getImagesManager()
+							+ Repository.getIntent(getActivity()).getImagesManager()
 									.getImagePath(entity.getIco()));
 			
 			textView.setText(entity.getName());

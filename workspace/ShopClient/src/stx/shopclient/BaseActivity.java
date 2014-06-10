@@ -59,7 +59,7 @@ public class BaseActivity extends FragmentActivity
 
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setBackgroundDrawable(new ColorDrawable(Repository.getIntent().getCatalogManager().getSettings().getBackground()));
+		actionBar.setBackgroundDrawable(new ColorDrawable(Repository.getIntent(this).getCatalogManager().getSettings().getBackground()));
 
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setContentView(R.layout.base_activity);		

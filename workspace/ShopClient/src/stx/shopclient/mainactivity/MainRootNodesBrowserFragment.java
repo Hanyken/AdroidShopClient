@@ -57,11 +57,11 @@ public class MainRootNodesBrowserFragment extends Fragment implements
 		tabStrip.setTabNames(new String[]
 		{ "Список", "Плитки" });
 
-		tabStrip.setIndicatorColor(Repository.getIntent().getCatalogManager()
+		tabStrip.setIndicatorColor(Repository.getIntent(getActivity()).getCatalogManager()
 				.getSettings().getBackground());
-		tabStrip.setUnderlineColor(Repository.getIntent().getCatalogManager()
+		tabStrip.setUnderlineColor(Repository.getIntent(getActivity()).getCatalogManager()
 				.getSettings().getBackground());
-		tabStrip.setBackgroundColor(Repository.getIntent().getCatalogManager()
+		tabStrip.setBackgroundColor(Repository.getIntent(getActivity()).getCatalogManager()
 				.getSettings().getItemPanelColor());
 
 		FrameLayout frameLayout = (FrameLayout) view
@@ -80,11 +80,11 @@ public class MainRootNodesBrowserFragment extends Fragment implements
 	{
 		// _nodes = generateData();
 		_nodes = new ArrayList<CatalogNode>();
-		_nodes.addAll(Repository.getIntent().getCatalogManager().getNodes());
-		_nodes.addAll(Repository.getIntent().getCatalogManager().getNodes());
-		_nodes.addAll(Repository.getIntent().getCatalogManager().getNodes());
-		_nodes.addAll(Repository.getIntent().getCatalogManager().getNodes());
-		_nodes.addAll(Repository.getIntent().getCatalogManager().getNodes());
+		_nodes.addAll(Repository.getIntent(getActivity()).getCatalogManager().getNodes());
+		_nodes.addAll(Repository.getIntent(getActivity()).getCatalogManager().getNodes());
+		_nodes.addAll(Repository.getIntent(getActivity()).getCatalogManager().getNodes());
+		_nodes.addAll(Repository.getIntent(getActivity()).getCatalogManager().getNodes());
+		_nodes.addAll(Repository.getIntent(getActivity()).getCatalogManager().getNodes());
 	}
 
 	void loadGrid(View view)
@@ -172,7 +172,7 @@ public class MainRootNodesBrowserFragment extends Fragment implements
 		RoundRectShape shape = new RoundRectShape(rads, null, null);
 		ShapeDrawable drawable = new ShapeDrawable(shape);
 		drawable.getPaint().setColor(
-				Repository.getIntent().getCatalogManager().getSettings()
+				Repository.getIntent(getActivity()).getCatalogManager().getSettings()
 						.getBackground());
 
 		return drawable;

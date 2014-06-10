@@ -28,7 +28,7 @@ public class ItemImageFragment extends Fragment
 		pageIndicator = (CirclePageIndicator) view
 				.findViewById(R.id.page_indicator);
 		
-		pageIndicator.setFillColor(Repository.getIntent().getCatalogManager().getSettings().getBackground());
+		pageIndicator.setFillColor(Repository.getIntent(getActivity()).getCatalogManager().getSettings().getBackground());
 		
 		return view;
 	}

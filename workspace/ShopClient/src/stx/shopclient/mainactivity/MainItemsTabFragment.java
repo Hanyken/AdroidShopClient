@@ -3,21 +3,14 @@ package stx.shopclient.mainactivity;
 import com.astuetz.PagerSlidingTabStrip;
 
 import stx.shopclient.R;
-import stx.shopclient.R.id;
-import stx.shopclient.R.layout;
 import stx.shopclient.repository.Repository;
 import android.app.Fragment;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.TabHost;
-import android.widget.TabWidget;
-import android.widget.TextView;
 
 public class MainItemsTabFragment extends Fragment
 {
@@ -37,11 +30,11 @@ public class MainItemsTabFragment extends Fragment
 		tabStrip.setTabNames(new String[]
 		{ "Популярное", "Избранное", "Последнее" });
 		
-		tabStrip.setIndicatorColor(Repository.getIntent().getCatalogManager()
+		tabStrip.setIndicatorColor(Repository.getIntent(getActivity()).getCatalogManager()
 				.getSettings().getBackground());
-		tabStrip.setUnderlineColor(Repository.getIntent().getCatalogManager()
+		tabStrip.setUnderlineColor(Repository.getIntent(getActivity()).getCatalogManager()
 				.getSettings().getBackground());
-		tabStrip.setBackgroundColor(Repository.getIntent().getCatalogManager()
+		tabStrip.setBackgroundColor(Repository.getIntent(getActivity()).getCatalogManager()
 				.getSettings().getItemPanelColor());
 
 		FrameLayout frameLayout = (FrameLayout) view

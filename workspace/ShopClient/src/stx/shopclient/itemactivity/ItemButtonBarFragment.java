@@ -63,7 +63,7 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 
 	private void setThems(View view)
 	{
-		settings = Repository.getIntent().getCatalogManager().getSettings();
+		settings = Repository.getIntent(getActivity()).getCatalogManager().getSettings();
 
 		RelativeLayout rlButtonPanel = (RelativeLayout) view
 				.findViewById(R.id.rlButtonPanel);

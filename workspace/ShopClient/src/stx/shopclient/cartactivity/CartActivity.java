@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import android.content.Intent;
+import android.nfc.cardemulation.CardEmulation;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.MenuItem;
@@ -67,8 +68,8 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 		 * for (int i = 1; i <= 5; i++) { CatalogItem item = new CatalogItem();
 		 * item.setName("Товар " + Integer.toString(i)); _cartItems.add(item); }
 		 */
-		ItemsManager manager = Repository.getIntent().getItemsManager();
-		Collection<Order> orderItems = Repository.getIntent().getOrderManager()
+		ItemsManager manager = Repository.getIntent(this).getItemsManager();
+		Collection<Order> orderItems = Repository.getIntent(this).getOrderManager()
 				.getOrderItems();
 		for (Order el : orderItems)
 		{
@@ -139,7 +140,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 			descrTextView.setText("1 шт.");
 			
 			ImageView imgView = (ImageView)view.findViewById(R.id.imageView);
-			ImageDownloadTask.startNew(imgView, "file://" + Repository.getIntent().getImagesManager().getImagePath(item.item.getIco()));
+			ImageDownloadTask.startNew(imgView, "file://" + Repository.getIntent(CartActivity.this).getImagesManager().getImagePath(item.item.getIco()));
 
 			Button menuButton = (Button) view.findViewById(R.id.menuButton);
 
@@ -176,7 +177,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 		{
 			_cartItems.remove(orderItem);
 			
-			Repository.getIntent().getOrderManager().removeOrderItem(orderItem.orderId);
+			Repository.getIntent(this).getOrderManager().removeOrderItem(orderItem.orderId);
 
 			_adapter.notifyDataSetChanged();
 			Toast.makeText(this,

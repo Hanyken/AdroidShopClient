@@ -343,4 +343,14 @@ public class WebClient
 		
 		request("overview/Edit", args, true);
 	}
+	
+	public void getImage(Token token, String imgKey, boolean isBig)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("imgKey", imgKey);
+		args.addParam("isBig", isBig);
+		
+		request("image/get", args, true); // надо что то написать что бы превратить в картинку
+	}
 }

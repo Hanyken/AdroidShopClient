@@ -1,16 +1,25 @@
 package stx.shopclient.repository;
 
+import android.content.Context;
+import android.os.AsyncTask;
+import android.util.DisplayMetrics;
+import stx.shopclient.entity.Catalog;
+import stx.shopclient.entity.Token;
 import stx.shopclient.loaders.CatalogFileLoader;
+import stx.shopclient.settings.UserAccount;
+import stx.shopclient.webservice.WebClient;
 
 
 public class Repository
 {
+	public static long CatalogId = 1;
+	
 	private static Repository _intent;
 	
-	public static Repository getIntent()
+	public static Repository getIntent(Context context)
 	{
 		if (_intent == null)
-			_intent = new Repository();
+			_intent = new Repository(context);
 		return _intent;
 	}
 	
@@ -21,7 +30,7 @@ public class Repository
 	private ItemsManager _ItemsManager;
 	private MessagesManager _MessagesManager;
 	
-	private Repository()
+	private Repository(Context context)
 	{
 		_ImagesManager = new ImagesManager();
 		_OrderManager = new OrdersManager();
@@ -32,6 +41,12 @@ public class Repository
 		
 		CatalogFileLoader catalogLoader = new CatalogFileLoader(_CatalogManager);
 		catalogLoader.Load();
+		/*
+		CatalogLoad load = new CatalogLoad();
+		load._Context = context;
+		load._Manager = _CatalogManager;
+		load.execute();
+		*/
 	}
 	
 	
@@ -60,4 +75,34 @@ public class Repository
 	{
 		return _MessagesManager;
 	}
+	
+	
+	private Token getToken(Context context)
+	{
+		if (Token.getCurrent() == null)
+		{
+			WebClient client = new WebClient(context);
+			DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+			Token.setCurrent(client.login("admin", "123", displayMetrics.widthPixels, displayMetrics.heightPixels));
+		}
+		return Token.getCurrent();
+	}
+	
+	
+	class CatalogLoad extends AsyncTask<Void, Void, Void>
+	{
+		public Context _Context;
+		public CatalogManager _Manager;
+
+		@Override
+		protected Void doInBackground(Void... arg0)
+		{
+			WebClient client = new WebClient(_Context);
+			//Catalog cat = client.getCatalog(getToken(_Context), CatalogId);
+			client.getNodeItems(getToken(_Context), 1, 0, 10, 0);
+			
+			return null;
+		}
+	}
+	
 }

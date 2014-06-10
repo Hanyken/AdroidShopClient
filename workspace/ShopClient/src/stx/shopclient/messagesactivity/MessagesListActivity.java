@@ -33,7 +33,7 @@ public class MessagesListActivity extends BaseActivity implements
 	@Override
 	protected View createMainView(ViewGroup parent)
 	{
-		_messages.addAll(Repository.getIntent().getMessagesManager()
+		_messages.addAll(Repository.getIntent(this).getMessagesManager()
 				.getMessages());
 
 		getActionBar().setTitle("Сообщения");

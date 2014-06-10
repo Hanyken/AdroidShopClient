@@ -29,14 +29,16 @@ public class OverviewAdapter extends BaseAdapter
 	private LayoutInflater _Inflater;
 	private PullToRefreshListView _listView;
 	private CatalogSettings settings;
+	private Context _Context;
 	
 	public OverviewAdapter(Context context, PullToRefreshListView lstView, long itemId)
 	{
-		settings = Repository.getIntent().getCatalogManager().getSettings();
+		_Context = context;
+		settings = Repository.getIntent(context).getCatalogManager().getSettings();
 		_listView = lstView;
 		_Inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		_Items = new ArrayList<Overview>();
-		_Item = Repository.getIntent().getItemsManager().getItem(itemId);
+		_Item = Repository.getIntent(context).getItemsManager().getItem(itemId);
 		
 		_Items.addAll(onLoadMore());
 	}
@@ -86,7 +88,7 @@ public class OverviewAdapter extends BaseAdapter
 		ArrayList<Overview> items = new ArrayList<Overview>();
 		
 		int size = _Items.size();
-		OverviewsManager manager = Repository.getIntent().getOverviewsManager();
+		OverviewsManager manager = Repository.getIntent(_Context).getOverviewsManager();
 		int count = _Item.getOverviewsCount();
 		
 		if (size < count)

@@ -52,7 +52,7 @@ public class MainMenuListAdapter extends BaseAdapter
 		_cartMenuItem.setName("Корзина");
 		_cartMenuItem.setHasIcon(true);
 		_cartMenuItem.setIconId(R.drawable.img_shopping_cart);
-		_cartMenuItem.setCount(Repository.getIntent().getOrderManager()
+		_cartMenuItem.setCount(Repository.getIntent(_context).getOrderManager()
 				.getOrderItemsCount());
 		_menuItems.add(_cartMenuItem);
 
@@ -78,11 +78,11 @@ public class MainMenuListAdapter extends BaseAdapter
 
 	void updateMenuItems()
 	{
-		_cartMenuItem.setCount(Repository.getIntent().getOrderManager()
+		_cartMenuItem.setCount(Repository.getIntent(_context).getOrderManager()
 				.getOrderItemsCount());
 
 		int unreadMessages = 0;
-		for (Message m : Repository.getIntent().getMessagesManager()
+		for (Message m : Repository.getIntent(_context).getMessagesManager()
 				.getMessages())
 		{
 			if(!m.isRead())

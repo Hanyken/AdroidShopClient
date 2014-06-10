@@ -8,7 +8,6 @@ import stx.shopclient.entity.AnalogGroup;
 import stx.shopclient.entity.Catalog;
 import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.entity.CatalogSettings;
-import stx.shopclient.loaders.OnLoadChange;
 import stx.shopclient.orderactivity.OrderActivity;
 import stx.shopclient.overviewactivity.OverviewActivity;
 import stx.shopclient.repository.Repository;
@@ -23,11 +22,10 @@ import android.text.style.StyleSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import stx.shopclient.entity.Token;
 
-public class ItemActivity extends BaseActivity implements OnLoadChange<Token>
+public class ItemActivity extends BaseActivity
 {
 	private CatalogItem _Item;
 
@@ -44,13 +42,13 @@ public class ItemActivity extends BaseActivity implements OnLoadChange<Token>
 		
 		Intent intent = getIntent();
 		
-		CatalogSettings settings = Repository.getIntent().getCatalogManager().getSettings();
+		CatalogSettings settings = Repository.getIntent(this).getCatalogManager().getSettings();
 		
 		getActionBar().setBackgroundDrawable(new ColorDrawable(settings.getBackground()));
 		
 		Long itemId = intent.getLongExtra(ITEM_ID_EXTRA_KEY, 0);
 		
-		_Item = Repository.getIntent().getItemsManager().getItem(itemId);
+		_Item = Repository.getIntent(this).getItemsManager().getItem(itemId);
 
 		ItemImageFragment imageFragment = (ItemImageFragment) getFragmentManager()
 				.findFragmentById(R.id.frgImages);
@@ -65,7 +63,7 @@ public class ItemActivity extends BaseActivity implements OnLoadChange<Token>
 		buttonBar.setOverviewCount(_Item.getOverviewsCount());
 		//buttonBar.setCanBuy(intent.getBooleanExtra(ITEM_BUY_EXTRA_KEY, true));
 		
-		Collection<AnalogGroup> groups = Repository.getIntent().getItemsManager().getAnalogs(itemId);
+		Collection<AnalogGroup> groups = Repository.getIntent(this).getItemsManager().getAnalogs(itemId);
 		for(AnalogGroup el : groups)
 		{
 			buttonBar.addAnalogs(el.getName(), el.getIds());	
@@ -83,7 +81,7 @@ public class ItemActivity extends BaseActivity implements OnLoadChange<Token>
 	protected void onStart()
 	{
 		super.onStart();
-		buttonBar.setCanBuy(!Repository.getIntent().getOrderManager().existsItem(_Item.getId()));
+		buttonBar.setCanBuy(!Repository.getIntent(this).getOrderManager().existsItem(_Item.getId()));
 	}
 	
 	
@@ -125,7 +123,7 @@ public class ItemActivity extends BaseActivity implements OnLoadChange<Token>
 			sendIntent.setType("text/plain");
 			sendIntent.putExtra(Intent.EXTRA_TEXT, _Item.getName());
 			sendIntent.setType("image/jpeg");
-			sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://"+Repository.getIntent().getImagesManager().getImagePath(_Item.getIco())));
+			sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://"+Repository.getIntent(this).getImagesManager().getImagePath(_Item.getIco())));
 			startActivity(sendIntent);
 
 			break;
@@ -138,13 +136,7 @@ public class ItemActivity extends BaseActivity implements OnLoadChange<Token>
 			break;
 		}
 	}
-	@Override
-	public void onChange(Collection<Token> args)
-	{
-		Toast.makeText(this, "!!!", Toast.LENGTH_SHORT).show();
-	}
-	
-	
+
 	class CatalogTask extends AsyncTask<Void, Void, Catalog>
 	{
 
