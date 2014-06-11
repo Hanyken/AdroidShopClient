@@ -94,6 +94,7 @@ public class LoginActivity extends Activity
 		String password;
 		int width;
 		int height;
+		Throwable exception;
 
 		public LoginTask(String login, String password, int width, int height)
 		{
@@ -114,6 +115,7 @@ public class LoginActivity extends Activity
 			}
 			catch (Throwable ex)
 			{
+				exception = ex;
 				return null;
 			}
 		}
@@ -127,17 +129,21 @@ public class LoginActivity extends Activity
 
 			if (result == null)
 			{
-				Toast.makeText(LoginActivity.this, "Ошибка входа",
+				String message = "Ошибка входа";
+				if (exception != null)
+					message += ": " + exception.getLocalizedMessage();
+
+				Toast.makeText(LoginActivity.this, message,
 						Toast.LENGTH_LONG).show();
 				return;
 			}
 			else if (result.getToken() == null || result.getToken().equals(""))
 			{
-				String error = ServiceResponseCode.getMessage(Integer.parseInt(result
-						.getCode()));
-				
-				Toast.makeText(LoginActivity.this, error,
-						Toast.LENGTH_LONG).show();
+				String error = ServiceResponseCode.getMessage(Integer
+						.parseInt(result.getCode()));
+
+				Toast.makeText(LoginActivity.this, error, Toast.LENGTH_LONG)
+						.show();
 				return;
 			}
 

@@ -114,7 +114,11 @@ public class WebClient
 		if (tokens.size() == 0)
 			throw new RuntimeException("No tokens returned");
 		else
-			return tokens.iterator().next();
+		{
+			Token token = tokens.iterator().next();
+			token.setBegDate(new Date());			
+			return token;
+		}
 	}
 
 	public Token register(String login, String password, String firstName,
@@ -162,43 +166,52 @@ public class WebClient
 		else
 			return tokens.iterator().next();
 	}
-	
+
 	public Catalog getCatalog(Token token, long catalogId)
+	{
+		return getCatalog(token, catalogId, null);
+	}
+
+	public Catalog getCatalog(Token token, long catalogId, StringBuilder xml)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
 		args.addParam("catalogId", catalogId);
-		
+
 		String response = request("catalog/get", args, true);
-		Collection<Catalog> catalogs = new CatalogParser().parseString(response);
-		
+		if (xml != null)
+			xml.append(response);
+		Collection<Catalog> catalogs = new CatalogParser()
+				.parseString(response);
+
 		if (catalogs.size() == 0)
 			throw new RuntimeException("No catalog returned");
 		else
 			return catalogs.iterator().next();
 	}
-	
-	public Collection<CatalogNode> getNodes(Token token, long catalogId, int start, int offset)
+
+	public Collection<CatalogNode> getNodes(Token token, long catalogId,
+			int start, int offset)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
 		args.addParam("catalogId", catalogId);
 		args.addParam("start", start);
 		args.addParam("offset", offset);
-		
+
 		String response = request("node/get", args, true);
 		Collection<CatalogNode> nodes = new NodeParser().parseString(response);
 		return nodes;
 	}
-	
-	
+
 	// OrderType
 	// 0 - отсутствует
-    // 1 - по цене по возрастанию
-    // 2 - по цене по убыванию
-    // 3 - по популярности по возрастанию
-    // 4 - по популярности по убыванию
-	public Collection<CatalogItem> getNodeItems(Token token, long catalogNodeId, int start, int offset, int orderType)
+	// 1 - по цене по возрастанию
+	// 2 - по цене по убыванию
+	// 3 - по популярности по возрастанию
+	// 4 - по популярности по убыванию
+	public Collection<CatalogItem> getNodeItems(Token token,
+			long catalogNodeId, int start, int offset, int orderType)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
@@ -208,26 +221,29 @@ public class WebClient
 		args.addParam("orderType", offset);
 		args.addParam("deep", false);
 		args.addParam("filter", "");
-		
+
 		String response = request("item/get", args, true);
 		Collection<CatalogItem> items = new ItemParser().parseString(response);
 		return items;
 	}
-	
-	public Collection<CatalogItem> quickSearchItems(Token token, long catalogId, String name)
+
+	public Collection<CatalogItem> quickSearchItems(Token token,
+			long catalogId, String name)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
 		args.addParam("catalogId", catalogId);
 		args.addParam("name", name);
-		
+
 		String response = request("item/quick", args, true);
 		Collection<CatalogItem> items = new ItemParser().parseString(response);
 		return items;
 	}
-	
-	// deep : true - включать результат товары из подразделов, false - не включать
-	public Collection<CatalogItem> searchItems(Token token, long catalogNodeId, int start, int offset, int orderType, boolean deep, String filter)
+
+	// deep : true - включать результат товары из подразделов, false - не
+	// включать
+	public Collection<CatalogItem> searchItems(Token token, long catalogNodeId,
+			int start, int offset, int orderType, boolean deep, String filter)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
@@ -237,93 +253,92 @@ public class WebClient
 		args.addParam("orderType", offset);
 		args.addParam("deep", deep);
 		args.addParam("filter", filter);
-		
+
 		String response = request("item/get", args, true);
 		Collection<CatalogItem> items = new ItemParser().parseString(response);
 		return items;
 	}
-	
+
 	public Collection<CatalogItem> getPopular(Token token, long catalogId)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
 		args.addParam("catalogId", catalogId);
-		
+
 		String response = request("item/popular", args, true);
 		Collection<CatalogItem> items = new ItemParser().parseString(response);
 		return items;
 	}
-	
+
 	public Collection<CatalogItem> getLast(Token token, long catalogId)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
 		args.addParam("catalogId", catalogId);
-		
+
 		String response = request("item/last", args, true);
 		Collection<CatalogItem> items = new ItemParser().parseString(response);
 		return items;
 	}
-	
+
 	public Collection<CatalogItem> getFavorite(Token token, long catalogId)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
 		args.addParam("catalogId", catalogId);
-		
+
 		String response = request("item/favorite", args, true);
 		Collection<CatalogItem> items = new ItemParser().parseString(response);
 		return items;
-	}	
-	
+	}
+
 	public void addLast(Token token, String list)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
 		args.addParam("list", list);
-		
+
 		request("item/lastAdd", args, true);
 	}
-	
+
 	public void addFavorite(Token token, long itemId)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
 		args.addParam("itemId", itemId);
-		
+
 		request("item/favoriteAdd", args, true);
 	}
-	
+
 	public void delFavorite(Token token, long itemId)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
 		args.addParam("itemId", itemId);
-		
+
 		request("item/favoriteDel", args, true);
 	}
-	
-	
-	
-	public Collection<Overview> getOverviews(Token token, long itemId, int start, int offset)
+
+	public Collection<Overview> getOverviews(Token token, long itemId,
+			int start, int offset)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
 		args.addParam("itemId", itemId);
 		args.addParam("start", start);
 		args.addParam("offset", offset);
-		
+
 		String response = request("overview/get", args, true);
 		Collection<Overview> items = new OverviewParser().parseString(response);
 		return items;
 	}
-	
+
 	public Overview getUserOverview(Token token, long itemId)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
 		args.addParam("itemId", itemId);
-		
+
 		String response = request("overview/get", args, true);
 		Collection<Overview> items = new OverviewParser().parseString(response);
 
@@ -333,24 +348,26 @@ public class WebClient
 			return items.iterator().next();
 	}
 
-	public void editOverview(Token token, long itemId, byte rating, String description)
+	public void editOverview(Token token, long itemId, byte rating,
+			String description)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
 		args.addParam("itemId", itemId);
 		args.addParam("rating", rating);
 		args.addParam("description", description);
-		
+
 		request("overview/Edit", args, true);
 	}
-	
+
 	public void getImage(Token token, String imgKey, boolean isBig)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
 		args.addParam("imgKey", imgKey);
 		args.addParam("isBig", isBig);
-		
-		request("image/get", args, true); // надо что то написать что бы превратить в картинку
+
+		request("image/get", args, true); // надо что то написать что бы
+											// превратить в картинку
 	}
 }
