@@ -57,11 +57,11 @@ public class MainRootNodesBrowserFragment extends Fragment implements
 		tabStrip.setTabNames(new String[]
 		{ "Список", "Плитки" });
 
-		tabStrip.setIndicatorColor(Repository.getIntent(getActivity()).getCatalogManager()
+		tabStrip.setIndicatorColor(Repository.get(getActivity()).getCatalogManager()
 				.getSettings().getBackground());
-		tabStrip.setUnderlineColor(Repository.getIntent(getActivity()).getCatalogManager()
+		tabStrip.setUnderlineColor(Repository.get(getActivity()).getCatalogManager()
 				.getSettings().getBackground());
-		tabStrip.setBackgroundColor(Repository.getIntent(getActivity()).getCatalogManager()
+		tabStrip.setBackgroundColor(Repository.get(getActivity()).getCatalogManager()
 				.getSettings().getItemPanelColor());
 
 		FrameLayout frameLayout = (FrameLayout) view
@@ -80,11 +80,11 @@ public class MainRootNodesBrowserFragment extends Fragment implements
 	{
 		// _nodes = generateData();
 		_nodes = new ArrayList<CatalogNode>();
-		_nodes.addAll(Repository.getIntent(getActivity()).getCatalogManager().getNodes());
-		_nodes.addAll(Repository.getIntent(getActivity()).getCatalogManager().getNodes());
-		_nodes.addAll(Repository.getIntent(getActivity()).getCatalogManager().getNodes());
-		_nodes.addAll(Repository.getIntent(getActivity()).getCatalogManager().getNodes());
-		_nodes.addAll(Repository.getIntent(getActivity()).getCatalogManager().getNodes());
+		_nodes.addAll(Repository.get(getActivity()).getCatalogManager().getNodes());
+		_nodes.addAll(Repository.get(getActivity()).getCatalogManager().getNodes());
+		_nodes.addAll(Repository.get(getActivity()).getCatalogManager().getNodes());
+		_nodes.addAll(Repository.get(getActivity()).getCatalogManager().getNodes());
+		_nodes.addAll(Repository.get(getActivity()).getCatalogManager().getNodes());
 	}
 
 	void loadGrid(View view)
@@ -172,7 +172,7 @@ public class MainRootNodesBrowserFragment extends Fragment implements
 		RoundRectShape shape = new RoundRectShape(rads, null, null);
 		ShapeDrawable drawable = new ShapeDrawable(shape);
 		drawable.getPaint().setColor(
-				Repository.getIntent(getActivity()).getCatalogManager().getSettings()
+				Repository.get(getActivity()).getCatalogManager().getSettings()
 						.getBackground());
 
 		return drawable;

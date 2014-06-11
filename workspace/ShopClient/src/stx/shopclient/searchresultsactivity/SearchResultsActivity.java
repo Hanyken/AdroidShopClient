@@ -142,7 +142,7 @@ public class SearchResultsActivity extends BaseActivity implements
 					.findViewById(R.id.descriptionTextView);
 			RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingBar);
 			
-			BaseActivity.setRatingBarColor(ratingBar, Repository.getIntent(SearchResultsActivity.this).getCatalogManager().getSettings()
+			BaseActivity.setRatingBarColor(ratingBar, Repository.get(SearchResultsActivity.this).getCatalogManager().getSettings()
 					.getRatingColor());
 
 			nameTextView.setText(item.getName());

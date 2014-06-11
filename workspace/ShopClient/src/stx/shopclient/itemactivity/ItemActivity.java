@@ -42,13 +42,13 @@ public class ItemActivity extends BaseActivity
 		
 		Intent intent = getIntent();
 		
-		CatalogSettings settings = Repository.getIntent(this).getCatalogManager().getSettings();
+		CatalogSettings settings = Repository.get(this).getCatalogManager().getSettings();
 		
 		getActionBar().setBackgroundDrawable(new ColorDrawable(settings.getBackground()));
 		
 		Long itemId = intent.getLongExtra(ITEM_ID_EXTRA_KEY, 0);
 		
-		_Item = Repository.getIntent(this).getItemsManager().getItem(itemId);
+		_Item = Repository.get(this).getItemsManager().getItem(itemId);
 
 		ItemImageFragment imageFragment = (ItemImageFragment) getFragmentManager()
 				.findFragmentById(R.id.frgImages);
@@ -63,7 +63,7 @@ public class ItemActivity extends BaseActivity
 		buttonBar.setOverviewCount(_Item.getOverviewsCount());
 		//buttonBar.setCanBuy(intent.getBooleanExtra(ITEM_BUY_EXTRA_KEY, true));
 		
-		Collection<AnalogGroup> groups = Repository.getIntent(this).getItemsManager().getAnalogs(itemId);
+		Collection<AnalogGroup> groups = Repository.get(this).getItemsManager().getAnalogs(itemId);
 		for(AnalogGroup el : groups)
 		{
 			buttonBar.addAnalogs(el.getName(), el.getIds());	
@@ -81,7 +81,7 @@ public class ItemActivity extends BaseActivity
 	protected void onStart()
 	{
 		super.onStart();
-		buttonBar.setCanBuy(!Repository.getIntent(this).getOrderManager().existsItem(_Item.getId()));
+		buttonBar.setCanBuy(!Repository.get(this).getOrderManager().existsItem(_Item.getId()));
 	}
 	
 	
@@ -123,7 +123,7 @@ public class ItemActivity extends BaseActivity
 			sendIntent.setType("text/plain");
 			sendIntent.putExtra(Intent.EXTRA_TEXT, _Item.getName());
 			sendIntent.setType("image/jpeg");
-			sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://"+Repository.getIntent(this).getImagesManager().getImagePath(_Item.getIco())));
+			sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://"+Repository.get(this).getImagesManager().getImagePath(_Item.getIco())));
 			startActivity(sendIntent);
 
 			break;

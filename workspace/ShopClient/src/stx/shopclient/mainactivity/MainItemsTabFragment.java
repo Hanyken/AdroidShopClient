@@ -30,11 +30,11 @@ public class MainItemsTabFragment extends Fragment
 		tabStrip.setTabNames(new String[]
 		{ "Популярное", "Избранное", "Последнее" });
 		
-		tabStrip.setIndicatorColor(Repository.getIntent(getActivity()).getCatalogManager()
+		tabStrip.setIndicatorColor(Repository.get(getActivity()).getCatalogManager()
 				.getSettings().getBackground());
-		tabStrip.setUnderlineColor(Repository.getIntent(getActivity()).getCatalogManager()
+		tabStrip.setUnderlineColor(Repository.get(getActivity()).getCatalogManager()
 				.getSettings().getBackground());
-		tabStrip.setBackgroundColor(Repository.getIntent(getActivity()).getCatalogManager()
+		tabStrip.setBackgroundColor(Repository.get(getActivity()).getCatalogManager()
 				.getSettings().getItemPanelColor());
 
 		FrameLayout frameLayout = (FrameLayout) view

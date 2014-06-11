@@ -23,7 +23,7 @@ public class Repository
 
 	private static Repository _intent;
 
-	public static Repository getIntent(Context context)
+	public static Repository get(Context context)
 	{
 		if (_intent == null)
 			_intent = new Repository(context);
@@ -98,6 +98,65 @@ public class Repository
 		}
 		return Token.getCurrent();
 	}
+	
+	public void loadCatalogFromFile(Context context)
+	{
+		String catalogFile = "catalog_" + Long.toString(CatalogId);
+		File file = context.getFileStreamPath(catalogFile);
+		
+		CatalogParser parser = new CatalogParser();
+		Collection<Catalog> catalogs = parser.parseFile(file.getAbsolutePath());
+		if(catalogs.size()==0)
+			throw new RuntimeException("no catalogs load from file");
+		else
+		{
+			Catalog catalog = catalogs.iterator().next();
+			_CatalogManager.addCatalog(catalog);
+		}
+	}
+	
+	public void loadCatalogFromWeb(Context context)
+	{
+		String catalogFile = "catalog_" + Long.toString(CatalogId);
+		File file = context.getFileStreamPath(catalogFile);
+		
+		WebClient client = new WebClient(context);
+		StringBuilder xml = new StringBuilder();
+		Catalog catalog = client.getCatalog(Token.getCurrent(), CatalogId,
+				xml);
+
+		FileOutputStream stream = null;
+		OutputStreamWriter writer = null;
+		try
+		{
+			stream = context.openFileOutput(catalogFile, 0);
+			writer = new OutputStreamWriter(stream);
+			writer.write(xml.toString());
+			writer.close();
+			stream.close();
+			
+			_CatalogManager.addCatalog(catalog);
+		}
+		catch (Throwable ex)
+		{
+			throw new RuntimeException(ex);
+		}
+		finally
+		{
+			try
+			{
+				if (writer != null)
+					writer.close();
+				if (stream != null)
+					stream.close();
+			}
+			catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 
 	public void loadCatalog(Context context)
 	{
@@ -105,54 +164,11 @@ public class Repository
 		File file = context.getFileStreamPath(catalogFile);
 		if (file.exists())
 		{
-			CatalogParser parser = new CatalogParser();
-			Collection<Catalog> catalogs = parser.parseFile(file.getAbsolutePath());
-			if(catalogs.size()==0)
-				throw new RuntimeException("no catalogs load from file");
-			else
-			{
-				Catalog catalog = catalogs.iterator().next();
-				_CatalogManager.addCatalog(catalog);
-			}				
+			loadCatalogFromFile(context);
 		}
 		else
 		{
-			WebClient client = new WebClient(context);
-			StringBuilder xml = new StringBuilder();
-			Catalog catalog = client.getCatalog(Token.getCurrent(), CatalogId,
-					xml);
-
-			FileOutputStream stream = null;
-			OutputStreamWriter writer = null;
-			try
-			{
-				stream = context.openFileOutput(catalogFile, 0);
-				writer = new OutputStreamWriter(stream);
-				writer.write(xml.toString());
-				writer.close();
-				stream.close();
-				
-				_CatalogManager.addCatalog(catalog);
-			}
-			catch (Throwable ex)
-			{
-				throw new RuntimeException(ex);
-			}
-			finally
-			{
-				try
-				{
-					if (writer != null)
-						writer.close();
-					if (stream != null)
-						stream.close();
-				}
-				catch (IOException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+			loadCatalogFromWeb(context);
 		}
 	}
 
