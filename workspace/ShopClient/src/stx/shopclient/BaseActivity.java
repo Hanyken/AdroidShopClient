@@ -168,8 +168,7 @@ public class BaseActivity extends FragmentActivity
 
 					if (token != null)
 					{
-						if (!token.getCode().equals(
-								Integer.toString(ServiceResponseCode.OK)))
+						if (token.getCode() != ServiceResponseCode.OK)
 							return false;
 					}
 					else

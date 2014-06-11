@@ -15,6 +15,10 @@ public class ServiceResponseCode
 	public static final int ORDER_CANT_DELETE = 7; // Для элемента сформирован
 													// счет, удаление невозможно
 
+	public static final int UPDATE_NOT_REQUIRED = 11; //Обновление данных не требуется
+	
+	public static final int UPDATE_NEEDED = 12; //Необходимо обновить данные 
+	
 	public static final int SQL_SERVER_ERROR = 1000; // Внутрянняя ошибка SQL
 														// сервера
 	public static final int RETURN_EMPTY_STRING = 1001; // Возникает если
@@ -43,6 +47,8 @@ public class ServiceResponseCode
 		messages.put(RETURN_EMPTY_STRING, "Нет данных");
 		messages.put(ORDER_CANT_DELETE,
 				"Для элемента сформирован счет, удаление невозможно");
+		messages.put(UPDATE_NOT_REQUIRED, "Обновление данных не требуется");
+		messages.put(UPDATE_NEEDED, "Необходимо обновить данные");
 	}
 
 	public static String getMessage(int code)

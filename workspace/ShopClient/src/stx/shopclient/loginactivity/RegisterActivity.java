@@ -147,8 +147,7 @@ public class RegisterActivity extends Activity
 						{
 							public void onClick(DialogInterface dialog,
 									int which)
-							{
-							}
+							{}
 						}).show();
 	}
 
@@ -204,15 +203,16 @@ public class RegisterActivity extends Activity
 						Toast.LENGTH_LONG).show();
 				return;
 			}
-			else if (result.getToken() == null || result.getToken().equals(""))
-			{
-				String error = ServiceResponseCode.getMessage(Integer.parseInt(result
-						.getCode()));
-				
-				Toast.makeText(RegisterActivity.this, error,
-						Toast.LENGTH_LONG).show();
-				return;
-			}
+			else
+				if (result.getToken() == null || result.getToken().equals(""))
+				{
+					String error = ServiceResponseCode.getMessage(result
+							.getCode());
+
+					Toast.makeText(RegisterActivity.this, error,
+							Toast.LENGTH_LONG).show();
+					return;
+				}
 
 			Token.setCurrent(result);
 			UserAccount.setLogin(login);

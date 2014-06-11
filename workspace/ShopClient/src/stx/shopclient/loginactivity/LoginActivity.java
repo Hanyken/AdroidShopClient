@@ -139,8 +139,7 @@ public class LoginActivity extends Activity
 			}
 			else if (result.getToken() == null || result.getToken().equals(""))
 			{
-				String error = ServiceResponseCode.getMessage(Integer
-						.parseInt(result.getCode()));
+				String error = ServiceResponseCode.getMessage(result.getCode());
 
 				Toast.makeText(LoginActivity.this, error, Toast.LENGTH_LONG)
 						.show();

@@ -2,23 +2,16 @@ package stx.shopclient.entity;
 
 import java.util.Date;
 
-public class Token
+public class Token extends ResultEntity
 {
 	private static Token current;	
 	
-	private String _code;
+	
 	private String _token;
 	private Date _begDate;
 	private int _interval;
 	
-	public String getCode()
-	{
-		return _code;
-	}
-	public void setCode(String code)
-	{
-		_code= code;
-	}
+	
 	
 	public String getToken()
 	{

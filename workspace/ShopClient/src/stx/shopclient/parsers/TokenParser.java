@@ -16,7 +16,7 @@ public class TokenParser extends BaseParser<Token>
 	public Token getElement(Element e)
 	{
 		Token token = new Token();
-		token.setCode(super.getValue(e, CODE_NAME));
+		token.setCode(super.getValueInt(e, CODE_NAME));
 		token.setToken(super.getValue(e, TOKEN_NAME));
 		token.setBegDate(super.getValueDate(e, BEG_DATE_NAME));
 		token.setInterval(super.getValueInt(e, INTERVAL_NAME));

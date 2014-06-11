@@ -16,12 +16,14 @@ import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.entity.CatalogNode;
 import stx.shopclient.entity.Overview;
 import stx.shopclient.entity.Token;
+import stx.shopclient.entity.UpdateResultEntity;
 import stx.shopclient.loaders.HttpArgs;
 import stx.shopclient.parsers.CatalogParser;
 import stx.shopclient.parsers.ItemParser;
 import stx.shopclient.parsers.NodeParser;
 import stx.shopclient.parsers.OverviewParser;
 import stx.shopclient.parsers.TokenParser;
+import stx.shopclient.parsers.UpdateResultParser;
 import stx.shopclient.settings.ServerSettings;
 import stx.shopclient.utils.StringUtils;
 import android.content.Context;
@@ -369,5 +371,37 @@ public class WebClient
 
 		request("image/get", args, true); // надо что то написать что бы
 											// превратить в картинку
+	}
+	
+	
+	public UpdateResultEntity updateCatalogNeeded(Token token, long catalogId, Date lastModification)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("catalogId", catalogId);
+		args.addParam("date", lastModification);
+
+		String response = request("valid/catalog", args, true); 
+		Collection<UpdateResultEntity> items = new UpdateResultParser().parseString(response);
+
+		if (items.size() == 0)
+			throw new RuntimeException("No update returned");
+		else
+			return items.iterator().next();
+	}
+	
+	public UpdateResultEntity updateSettingsNeeded(Token token, Date lastModification)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("date", lastModification);
+
+		String response = request("valid/settings", args, true); 
+		Collection<UpdateResultEntity> items = new UpdateResultParser().parseString(response);
+
+		if (items.size() == 0)
+			throw new RuntimeException("No update returned");
+		else
+			return items.iterator().next();
 	}
 }
