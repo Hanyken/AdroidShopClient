@@ -26,9 +26,9 @@ public class ItemImagePageAdapter extends PagerAdapter implements OnClickListene
 	{
 		_Context = context;
 		ItemId = itemId;
-		_Item = Repository.getIntent(_Context).getItemsManager().getItem(itemId);
+		_Item = Repository.get(_Context).getItemsManager().getItem(itemId);
 		_Items = new ArrayList<String>();
-		_ImgManager = Repository.getIntent(_Context).getImagesManager();
+		_ImgManager = Repository.get(_Context).getImagesManager();
 		_Items.addAll(_Item.getImages());
 	}
 

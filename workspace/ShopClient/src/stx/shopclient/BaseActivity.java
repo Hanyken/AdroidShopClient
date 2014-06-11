@@ -1,6 +1,5 @@
 package stx.shopclient;
 
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import stx.shopclient.cartactivity.CartActivity;
@@ -36,14 +35,11 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView.FindListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RatingBar;
-import android.widget.ScrollView;
 
 public class BaseActivity extends FragmentActivity
 {
@@ -51,6 +47,7 @@ public class BaseActivity extends FragmentActivity
 	LinearLayout _mainViewContainer;
 	MainMenuListAdapter _mainMenuListAdapter;
 	ProgressDialog _progressDialog;
+	GregorianCalendar _lastCheckCatalogModif;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -71,7 +68,7 @@ public class BaseActivity extends FragmentActivity
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setBackgroundDrawable(new ColorDrawable(Repository
-				.getIntent(this).getCatalogManager().getSettings()
+				.get(this).getCatalogManager().getSettings()
 				.getBackground()));
 
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -115,13 +112,32 @@ public class BaseActivity extends FragmentActivity
 
 		_mainViewContainer = (LinearLayout) findViewById(R.id.mainViewContainer);
 
-		if (Repository.getIntent(this).getCatalogManager().getCatalog() == null)
+		if (Repository.get(this).getCatalogManager().getCatalog() == null)
 		{
 			CatalogLoadTask task = new CatalogLoadTask();
 			task.execute();
 		}
 		else
+		{
 			loadMainView();
+
+			GregorianCalendar cal = new GregorianCalendar();
+			cal.add(GregorianCalendar.SECOND, -60);
+			if (_lastCheckCatalogModif.before(cal))
+			{
+				_lastCheckCatalogModif = new GregorianCalendar();
+
+				Thread thread = new Thread(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						refreshCatalogThreadFunc();
+					}
+				});
+				thread.start();
+			}
+		}
 	}
 
 	void loadMainView()
@@ -280,6 +296,19 @@ public class BaseActivity extends FragmentActivity
 				android.graphics.PorterDuff.Mode.SRC_ATOP);
 	}
 
+	void refreshCatalogThreadFunc()
+	{
+		if(!checkCatalogLastModif())
+		{
+			Repository.get(this).loadCatalogFromWeb(this);
+		}
+	}
+
+	boolean checkCatalogLastModif()
+	{
+		return true;
+	}
+
 	class CatalogLoadTask extends AsyncTask<Void, Void, Void>
 	{
 		Throwable exception = null;
@@ -298,7 +327,7 @@ public class BaseActivity extends FragmentActivity
 		{
 			try
 			{
-				Repository.getIntent(BaseActivity.this).loadCatalog(
+				Repository.get(BaseActivity.this).loadCatalog(
 						BaseActivity.this);
 			}
 			catch (Throwable ex)

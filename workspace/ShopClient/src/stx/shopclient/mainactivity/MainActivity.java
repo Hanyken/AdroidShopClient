@@ -24,7 +24,7 @@ public class MainActivity extends BaseActivity
 				false);
 
 		getActionBar().setTitle(
-				Repository.getIntent(this).getCatalogManager().getCatalog()
+				Repository.get(this).getCatalogManager().getCatalog()
 						.getName());
 
 		ScrollView scrollView = (ScrollView) view.findViewById(R.id.scrollView);

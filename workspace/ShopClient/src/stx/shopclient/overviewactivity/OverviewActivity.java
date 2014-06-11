@@ -49,7 +49,7 @@ public class OverviewActivity extends BaseActivity implements OnClickListener
 		View view = getLayoutInflater().inflate(R.layout.overview_activity,
 				parent, false);
 
-		CatalogSettings settings = Repository.getIntent(this).getCatalogManager().getSettings();
+		CatalogSettings settings = Repository.get(this).getCatalogManager().getSettings();
 		Intent intent = getIntent();
 		_ItemId = intent.getLongExtra(ItemActivity.ITEM_ID_EXTRA_KEY, 0);
 		
@@ -192,7 +192,7 @@ public class OverviewActivity extends BaseActivity implements OnClickListener
 		switch (v.getId())
 		{
 			case R.id.btnOk:
-				Repository.getIntent(this).getOverviewsManager().addUserOverview(_ItemId, (double)rtgRaiting.getRating(), txtOverview.getText().toString());
+				Repository.get(this).getOverviewsManager().addUserOverview(_ItemId, (double)rtgRaiting.getRating(), txtOverview.getText().toString());
 				HideOverview();
 				Toast.makeText(this, getString(R.string.overview_add_message), Toast.LENGTH_SHORT).show();
 				break;
@@ -205,7 +205,7 @@ public class OverviewActivity extends BaseActivity implements OnClickListener
 	
 	private void readUserOverview()
 	{
-		Overview item = Repository.getIntent(this).getOverviewsManager().getUserOverview(_ItemId);
+		Overview item = Repository.get(this).getOverviewsManager().getUserOverview(_ItemId);
 		txtOverview.setText(item.getDescription());
 		rtgRaiting.setRating((float)item.getRating());
 	}

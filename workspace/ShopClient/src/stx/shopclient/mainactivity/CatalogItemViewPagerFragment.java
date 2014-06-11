@@ -49,7 +49,7 @@ public class CatalogItemViewPagerFragment extends Fragment
 				.findViewById(R.id.page_indicator);
 
 		List<CatalogItem> list = new ArrayList<CatalogItem>();
-		list.addAll(Repository.getIntent(getActivity()).getItemsManager().getFavorits());
+		list.addAll(Repository.get(getActivity()).getItemsManager().getFavorits());
 
 		TestGridAdapter adapter = new TestGridAdapter(this.getActivity(), list);
 
@@ -96,7 +96,7 @@ public class CatalogItemViewPagerFragment extends Fragment
 			// imgView.setImageBitmap(Repository.getIntent().getImagesManager().getImage(item.getIco()));
 			ImageDownloadTask.startNew(imgView,
 					"file://"
-							+ Repository.getIntent(getActivity()).getImagesManager()
+							+ Repository.get(getActivity()).getImagesManager()
 									.getImagePath(item.getIco()));
 
 			TextView textView = (TextView) view.findViewById(R.id.textView);
@@ -105,7 +105,7 @@ public class CatalogItemViewPagerFragment extends Fragment
 			RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingBar);
 			ratingBar.setRating((float) item.getRating());
 
-			BaseActivity.setRatingBarColor(ratingBar, Repository.getIntent(getActivity()).getCatalogManager().getSettings()
+			BaseActivity.setRatingBarColor(ratingBar, Repository.get(getActivity()).getCatalogManager().getSettings()
 							.getRatingColor());
 			
 			return view;

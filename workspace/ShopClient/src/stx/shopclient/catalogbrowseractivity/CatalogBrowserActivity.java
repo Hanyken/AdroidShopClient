@@ -122,8 +122,8 @@ public class CatalogBrowserActivity extends BaseActivity implements
 			_nodes = new ArrayList<CatalogNode>();
 			_items = new ArrayList<CatalogItem>();
 			
-			_nodes.addAll(Repository.getIntent(CatalogBrowserActivity.this).getCatalogManager().getNodes(nodeId));
-			_items.addAll(Repository.getIntent(CatalogBrowserActivity.this).getItemsManager().getItems(nodeId));
+			_nodes.addAll(Repository.get(CatalogBrowserActivity.this).getCatalogManager().getNodes(nodeId));
+			_items.addAll(Repository.get(CatalogBrowserActivity.this).getItemsManager().getItems(nodeId));
 			//generateData();
 		}
 
@@ -171,14 +171,14 @@ public class CatalogBrowserActivity extends BaseActivity implements
 					.findViewById(R.id.descriptionTextView);
 			RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingBar);
 			
-			BaseActivity.setRatingBarColor(ratingBar, Repository.getIntent(CatalogBrowserActivity.this).getCatalogManager().getSettings()
+			BaseActivity.setRatingBarColor(ratingBar, Repository.get(CatalogBrowserActivity.this).getCatalogManager().getSettings()
 					.getRatingColor());
 
 			nameTextView.setText(item.getName());
 			descriptionTextView.setText(Double.toString(item.getPrice()) + " рублей");
 			
 			ImageView imgView = (ImageView)view.findViewById(R.id.imageView);			
-			ImageDownloadTask.startNew(imgView, "file://" + Repository.getIntent(CatalogBrowserActivity.this).getImagesManager().getImagePath(item.getIco()));
+			ImageDownloadTask.startNew(imgView, "file://" + Repository.get(CatalogBrowserActivity.this).getImagesManager().getImagePath(item.getIco()));
 
 			ratingBar.setRating((float) item.getRating());
 		}

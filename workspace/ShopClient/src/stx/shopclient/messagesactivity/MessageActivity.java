@@ -20,7 +20,7 @@ public class MessageActivity extends BaseActivity
 	protected View createMainView(ViewGroup parent)
 	{
 		_messageId = getIntent().getLongExtra(MESSAGE_ID_EXTRA_KEY, 0);
-		_message = Repository.getIntent(this).getMessagesManager().getMessage(_messageId);
+		_message = Repository.get(this).getMessagesManager().getMessage(_messageId);
 		
 		getActionBar().setTitle(_message.getTitle());
 		
