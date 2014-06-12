@@ -96,10 +96,10 @@ public class ItemAnalogsFragment extends Fragment implements OnClickListener
 			ImageView imgView = (ImageView) itemView
 					.findViewById(R.id.imgIco);
 			
-			ImageDownloadTask.startNew(imgView,
-					"file://"
-							+ Repository.get(getActivity()).getImagesManager()
-									.getImagePath(entity.getIco()));
+//			ImageDownloadTask.startNew(imgView,
+//					"file://"
+//							+ Repository.get(getActivity()).getImagesManager()
+//									.getImagePath(entity.getIco()));
 			
 			textView.setText(entity.getName());
 		}

@@ -7,90 +7,65 @@ import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
+import stx.shopclient.entity.Token;
+import stx.shopclient.webservice.WebClient;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
-public class ImageDownloadTask extends AsyncTask<String, Void, Bitmap>
+public class ImageDownloadTask extends AsyncTask<Void, Void, Bitmap>
 {
 	ImageView _view;
+	String _key;
+	boolean _isBig;
+	Context _context;
 
 	static Map<String, Bitmap> Cache = new HashMap<String, Bitmap>();
 
-	public ImageDownloadTask(ImageView view)
+	public ImageDownloadTask(ImageView view, Context context, String key,
+			boolean isBig)
 	{
 		_view = view;
+		_context = context;
+		_key = key;
+		_isBig = isBig;
 	}
 
-	public static void startNew(ImageView view, String url)
+	public static void startNew(ImageView view, Context context, String key,
+			boolean isBig)
 	{
 		synchronized (Cache)
 		{
-			if (Cache.containsKey(url))
+			if (Cache.containsKey(key))
 			{
-				view.setImageBitmap(Cache.get(url));
+				view.setImageBitmap(Cache.get(key));
 				return;
 			}
 		}
 
-		new ImageDownloadTask(view).execute(url);
+		new ImageDownloadTask(view, context, key, isBig).execute();
 	}
 
 	@Override
-	protected Bitmap doInBackground(String... params)
+	protected Bitmap doInBackground(Void... params)
 	{
-		String urlString = params[0];
-
 		synchronized (Cache)
 		{
-			if (Cache.containsKey(urlString))
-				return Cache.get(urlString);
-		}
-
-		InputStream stream = null;
-
-		try
-		{
-			Thread.sleep(700);
-		}
-		catch (InterruptedException e1)
-		{
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			if (Cache.containsKey(_key))
+				return Cache.get(_key);
 		}
 
 		try
 		{
-			URL url = new URL(urlString);
-
-			URLConnection connection = url.openConnection();
-			stream = connection.getInputStream();
-			Bitmap result = BitmapFactory.decodeStream(stream);
-
-			synchronized (Cache)
-			{
-				Cache.put(urlString, result);
-			}
-
+			WebClient client = new WebClient(_context);
+			Bitmap result = client.getImage(Token.getCurrent(), _key, _isBig);
 			return result;
 		}
-		catch (Exception e)
+		catch (Throwable e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		finally
-		{
-			if (stream != null)
-				try
-				{
-					stream.close();
-				}
-				catch (IOException e)
-				{
-					e.printStackTrace();
-				}
 		}
 
 		return null;

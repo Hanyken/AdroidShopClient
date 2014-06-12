@@ -10,6 +10,7 @@ import stx.shopclient.R;
 import stx.shopclient.catalogbrowseractivity.CatalogBrowserActivity;
 import stx.shopclient.entity.CatalogNode;
 import stx.shopclient.repository.Repository;
+import stx.shopclient.utils.ImageDownloadTask;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Color;
@@ -81,10 +82,6 @@ public class MainRootNodesBrowserFragment extends Fragment implements
 		// _nodes = generateData();
 		_nodes = new ArrayList<CatalogNode>();
 		_nodes.addAll(Repository.get(getActivity()).getCatalogManager().getNodes());
-		_nodes.addAll(Repository.get(getActivity()).getCatalogManager().getNodes());
-		_nodes.addAll(Repository.get(getActivity()).getCatalogManager().getNodes());
-		_nodes.addAll(Repository.get(getActivity()).getCatalogManager().getNodes());
-		_nodes.addAll(Repository.get(getActivity()).getCatalogManager().getNodes());
 	}
 
 	void loadGrid(View view)
@@ -125,6 +122,7 @@ public class MainRootNodesBrowserFragment extends Fragment implements
 			ImageView imgView = (ImageView) itemView
 					.findViewById(R.id.imageView);
 			imgView.setBackground(getNodeIconBackground());
+			ImageDownloadTask.startNew(imgView, getActivity(), node.getIcon(), false);			
 
 			textView.setText(node.getName());
 		}
@@ -159,6 +157,7 @@ public class MainRootNodesBrowserFragment extends Fragment implements
 			ImageView imgView = (ImageView) itemView
 					.findViewById(R.id.imageView);
 			imgView.setBackground(getNodeIconBackground());
+			ImageDownloadTask.startNew(imgView, getActivity(), node.getIcon(), false);
 
 			linearLayout.addView(itemView);
 		}

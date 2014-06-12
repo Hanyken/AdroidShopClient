@@ -16,11 +16,11 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
+        android:label="ShopClient"
         android:theme="@style/AppTheme" >
         <activity
             android:name="stx.shopclient.mainactivity.MainActivity"
-            android:label="@string/app_name" >
+            android:label="ShopClient" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,28 +29,28 @@
         </activity>
         <activity
             android:name="stx.shopclient.itemactivity.ItemActivity"
-            android:label="@string/app_name"
+            android:label="@string/default_title"
             android:theme="@style/ItemActivityStyle" >
         </activity>
         <activity
             android:name="stx.shopclient.catalogbrowseractivity.CatalogBrowserActivity"
-            android:label="@string/app_name" >
+            android:label="@string/default_title" >
         </activity>
         <activity
             android:name="stx.shopclient.searchactivity.SearchActivity"
-            android:label="@string/app_name" >
+            android:label="@string/default_title" >
         </activity>
         <activity
             android:name="stx.shopclient.searchactivity.DateRangeSelectActivity"
-            android:label="@string/app_name" >
+            android:label="@string/default_title" >
         </activity>
         <activity
             android:name="stx.shopclient.searchresultsactivity.SearchResultsActivity"
-            android:label="@string/app_name" >
+            android:label="@string/default_title" >
         </activity>
         <activity
             android:name="stx.shopclient.cartactivity.CartActivity"
-            android:label="@string/app_name" >
+            android:label="@string/default_title" >
         </activity>
         <activity
             android:name="stx.shopclient.overviewactivity.OverviewActivity"
@@ -58,7 +58,7 @@
         </activity>
         <activity
             android:name="stx.shopclient.order_properties_activity.OrderPropertiesActivity"
-            android:label="@string/app_name" >
+            android:label="@string/default_title" >
         </activity>
         <activity
             android:name="stx.shopclient.orderactivity.OrderActivity"
@@ -68,31 +68,31 @@
         </activity>
         <activity
             android:name="stx.shopclient.discountactivity.DiscountListActivity"
-            android:label="@string/app_name" >
+            android:label="@string/default_title" >
         </activity>
         <activity
             android:name="stx.shopclient.discountactivity.DiscountActivity"
-            android:label="@string/app_name" >
+            android:label="@string/default_title" >
         </activity>
         <activity
             android:name="stx.shopclient.messagesactivity.MessagesListActivity"
-            android:label="@string/app_name" >
+            android:label="@string/default_title" >
         </activity>
         <activity
             android:name="stx.shopclient.messagesactivity.MessageActivity"
-            android:label="@string/app_name" >
+            android:label="@string/default_title" >
         </activity>
         <activity
             android:name="stx.shopclient.loginactivity.LoginActivity"
-            android:label="@string/app_name" >
+            android:label="@string/default_title" >
         </activity>
         <activity
             android:name="stx.shopclient.settingsactivity.SettingsActivity"
-            android:label="@string/app_name" >
+            android:label="@string/default_title" >
         </activity>
         <activity
             android:name="stx.shopclient.loginactivity.RegisterActivity"
-            android:label="@string/app_name" >
+            android:label="@string/default_title" >
         </activity>
     </application>
 

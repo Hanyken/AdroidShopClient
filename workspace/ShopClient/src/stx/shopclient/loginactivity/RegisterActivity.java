@@ -123,7 +123,7 @@ public class RegisterActivity extends Activity
 			return;
 		}
 
-		dialog = ProgressDialog.show(RegisterActivity.this, "Регистрация", "",
+		dialog = ProgressDialog.show(RegisterActivity.this, "Загрузка", "Выполняется регистрация",
 				true);
 
 		RegisterTask task = new RegisterTask();

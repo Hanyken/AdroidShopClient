@@ -1,6 +1,7 @@
 package stx.shopclient.mainactivity;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import stx.shopclient.BaseActivity;
@@ -35,6 +36,10 @@ import android.widget.Toast;
 
 public class CatalogItemViewPagerFragment extends Fragment
 {
+	List<CatalogItem> _items = new ArrayList<CatalogItem>();
+	TestGridAdapter _adapter;
+	CirclePageIndicator _pageIndicator;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState)
@@ -45,18 +50,27 @@ public class CatalogItemViewPagerFragment extends Fragment
 
 		ViewPager viewPager = (ViewPager) view
 				.findViewById(R.id.product_viewpager);
-		CirclePageIndicator pageIndicator = (CirclePageIndicator) view
+		_pageIndicator = (CirclePageIndicator) view
 				.findViewById(R.id.page_indicator);
 
-		List<CatalogItem> list = new ArrayList<CatalogItem>();
-		list.addAll(Repository.get(getActivity()).getItemsManager().getFavorits());
+		_adapter = new TestGridAdapter(this.getActivity(), _items);
+		
 
-		TestGridAdapter adapter = new TestGridAdapter(this.getActivity(), list);
-
-		viewPager.setAdapter(adapter);
-		pageIndicator.setViewPager(viewPager);
+		viewPager.setAdapter(_adapter);
+		_pageIndicator.setViewPager(viewPager);
 
 		return view;
+	}
+
+	public void setItems(Collection<CatalogItem> items)
+	{
+		_items.clear();
+		_items.addAll(items);
+		_adapter.notifyDataSetChanged();
+		if (_adapter.getCount() > 1)
+			_pageIndicator.setVisibility(View.VISIBLE);
+		else
+			_pageIndicator.setVisibility(View.INVISIBLE);
 	}
 
 	private class TestGridAdapter extends GridPagerAdapter<CatalogItem>
@@ -83,7 +97,6 @@ public class CatalogItemViewPagerFragment extends Fragment
 		@Override
 		protected View createItemView(CatalogItem item)
 		{
-
 			LayoutInflater inflater = (LayoutInflater) _context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View view = inflater
@@ -94,10 +107,10 @@ public class CatalogItemViewPagerFragment extends Fragment
 			// TODO: после этого все уезжает
 			ImageView imgView = (ImageView) view.findViewById(R.id.imageView);
 			// imgView.setImageBitmap(Repository.getIntent().getImagesManager().getImage(item.getIco()));
-			ImageDownloadTask.startNew(imgView,
-					"file://"
-							+ Repository.get(getActivity()).getImagesManager()
-									.getImagePath(item.getIco()));
+			// ImageDownloadTask.startNew(imgView,
+			// "file://"
+			// + Repository.get(getActivity()).getImagesManager()
+			// .getImagePath(item.getIco()));
 
 			TextView textView = (TextView) view.findViewById(R.id.textView);
 			textView.setText(item.getName());
@@ -105,9 +118,10 @@ public class CatalogItemViewPagerFragment extends Fragment
 			RatingBar ratingBar = (RatingBar) view.findViewById(R.id.ratingBar);
 			ratingBar.setRating((float) item.getRating());
 
-			BaseActivity.setRatingBarColor(ratingBar, Repository.get(getActivity()).getCatalogManager().getSettings()
-							.getRatingColor());
-			
+			BaseActivity.setRatingBarColor(ratingBar,
+					Repository.get(getActivity()).getCatalogManager()
+							.getSettings().getRatingColor());
+
 			return view;
 		}
 

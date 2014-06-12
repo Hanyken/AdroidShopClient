@@ -4,7 +4,9 @@ import java.util.GregorianCalendar;
 
 import stx.shopclient.cartactivity.CartActivity;
 import stx.shopclient.discountactivity.DiscountListActivity;
+import stx.shopclient.entity.Catalog;
 import stx.shopclient.entity.Token;
+import stx.shopclient.entity.UpdateResultEntity;
 import stx.shopclient.loginactivity.LoginActivity;
 import stx.shopclient.mainactivity.MainActivity;
 import stx.shopclient.mainmenu.MainMenuItem;
@@ -14,6 +16,7 @@ import stx.shopclient.repository.Repository;
 import stx.shopclient.searchactivity.SearchActivity;
 import stx.shopclient.settings.UserAccount;
 import stx.shopclient.settingsactivity.SettingsActivity;
+import stx.shopclient.utils.ImageDownloadTask;
 import stx.shopclient.webservice.ServiceResponseCode;
 import stx.shopclient.webservice.WebClient;
 import android.app.ActionBar;
@@ -31,15 +34,18 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
 import android.support.v4.widget.DrawerLayout;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RatingBar;
+import android.widget.Toast;
 
 public class BaseActivity extends FragmentActivity
 {
@@ -47,29 +53,30 @@ public class BaseActivity extends FragmentActivity
 	LinearLayout _mainViewContainer;
 	MainMenuListAdapter _mainMenuListAdapter;
 	ProgressDialog _progressDialog;
-	GregorianCalendar _lastCheckCatalogModif;
+	static GregorianCalendar _lastCheckCatalogModif = new GregorianCalendar();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 
-		if (!checkUserAccount())
+		UserAccount.load(this);
+		if (UserAccount.getLogin() == null || UserAccount.getLogin().equals(""))
 		{
-			Intent intent = new Intent(this, LoginActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-			startActivity(intent);
-			finish();
+			redirectToLoginActivity();
 			return;
 		}
 
+		LoginTask task = new LoginTask();
+		task.execute();
+	}
+
+	void loadUI()
+	{
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setBackgroundDrawable(new ColorDrawable(Repository
-				.get(this).getCatalogManager().getSettings()
-				.getBackground()));
+		actionBar.setBackgroundDrawable(new ColorDrawable(Repository.get(this)
+				.getCatalogManager().getSettings().getBackground()));
 
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setContentView(R.layout.base_activity);
@@ -112,36 +119,6 @@ public class BaseActivity extends FragmentActivity
 
 		_mainViewContainer = (LinearLayout) findViewById(R.id.mainViewContainer);
 
-		if (Repository.get(this).getCatalogManager().getCatalog() == null)
-		{
-			CatalogLoadTask task = new CatalogLoadTask();
-			task.execute();
-		}
-		else
-		{
-			loadMainView();
-
-			GregorianCalendar cal = new GregorianCalendar();
-			cal.add(GregorianCalendar.SECOND, -60);
-			if (_lastCheckCatalogModif.before(cal))
-			{
-				_lastCheckCatalogModif = new GregorianCalendar();
-
-				Thread thread = new Thread(new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						refreshCatalogThreadFunc();
-					}
-				});
-				thread.start();
-			}
-		}
-	}
-
-	void loadMainView()
-	{
 		View mainView = createMainView(_mainViewContainer);
 
 		if (mainView != null)
@@ -150,31 +127,65 @@ public class BaseActivity extends FragmentActivity
 		}
 	}
 
-	protected boolean checkUserAccount()
+	protected boolean isNeedRelogin()
 	{
-		UserAccount.load(this);
-		if (UserAccount.getLogin() == null || UserAccount.getLogin().equals(""))
-			return false;
-		else
+		boolean needLogin = false;
+
+		if (Token.getCurrent() == null)
+			needLogin = true;
+		if (Token.getCurrent() != null)
 		{
-			boolean needLogin = false;
+			GregorianCalendar cal = new GregorianCalendar();
+			cal.setTime(Token.getCurrent().getBegDate());
+			cal.add(GregorianCalendar.SECOND, Token.getCurrent().getInterval());
 
-			if (Token.getCurrent() == null)
+			String time1 = cal.toString();
+			String time2 = new GregorianCalendar().toString();
+			Log.d("asd", time1 + time2);
+
+			if (cal.before(new GregorianCalendar()))
 				needLogin = true;
-			if (Token.getCurrent() != null)
+		}
+
+		return needLogin;
+	}
+
+	public void redirectToLoginActivity()
+	{
+		Intent intent = new Intent(BaseActivity.this, LoginActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		startActivity(intent);
+		finish();
+	}
+
+	class LoginTask extends AsyncTask<Void, Void, Token>
+	{
+		Throwable exception;
+		boolean needLogin = false;
+
+		@Override
+		protected void onPreExecute()
+		{
+			super.onPreExecute();
+
+			_progressDialog = null;
+
+			if (isNeedRelogin())
 			{
-				GregorianCalendar cal = new GregorianCalendar();
-				cal.setTime(Token.getCurrent().getBegDate());
-				cal.add(GregorianCalendar.SECOND, Token.getCurrent()
-						.getInterval());
-
-				if (cal.after(new GregorianCalendar()))
-					needLogin = true;
+				needLogin = true;
+				_progressDialog = ProgressDialog.show(BaseActivity.this,
+						"Загрузка", "Выполняется вход");
 			}
+		}
 
+		@Override
+		protected Token doInBackground(Void... arg0)
+		{
 			if (needLogin)
 			{
-				WebClient client = new WebClient(this);
+				WebClient client = new WebClient(BaseActivity.this);
 				DisplayMetrics metrics = getResources().getDisplayMetrics();
 				try
 				{
@@ -185,18 +196,74 @@ public class BaseActivity extends FragmentActivity
 					if (token != null)
 					{
 						if (token.getCode() != ServiceResponseCode.OK)
-							return false;
+							return token;
 					}
 					else
-						return false;
+						return null;
 				}
 				catch (Throwable ex)
 				{
-					return false;
+					exception = ex;
+					return null;
 				}
 			}
+			return null;
+		}
 
-			return true;
+		@Override
+		protected void onPostExecute(Token result)
+		{
+			super.onPostExecute(result);
+
+			if (_progressDialog != null)
+				_progressDialog.dismiss();
+
+			if (exception != null)
+			{
+				Toast.makeText(BaseActivity.this,
+						exception.getLocalizedMessage(), Toast.LENGTH_LONG)
+						.show();
+				redirectToLoginActivity();
+			}
+			else if (result != null
+					&& result.getCode() != ServiceResponseCode.OK)
+			{
+				Toast.makeText(BaseActivity.this,
+						ServiceResponseCode.getMessage(result.getCode()),
+						Toast.LENGTH_LONG).show();
+				redirectToLoginActivity();
+				return;
+			}
+			else
+			{
+				if (Repository.get(BaseActivity.this).getCatalogManager()
+						.getCatalog() == null)
+				{
+					CatalogLoadTask task = new CatalogLoadTask();
+					task.execute();
+				}
+				else
+				{
+					loadUI();
+
+					GregorianCalendar cal = new GregorianCalendar();
+					cal.add(GregorianCalendar.SECOND, -60);
+					if (_lastCheckCatalogModif.before(cal))
+					{
+						_lastCheckCatalogModif = new GregorianCalendar();
+
+						Thread thread = new Thread(new Runnable()
+						{
+							@Override
+							public void run()
+							{
+								refreshCatalogThreadFunc();
+							}
+						});
+						thread.start();
+					}
+				}
+			}
 		}
 	}
 
@@ -297,15 +364,37 @@ public class BaseActivity extends FragmentActivity
 
 	void refreshCatalogThreadFunc()
 	{
-		if(!checkCatalogLastModif())
+		try
 		{
-			Repository.get(this).loadCatalogFromWeb(this);
+			if (!checkCatalogLastModif())
+			{
+				Repository.get(this).loadCatalogFromWeb(this);
+			}
+		}
+		catch (Throwable ex)
+		{
+			Log.e("Refresh catalog", "error", ex);
 		}
 	}
 
 	boolean checkCatalogLastModif()
 	{
-		return true;
+		Catalog catalog = Repository.get(this).getCatalogManager().getCatalog();
+		WebClient client = createWebClient();
+		UpdateResultEntity res = client.updateCatalogNeeded(Token.getCurrent(),
+				catalog.getId(), catalog.getLastModification());
+
+		return !res.updateNeeded();
+	}
+
+	public WebClient createWebClient()
+	{
+		return new WebClient(this);
+	}
+
+	public void setImage(ImageView view, String key, boolean isBig)
+	{
+		ImageDownloadTask.startNew(view, this, key, isBig);
 	}
 
 	class CatalogLoadTask extends AsyncTask<Void, Void, Void>
@@ -318,7 +407,7 @@ public class BaseActivity extends FragmentActivity
 			super.onPreExecute();
 
 			_progressDialog = ProgressDialog.show(BaseActivity.this,
-					"Загрузка каталога", "");
+					"Загрузка", "Выполняется загрузка каталога");
 		}
 
 		@Override
@@ -326,8 +415,8 @@ public class BaseActivity extends FragmentActivity
 		{
 			try
 			{
-				Repository.get(BaseActivity.this).loadCatalog(
-						BaseActivity.this);
+				Repository.get(BaseActivity.this)
+						.loadCatalog(BaseActivity.this);
 			}
 			catch (Throwable ex)
 			{
@@ -346,7 +435,7 @@ public class BaseActivity extends FragmentActivity
 
 			if (exception == null)
 			{
-				loadMainView();
+				loadUI();
 			}
 			else
 			{

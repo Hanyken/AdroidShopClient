@@ -140,7 +140,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 			descrTextView.setText("1 רע.");
 			
 			ImageView imgView = (ImageView)view.findViewById(R.id.imageView);
-			ImageDownloadTask.startNew(imgView, "file://" + Repository.get(CartActivity.this).getImagesManager().getImagePath(item.item.getIco()));
+//			ImageDownloadTask.startNew(imgView, "file://" + Repository.get(CartActivity.this).getImagesManager().getImagePath(item.item.getIco()));
 
 			Button menuButton = (Button) view.findViewById(R.id.menuButton);
 

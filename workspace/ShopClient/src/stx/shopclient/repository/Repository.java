@@ -118,7 +118,6 @@ public class Repository
 	public void loadCatalogFromWeb(Context context)
 	{
 		String catalogFile = "catalog_" + Long.toString(CatalogId);
-		File file = context.getFileStreamPath(catalogFile);
 		
 		WebClient client = new WebClient(context);
 		StringBuilder xml = new StringBuilder();

@@ -33,21 +33,23 @@ public class ItemActivity extends BaseActivity
 	public static final String ITEM_BUY_EXTRA_KEY = "CanBuyItem";
 
 	private ItemButtonBarFragment buttonBar;
-	
+
 	@Override
 	protected View createMainView(ViewGroup parent)
 	{
 		View view = getLayoutInflater().inflate(R.layout.item_activity, parent,
 				false);
-		
+
 		Intent intent = getIntent();
-		
-		CatalogSettings settings = Repository.get(this).getCatalogManager().getSettings();
-		
-		getActionBar().setBackgroundDrawable(new ColorDrawable(settings.getBackground()));
-		
+
+		CatalogSettings settings = Repository.get(this).getCatalogManager()
+				.getSettings();
+
+		getActionBar().setBackgroundDrawable(
+				new ColorDrawable(settings.getBackground()));
+
 		Long itemId = intent.getLongExtra(ITEM_ID_EXTRA_KEY, 0);
-		
+
 		_Item = Repository.get(this).getItemsManager().getItem(itemId);
 
 		ItemImageFragment imageFragment = (ItemImageFragment) getFragmentManager()
@@ -61,30 +63,35 @@ public class ItemActivity extends BaseActivity
 		buttonBar.setPrice(_Item.getPrice());
 		buttonBar.setRating(_Item.getRating());
 		buttonBar.setOverviewCount(_Item.getOverviewsCount());
-		//buttonBar.setCanBuy(intent.getBooleanExtra(ITEM_BUY_EXTRA_KEY, true));
-		
-		Collection<AnalogGroup> groups = Repository.get(this).getItemsManager().getAnalogs(itemId);
-		for(AnalogGroup el : groups)
+		buttonBar.setCanBuy(!Repository.get(this).getOrderManager()
+				.existsItem(_Item.getId()));
+
+		Collection<AnalogGroup> groups = Repository.get(this).getItemsManager()
+				.getAnalogs(itemId);
+		for (AnalogGroup el : groups)
 		{
-			buttonBar.addAnalogs(el.getName(), el.getIds());	
+			buttonBar.addAnalogs(el.getName(), el.getIds());
 		}
 
 		setProperty(txtProperty);
 		getActionBar().setTitle(_Item.getName());
-		
-		//CatalogTask task = new CatalogTask();
-		//task.execute();
-		
+
+		// CatalogTask task = new CatalogTask();
+		// task.execute();
+
 		return view;
 	}
+
 	@Override
 	protected void onStart()
 	{
 		super.onStart();
-		buttonBar.setCanBuy(!Repository.get(this).getOrderManager().existsItem(_Item.getId()));
+
+		if (_Item != null)
+			buttonBar.setCanBuy(!Repository.get(this).getOrderManager()
+					.existsItem(_Item.getId()));
 	}
-	
-	
+
 	public void setProperty(TextView txtProperty)
 	{
 		String description = _Item.getDescription() + "\n\n\n";
@@ -123,7 +130,11 @@ public class ItemActivity extends BaseActivity
 			sendIntent.setType("text/plain");
 			sendIntent.putExtra(Intent.EXTRA_TEXT, _Item.getName());
 			sendIntent.setType("image/jpeg");
-			sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://"+Repository.get(this).getImagesManager().getImagePath(_Item.getIco())));
+			sendIntent.putExtra(
+					Intent.EXTRA_STREAM,
+					Uri.parse("file://"
+							+ Repository.get(this).getImagesManager()
+									.getImagePath(_Item.getIco())));
 			startActivity(sendIntent);
 
 			break;
@@ -152,7 +163,7 @@ public class ItemActivity extends BaseActivity
 		{
 			super.onPostExecute(result);
 		}
-		
+
 	}
-	
+
 }

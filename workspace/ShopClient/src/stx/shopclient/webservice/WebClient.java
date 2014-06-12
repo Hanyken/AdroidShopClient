@@ -24,9 +24,12 @@ import stx.shopclient.parsers.NodeParser;
 import stx.shopclient.parsers.OverviewParser;
 import stx.shopclient.parsers.TokenParser;
 import stx.shopclient.parsers.UpdateResultParser;
+import stx.shopclient.repository.Repository;
 import stx.shopclient.settings.ServerSettings;
 import stx.shopclient.utils.StringUtils;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 public class WebClient
 {
@@ -48,6 +51,22 @@ public class WebClient
 	private String request(String relativeUrl, HttpArgs args, boolean isGet)
 	{
 		try
+		{			
+			InputStream stream = requestStream(relativeUrl, args, isGet);
+
+			String str = convertStreamToString(stream);
+
+			return str;
+		}
+		catch (Throwable ex)
+		{
+			throw new RuntimeException(ex);
+		}
+	}
+
+	private InputStream requestStream(String relativeUrl, HttpArgs args, boolean isGet)
+	{
+		try
 		{
 			String url = getUrl(relativeUrl);
 			HttpClient httpclient = new DefaultHttpClient();
@@ -57,10 +76,7 @@ public class WebClient
 			else
 				response = httpclient.execute(args.getPost(url));
 
-			String str = convertStreamToString(response.getEntity()
-					.getContent());
-
-			return str;
+			return response.getEntity().getContent();
 		}
 		catch (Throwable ex)
 		{
@@ -118,7 +134,8 @@ public class WebClient
 		else
 		{
 			Token token = tokens.iterator().next();
-			token.setBegDate(new Date());			
+			token.setBegDate(new Date());
+			Token.setCurrent(token);
 			return token;
 		}
 	}
@@ -220,12 +237,13 @@ public class WebClient
 		args.addParam("catalogNodeId", catalogNodeId);
 		args.addParam("start", start);
 		args.addParam("offset", offset);
-		args.addParam("orderType", offset);
+		args.addParam("orderType", orderType);
 		args.addParam("deep", false);
 		args.addParam("filter", "");
 
 		String response = request("item/get", args, true);
 		Collection<CatalogItem> items = new ItemParser().parseString(response);
+		Repository.get(null).getItemsManager().addAll(items);
 		return items;
 	}
 
@@ -239,6 +257,7 @@ public class WebClient
 
 		String response = request("item/quick", args, true);
 		Collection<CatalogItem> items = new ItemParser().parseString(response);
+		Repository.get(null).getItemsManager().addAll(items);
 		return items;
 	}
 
@@ -258,6 +277,7 @@ public class WebClient
 
 		String response = request("item/get", args, true);
 		Collection<CatalogItem> items = new ItemParser().parseString(response);
+		Repository.get(null).getItemsManager().addAll(items);
 		return items;
 	}
 
@@ -269,6 +289,7 @@ public class WebClient
 
 		String response = request("item/popular", args, true);
 		Collection<CatalogItem> items = new ItemParser().parseString(response);
+		Repository.get(null).getItemsManager().addAll(items);
 		return items;
 	}
 
@@ -280,6 +301,7 @@ public class WebClient
 
 		String response = request("item/last", args, true);
 		Collection<CatalogItem> items = new ItemParser().parseString(response);
+		Repository.get(null).getItemsManager().addAll(items);
 		return items;
 	}
 
@@ -291,6 +313,7 @@ public class WebClient
 
 		String response = request("item/favorite", args, true);
 		Collection<CatalogItem> items = new ItemParser().parseString(response);
+		Repository.get(null).getItemsManager().addAll(items);
 		return items;
 	}
 
@@ -345,59 +368,64 @@ public class WebClient
 		Collection<Overview> items = new OverviewParser().parseString(response);
 
 		if (items.size() == 0)
-			throw new RuntimeException("No overviews returned");
+			return null;
 		else
 			return items.iterator().next();
 	}
 
-	public void editOverview(Token token, long itemId, byte rating,
+	public void editOverview(Token token, long itemId, double rating,
 			String description)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
 		args.addParam("itemId", itemId);
-		args.addParam("rating", rating);
+		args.addParam("rating", (byte)rating);
 		args.addParam("description", description);
 
-		request("overview/Edit", args, true);
+		String response = request("overview/Edit", args, true);
+		UpdateResultParser parser = new UpdateResultParser();
+		Collection<UpdateResultEntity> res = parser.parseString(response);
 	}
 
-	public void getImage(Token token, String imgKey, boolean isBig)
+	public Bitmap getImage(Token token, String imgKey, boolean isBig)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
 		args.addParam("imgKey", imgKey);
 		args.addParam("isBig", isBig);
 
-		request("image/get", args, true); // надо что то написать что бы
-											// превратить в картинку
+		InputStream stream = requestStream("image/get", args, true);
+		return BitmapFactory.decodeStream(stream);
 	}
-	
-	
-	public UpdateResultEntity updateCatalogNeeded(Token token, long catalogId, Date lastModification)
+
+	public UpdateResultEntity updateCatalogNeeded(Token token, long catalogId,
+			Date lastModification)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
 		args.addParam("catalogId", catalogId);
 		args.addParam("date", lastModification);
 
-		String response = request("valid/catalog", args, true); 
-		Collection<UpdateResultEntity> items = new UpdateResultParser().parseString(response);
+		String response = request("valid/catalog", args, true);
+		Collection<UpdateResultEntity> items = new UpdateResultParser()
+				.parseString(response);
 
 		if (items.size() == 0)
 			throw new RuntimeException("No update returned");
 		else
 			return items.iterator().next();
 	}
-	
-	public UpdateResultEntity updateSettingsNeeded(Token token, Date lastModification)
+
+	public UpdateResultEntity updateSettingsNeeded(Token token,
+			Date lastModification)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
 		args.addParam("date", lastModification);
 
-		String response = request("valid/settings", args, true); 
-		Collection<UpdateResultEntity> items = new UpdateResultParser().parseString(response);
+		String response = request("valid/settings", args, true);
+		Collection<UpdateResultEntity> items = new UpdateResultParser()
+				.parseString(response);
 
 		if (items.size() == 0)
 			throw new RuntimeException("No update returned");

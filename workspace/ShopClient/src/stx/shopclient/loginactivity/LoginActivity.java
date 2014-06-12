@@ -71,7 +71,7 @@ public class LoginActivity extends Activity
 			imm.hideSoftInputFromWindow(_loginEdit.getWindowToken(), 0);
 			imm.hideSoftInputFromWindow(_passwordEdit.getWindowToken(), 0);
 
-			dialog = ProgressDialog.show(LoginActivity.this, "Вход", "", true);
+			dialog = ProgressDialog.show(LoginActivity.this, "Загрузка", "Выполняется вход", true);
 
 			DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 

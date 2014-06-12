@@ -53,6 +53,11 @@ public class HttpArgs
 		_params.add(new BasicNameValuePair(name, Byte.toString(value)));
 	}
 	
+	public void addParam(String name, double value)
+	{
+		_params.add(new BasicNameValuePair(name, Double.toString(value)));
+	}
+	
 	public void addParam(String name, Date value)
 	{
 		_params.add(new BasicNameValuePair(name, BaseParser.dateParser.format(value)));

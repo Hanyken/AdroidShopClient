@@ -30,6 +30,8 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/textView1"
             android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/imageView2"
+            android:maxLines="1"
             android:text="TextView"
             android:textSize="15sp" />
 
