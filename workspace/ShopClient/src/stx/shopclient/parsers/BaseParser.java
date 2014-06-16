@@ -20,6 +20,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import stx.shopclient.entity.Order;
+
 import android.util.Log;
 
 public abstract class BaseParser<T>

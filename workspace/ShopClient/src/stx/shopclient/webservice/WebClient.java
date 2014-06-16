@@ -17,6 +17,7 @@ import stx.shopclient.entity.CatalogNode;
 import stx.shopclient.entity.Order;
 import stx.shopclient.entity.OrderProperty;
 import stx.shopclient.entity.Overview;
+import stx.shopclient.entity.Payment;
 import stx.shopclient.entity.Token;
 import stx.shopclient.entity.UpdateResultEntity;
 import stx.shopclient.loaders.HttpArgs;
@@ -25,16 +26,17 @@ import stx.shopclient.parsers.ItemParser;
 import stx.shopclient.parsers.NodeParser;
 import stx.shopclient.parsers.OrderParser;
 import stx.shopclient.parsers.OverviewParser;
+import stx.shopclient.parsers.PaymentParser;
 import stx.shopclient.parsers.TokenParser;
 import stx.shopclient.parsers.UpdateResultParser;
 import stx.shopclient.repository.OrdersManager;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.settings.ServerSettings;
+import stx.shopclient.settings.UserAccount;
 import stx.shopclient.utils.StringUtils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 public class WebClient
 {
@@ -60,7 +62,23 @@ public class WebClient
 			InputStream stream = requestStream(relativeUrl, args, isGet);
 
 			String str = convertStreamToString(stream);
+			
+			if (str.startsWith("<Result>"))
+			{
+				UpdateResultParser parser = new UpdateResultParser();
+				Collection<UpdateResultEntity> result = parser.parseString(str);
+				if (result.size() > 0 && result.iterator().next().getCode() == ServiceResponseCode.ACCESS_DENIED)
+				{
+					login(UserAccount.getLogin(), UserAccount.getPassword(), 0, 0);
+					args.setToken(Token.getCurrent());
+					
+					
+					stream = requestStream(relativeUrl, args, isGet);
+					str = convertStreamToString(stream);
 
+				}
+			}
+			
 			return str;
 		}
 		catch (Throwable ex)
@@ -481,7 +499,7 @@ public class WebClient
 			args.addParam(prop.getName(), prop.getValue());
 		}
 
-		request("order/add", args, true);
+		request("order/add", args, false);
 	}
 	
 	public void deleteOrder(Token token, long orderId)
@@ -492,4 +510,28 @@ public class WebClient
 
 		request("order/delete", args, true);
 	}
+	
+	public Collection<Payment> getPayments(Token token, long catalogId)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("catalogId", catalogId);
+
+		String response = request("payment/get", args, true);
+		Collection<Payment> items = new PaymentParser().parseString(response);
+		
+
+		return items;
+	}
+	
+	public void addPayment(Token token, long catalogId)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("catalogId", catalogId);
+
+		request("payment/add", args, true);
+	}
+	
+	
 }

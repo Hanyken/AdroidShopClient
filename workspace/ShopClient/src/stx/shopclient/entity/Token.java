@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class Token extends ResultEntity
 {
+	public static String TOKEN_ARG_NAME = "token";
 	private static Token current;	
 	
 	
