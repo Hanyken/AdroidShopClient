@@ -129,54 +129,54 @@ public abstract class BaseParser<T>
 
 	}
 
-	protected boolean getExistsValue(Element item, String str)
+	protected boolean getExistsValue(Element e, String str)
 	{
-		String value = getValue(item, str);
+		String value = getValue(e, str);
 		return !value.equals(null) && value != null && !value.equals("");
 	}
 	
-	protected String getValue(Element item, String str)
+	protected String getValue(Element e, String str)
 	{
-		NodeList n = item.getElementsByTagName(str);
+		NodeList n = e.getElementsByTagName(str);
 		return this.getElementValue(n.item(0));
 	}
 
-	protected Boolean getValueBool(Element item, String str)
+	protected Boolean getValueBool(Element e, String str)
 	{
-		String value = getValue(item, str);
+		String value = getValue(e, str);
 		return ("1".equals(value));
 	}
 
-	protected Integer getValueInt(Element item, String str)
+	protected Integer getValueInt(Element e, String str)
 	{
-		String value = getValue(item, str);
+		String value = getValue(e, str);
 		if (value.equals(null) || value == null || value.equals(""))
 			value = "0";
 		return Integer.parseInt(value);
 	}
 
-	protected Long getValueLong(Element item, String str)
+	protected Long getValueLong(Element e, String str)
 	{
-		String value = getValue(item, str);
+		String value = getValue(e, str);
 		if (value.equals(null) || value == null || value.equals(""))
 			value = "0";
 		return Long.parseLong(value);
 	}
 
-	protected Double getValueDouble(Element item, String str)
+	protected Double getValueDouble(Element e, String str)
 	{
-		String value = getValue(item, str);
+		String value = getValue(e, str);
 		if (value.equals(null) || value == null || value.equals(""))
 			value = "0";
 		return Double.parseDouble(value);
 	}
 
-	protected Date getValueDate(Element item, String str)
+	protected Date getValueDate(Element e, String str)
 	{
 		Date date = null;
 		try
 		{
-			String value = getValue(item, str);
+			String value = getValue(e, str);
 			date = dateParser.parse(value);
 		}
 		catch (Exception ex)
@@ -186,12 +186,12 @@ public abstract class BaseParser<T>
 		return date;
 	}
 
-	protected Date getValueTime(Element item, String str)
+	protected Date getValueTime(Element e, String str)
 	{
 		Date date = null;
 		try
 		{
-			String value = getValue(item, str);
+			String value = getValue(e, str);
 			date = timeParser.parse(value);
 		}
 		catch (Exception ex)

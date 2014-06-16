@@ -44,6 +44,16 @@ public class OrdersManager
 		_Orders.add(item);
 	}
 
+	public void addOrder(Order item)
+	{
+		for (OrderProperty el : item.getProperties())
+		{
+			_Properties.add(el);
+		}
+
+		_Orders.add(item);
+	}
+	
 	public void removeOrderItem(long orderId)
 	{
 		for (Order order : _Orders)

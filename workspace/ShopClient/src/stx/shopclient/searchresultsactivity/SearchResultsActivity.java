@@ -135,7 +135,7 @@ public class SearchResultsActivity extends BaseActivity implements
 			{
 				WebClient client = createWebClient();
 				items = client.quickSearchItems(Token.getCurrent(),
-						Repository.CatalogId, _quickSearchQuery);
+						Repository.CatalogId, _quickSearchQuery, 1, 10);
 			}
 			catch (Throwable ex)
 			{

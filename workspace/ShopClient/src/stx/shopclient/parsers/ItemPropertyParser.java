@@ -112,7 +112,9 @@ public class ItemPropertyParser extends BaseParser<PropertyDescriptor>
 	private List<EnumValue> getEnumList(Element e)
 	{
 		List<EnumValue> items = new ArrayList<EnumValue>();
-		NodeList nl = e.getElementsByTagName(RANGE_NAME);
+		NodeList ranges = e.getElementsByTagName(RANGE_NAME);
+		if (ranges.getLength() <= 0) return items;
+		NodeList nl = ranges.item(0).getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++)
 		{
 			EnumValue item = new EnumValue();
@@ -125,11 +127,13 @@ public class ItemPropertyParser extends BaseParser<PropertyDescriptor>
 	private List<EnumValue> getArrayList(Element e)
 	{
 		List<EnumValue> items = new ArrayList<EnumValue>();
-		NodeList nl = e.getElementsByTagName(RANGE_NAME);
+		NodeList ranges = e.getElementsByTagName(RANGE_NAME);
+		if (ranges.getLength() <= 0) return items;
+		NodeList nl = ranges.item(0).getChildNodes();
 		for (int i = 0; i < nl.getLength(); i++)
 		{
 			EnumValue item = new EnumValue();
-			item.setValue(super.getValue((Element) nl.item(i), VALUE_NAME));
+			item.setValue(super.getElementValue((Element) nl.item(i)));
 			items.add(item);
 		}
 		return items;

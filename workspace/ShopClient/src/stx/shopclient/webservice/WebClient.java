@@ -14,6 +14,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import stx.shopclient.entity.Catalog;
 import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.entity.CatalogNode;
+import stx.shopclient.entity.Order;
+import stx.shopclient.entity.OrderProperty;
 import stx.shopclient.entity.Overview;
 import stx.shopclient.entity.Token;
 import stx.shopclient.entity.UpdateResultEntity;
@@ -21,9 +23,11 @@ import stx.shopclient.loaders.HttpArgs;
 import stx.shopclient.parsers.CatalogParser;
 import stx.shopclient.parsers.ItemParser;
 import stx.shopclient.parsers.NodeParser;
+import stx.shopclient.parsers.OrderParser;
 import stx.shopclient.parsers.OverviewParser;
 import stx.shopclient.parsers.TokenParser;
 import stx.shopclient.parsers.UpdateResultParser;
+import stx.shopclient.repository.OrdersManager;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.settings.ServerSettings;
 import stx.shopclient.utils.StringUtils;
@@ -246,14 +250,28 @@ public class WebClient
 		Repository.get(null).getItemsManager().addAll(items);
 		return items;
 	}
+	
+	public Collection<CatalogItem> getNodeItem(Token token, long itemId)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("itemId", itemId);
+
+		String response = request("item/get", args, true);
+		Collection<CatalogItem> items = new ItemParser().parseString(response);
+		Repository.get(null).getItemsManager().addAll(items);
+		return items;
+	}
 
 	public Collection<CatalogItem> quickSearchItems(Token token,
-			long catalogId, String name)
+			long catalogId, String name, int start, int offset)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
 		args.addParam("catalogId", catalogId);
 		args.addParam("name", name);
+		args.addParam("start", start);
+		args.addParam("offset", offset);
 
 		String response = request("item/quick", args, true);
 		Collection<CatalogItem> items = new ItemParser().parseString(response);
@@ -431,5 +449,46 @@ public class WebClient
 			throw new RuntimeException("No update returned");
 		else
 			return items.iterator().next();
+	}
+	
+	// Order
+	public Collection<Order> getOrders(Token token, long catalogId)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("catalogId", catalogId);
+
+		String response = request("order/get", args, true);
+		Collection<Order> items = new OrderParser().parseString(response);
+		
+		OrdersManager ordersManager = Repository.get(null).getOrderManager();
+		for(Order order : items)
+		{
+			ordersManager.addOrder(order);
+		}
+		return items;
+	}
+	
+	public void addOrder(Token token, long itemId, double count, Collection<OrderProperty> properties)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("itemId", itemId);
+		args.addParam("count", count);
+		for(OrderProperty prop : properties)
+		{
+			args.addParam(prop.getName(), prop.getValue());
+		}
+
+		request("order/add", args, true);
+	}
+	
+	public void deleteOrder(Token token, long orderId)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("orderId", orderId);
+
+		request("order/delete", args, true);
 	}
 }

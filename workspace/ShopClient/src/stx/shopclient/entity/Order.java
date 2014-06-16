@@ -1,9 +1,16 @@
 package stx.shopclient.entity;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
 public class Order 
 {
 	private long _Id;
 	private long _itemId;
+	private List<OrderProperty> _properties = new ArrayList<OrderProperty>();
+	private Date _date;
 	
 	public long getId()
 	{
@@ -21,5 +28,24 @@ public class Order
 	public void setItemId(long itemId)
 	{
 		_itemId = itemId;
+	}
+	
+	public List<OrderProperty> getProperties()
+	{
+		return _properties;
+	}
+	public void setProperties(Collection<OrderProperty> properties)
+	{
+		_properties.clear();
+		_properties.addAll(properties);
+	}
+	
+	public Date getDate()
+	{
+		return _date;
+	}
+	public void setDate(Date date)
+	{
+		_date = date;
 	}
 }
