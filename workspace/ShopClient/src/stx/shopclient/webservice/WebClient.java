@@ -410,7 +410,7 @@ public class WebClient
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
 		args.addParam("imgKey", imgKey);
-		args.addParam("isBig", isBig);
+		args.addParam("isBig", true);
 
 		InputStream stream = requestStream("image/get", args, true);
 		return BitmapFactory.decodeStream(stream);
