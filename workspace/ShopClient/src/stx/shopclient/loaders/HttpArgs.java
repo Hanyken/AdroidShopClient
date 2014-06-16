@@ -63,6 +63,23 @@ public class HttpArgs
 		_params.add(new BasicNameValuePair(name, BaseParser.dateParser.format(value)));
 	}
 	
+	public void setToken(Token token)
+	{
+		BasicNameValuePair item = null;
+		for(BasicNameValuePair el : _params)
+		{
+			if (el.getName().equals(Token.TOKEN_ARG_NAME))
+			{
+				item = el;
+				break;
+			}
+		}
+		if (item != null)
+		{
+			_params.remove(item);
+			addParam(Token.TOKEN_ARG_NAME, token.getToken());
+		}
+	}
 	
 	public HttpPost getPost(String url) throws UnsupportedEncodingException
 	{
