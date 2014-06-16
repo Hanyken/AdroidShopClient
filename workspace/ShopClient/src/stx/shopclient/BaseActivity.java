@@ -392,9 +392,9 @@ public class BaseActivity extends FragmentActivity
 		return new WebClient(this);
 	}
 
-	public void setImage(ImageView view, String key, boolean isBig)
+	public void setImage(ImageView view, String key)
 	{
-		ImageDownloadTask.startNew(view, this, key, isBig);
+		ImageDownloadTask.startNew(view, this, key);
 	}
 
 	class CatalogLoadTask extends AsyncTask<Void, Void, Void>

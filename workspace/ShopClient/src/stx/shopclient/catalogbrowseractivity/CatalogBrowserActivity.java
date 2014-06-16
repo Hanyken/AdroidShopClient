@@ -234,8 +234,9 @@ public class CatalogBrowserActivity extends BaseActivity implements
 					+ " рублей");
 
 			ImageView imgView = (ImageView) view.findViewById(R.id.imageView);
-			// ImageDownloadTask.startNew(imgView, "file://" +
-			// Repository.get(CatalogBrowserActivity.this).getImagesManager().getImagePath(item.getIco()));
+			if (item.getIco() != null)
+				ImageDownloadTask.startNew(imgView,
+						CatalogBrowserActivity.this, item.getIco());
 
 			ratingBar.setRating((float) item.getRating());
 		}
@@ -248,6 +249,11 @@ public class CatalogBrowserActivity extends BaseActivity implements
 					.findViewById(R.id.descriptionTextView);
 
 			nameTextView.setText(node.getName());
+
+			ImageView imgView = (ImageView) view.findViewById(R.id.imageView);
+			if (node.getIcon() != null)
+				ImageDownloadTask.startNew(imgView,
+						CatalogBrowserActivity.this, node.getIcon());
 
 			descriptionTextView.setText(getNodeDescription(node));
 		}

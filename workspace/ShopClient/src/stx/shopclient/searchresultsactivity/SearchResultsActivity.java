@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
@@ -25,10 +26,12 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
+import stx.shopclient.catalogbrowseractivity.CatalogBrowserActivity;
 import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.entity.Token;
 import stx.shopclient.itemactivity.ItemActivity;
 import stx.shopclient.repository.Repository;
+import stx.shopclient.utils.ImageDownloadTask;
 import stx.shopclient.webservice.WebClient;
 
 public class SearchResultsActivity extends BaseActivity implements
@@ -209,9 +212,14 @@ public class SearchResultsActivity extends BaseActivity implements
 
 			nameTextView.setText(item.getName());
 			descriptionTextView.setText(Double.toString(item.getPrice())
-					+ " рублей");
+					+ " рублей");			
 
 			ratingBar.setRating((float) item.getRating());
+			
+			ImageView imgView = (ImageView) view.findViewById(R.id.imageView);
+			if (item.getIco() != null)
+				ImageDownloadTask.startNew(imgView,
+						SearchResultsActivity.this, item.getIco());
 		}
 
 		@Override

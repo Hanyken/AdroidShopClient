@@ -19,22 +19,18 @@ public class ImageDownloadTask extends AsyncTask<Void, Void, Bitmap>
 {
 	ImageView _view;
 	String _key;
-	boolean _isBig;
 	Context _context;
 
 	static Map<String, Bitmap> Cache = new HashMap<String, Bitmap>();
 
-	public ImageDownloadTask(ImageView view, Context context, String key,
-			boolean isBig)
+	public ImageDownloadTask(ImageView view, Context context, String key)
 	{
 		_view = view;
 		_context = context;
 		_key = key;
-		_isBig = isBig;
 	}
 
-	public static void startNew(ImageView view, Context context, String key,
-			boolean isBig)
+	public static void startNew(ImageView view, Context context, String key)
 	{
 		synchronized (Cache)
 		{
@@ -45,7 +41,7 @@ public class ImageDownloadTask extends AsyncTask<Void, Void, Bitmap>
 			}
 		}
 
-		new ImageDownloadTask(view, context, key, isBig).execute();
+		new ImageDownloadTask(view, context, key).execute();
 	}
 
 	@Override
@@ -60,7 +56,16 @@ public class ImageDownloadTask extends AsyncTask<Void, Void, Bitmap>
 		try
 		{
 			WebClient client = new WebClient(_context);
-			Bitmap result = client.getImage(Token.getCurrent(), _key, _isBig);
+			Bitmap result = client.getImage(Token.getCurrent(), _key);
+
+			if (result != null)
+			{
+				synchronized (Cache)
+				{
+					Cache.put(_key, result);
+				}
+			}
+
 			return result;
 		}
 		catch (Throwable e)
