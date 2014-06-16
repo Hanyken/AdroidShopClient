@@ -34,6 +34,7 @@ import stx.shopclient.utils.StringUtils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 public class WebClient
 {
@@ -405,12 +406,12 @@ public class WebClient
 		Collection<UpdateResultEntity> res = parser.parseString(response);
 	}
 
-	public Bitmap getImage(Token token, String imgKey, boolean isBig)
+	public Bitmap getImage(Token token, String imgKey)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
 		args.addParam("imgKey", imgKey);
-		args.addParam("isBig", isBig);
+		args.addParam("isBig", true);
 
 		InputStream stream = requestStream("image/get", args, true);
 		return BitmapFactory.decodeStream(stream);

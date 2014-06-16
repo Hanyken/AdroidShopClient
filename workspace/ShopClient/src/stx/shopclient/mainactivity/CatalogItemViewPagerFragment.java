@@ -54,7 +54,6 @@ public class CatalogItemViewPagerFragment extends Fragment
 				.findViewById(R.id.page_indicator);
 
 		_adapter = new TestGridAdapter(this.getActivity(), _items);
-		
 
 		viewPager.setAdapter(_adapter);
 		_pageIndicator.setViewPager(viewPager);
@@ -104,13 +103,10 @@ public class CatalogItemViewPagerFragment extends Fragment
 							R.layout.main_activity_catalogitems_viewpager_fragment_item,
 							null);
 
-			// TODO: после этого все уезжает
 			ImageView imgView = (ImageView) view.findViewById(R.id.imageView);
-			// imgView.setImageBitmap(Repository.getIntent().getImagesManager().getImage(item.getIco()));
-			// ImageDownloadTask.startNew(imgView,
-			// "file://"
-			// + Repository.get(getActivity()).getImagesManager()
-			// .getImagePath(item.getIco()));
+			if (item.getIco() != null)
+				ImageDownloadTask.startNew(imgView, getActivity(),
+						item.getIco());
 
 			TextView textView = (TextView) view.findViewById(R.id.textView);
 			textView.setText(item.getName());

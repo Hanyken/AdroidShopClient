@@ -58,12 +58,12 @@ public class MainRootNodesBrowserFragment extends Fragment implements
 		tabStrip.setTabNames(new String[]
 		{ "Список", "Плитки" });
 
-		tabStrip.setIndicatorColor(Repository.get(getActivity()).getCatalogManager()
-				.getSettings().getBackground());
-		tabStrip.setUnderlineColor(Repository.get(getActivity()).getCatalogManager()
-				.getSettings().getBackground());
-		tabStrip.setBackgroundColor(Repository.get(getActivity()).getCatalogManager()
-				.getSettings().getItemPanelColor());
+		tabStrip.setIndicatorColor(Repository.get(getActivity())
+				.getCatalogManager().getSettings().getBackground());
+		tabStrip.setUnderlineColor(Repository.get(getActivity())
+				.getCatalogManager().getSettings().getBackground());
+		tabStrip.setBackgroundColor(Repository.get(getActivity())
+				.getCatalogManager().getSettings().getItemPanelColor());
 
 		FrameLayout frameLayout = (FrameLayout) view
 				.findViewById(R.id.frameLayout);
@@ -81,12 +81,12 @@ public class MainRootNodesBrowserFragment extends Fragment implements
 	{
 		// _nodes = generateData();
 		_nodes = new ArrayList<CatalogNode>();
-		_nodes.addAll(Repository.get(getActivity()).getCatalogManager().getNodes());
+		_nodes.addAll(Repository.get(getActivity()).getCatalogManager()
+				.getNodes());
 	}
 
 	void loadGrid(View view)
 	{
-
 		Display display = getActivity().getWindowManager().getDefaultDisplay();
 		DisplayMetrics outMetrics = new DisplayMetrics();
 		display.getMetrics(outMetrics);
@@ -122,7 +122,9 @@ public class MainRootNodesBrowserFragment extends Fragment implements
 			ImageView imgView = (ImageView) itemView
 					.findViewById(R.id.imageView);
 			imgView.setBackground(getNodeIconBackground());
-			ImageDownloadTask.startNew(imgView, getActivity(), node.getIcon(), false);			
+			if (node.getIcon() != null)
+				ImageDownloadTask.startNew(imgView, getActivity(),
+						node.getIcon());
 
 			textView.setText(node.getName());
 		}
@@ -157,7 +159,7 @@ public class MainRootNodesBrowserFragment extends Fragment implements
 			ImageView imgView = (ImageView) itemView
 					.findViewById(R.id.imageView);
 			imgView.setBackground(getNodeIconBackground());
-			ImageDownloadTask.startNew(imgView, getActivity(), node.getIcon(), false);
+			ImageDownloadTask.startNew(imgView, getActivity(), node.getIcon());
 
 			linearLayout.addView(itemView);
 		}
