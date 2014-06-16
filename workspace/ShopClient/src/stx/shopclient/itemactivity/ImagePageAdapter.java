@@ -6,6 +6,7 @@ import java.util.List;
 import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.repository.ImagesManager;
 import stx.shopclient.repository.Repository;
+import stx.shopclient.utils.ImageDownloadTask;
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
@@ -45,8 +46,8 @@ public class ImagePageAdapter extends PagerAdapter
 	public Object instantiateItem(ViewGroup container, int position)
 	{
 		ImageView view = new ImageView(_Context);
-		view.setTag(position);
-		view.setImageBitmap(_ImgManager.getImage(_Items.get(position)));
+		view.setTag(position);		
+		ImageDownloadTask.startNew(view, _Context, _Items.get(position));
 		
 		container.addView(view);
 		return view;

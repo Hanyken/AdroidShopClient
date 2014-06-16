@@ -6,6 +6,7 @@ import java.util.List;
 import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.repository.ImagesManager;
 import stx.shopclient.repository.Repository;
+import stx.shopclient.utils.ImageDownloadTask;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.view.PagerAdapter;
@@ -49,7 +50,8 @@ public class ItemImagePageAdapter extends PagerAdapter implements OnClickListene
 	{
 		ImageView view = new ImageView(_Context);
 		view.setTag(position);
-		view.setImageBitmap(_ImgManager.getImage(_Items.get(position)));
+
+		ImageDownloadTask.startNew(view, _Context, _Items.get(position));
 		
 		view.setOnClickListener(this);
 		container.addView(view);

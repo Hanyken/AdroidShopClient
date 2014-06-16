@@ -12,6 +12,7 @@ import stx.shopclient.orderactivity.OrderActivity;
 import stx.shopclient.overviewactivity.OverviewActivity;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.webservice.WebClient;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -22,12 +23,13 @@ import android.text.style.StyleSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import stx.shopclient.entity.Token;
 
 public class ItemActivity extends BaseActivity
 {
 	private CatalogItem _Item;
+	private long _itemId;
 
 	public static final String ITEM_ID_EXTRA_KEY = "ItemID";
 	public static final String ITEM_BUY_EXTRA_KEY = "CanBuyItem";
@@ -48,10 +50,24 @@ public class ItemActivity extends BaseActivity
 		getActionBar().setBackgroundDrawable(
 				new ColorDrawable(settings.getBackground()));
 
-		Long itemId = intent.getLongExtra(ITEM_ID_EXTRA_KEY, 0);
+		_itemId = intent.getLongExtra(ITEM_ID_EXTRA_KEY, 0);
 
-		_Item = Repository.get(this).getItemsManager().getItem(itemId);
+		_Item = null;//Repository.get(this).getItemsManager().getItem(_itemId);
 
+		if (_Item != null)
+			loadUI(view);
+		else
+		{
+			LoadTask task = new LoadTask();
+			task.mainView = view;
+			task.execute();
+		}
+
+		return view;
+	}
+
+	void loadUI(View view)
+	{
 		ItemImageFragment imageFragment = (ItemImageFragment) getFragmentManager()
 				.findFragmentById(R.id.frgImages);
 		buttonBar = (ItemButtonBarFragment) getFragmentManager()
@@ -67,7 +83,7 @@ public class ItemActivity extends BaseActivity
 				.existsItem(_Item.getId()));
 
 		Collection<AnalogGroup> groups = Repository.get(this).getItemsManager()
-				.getAnalogs(itemId);
+				.getAnalogs(_itemId);
 		for (AnalogGroup el : groups)
 		{
 			buttonBar.addAnalogs(el.getName(), el.getIds());
@@ -75,11 +91,6 @@ public class ItemActivity extends BaseActivity
 
 		setProperty(txtProperty);
 		getActionBar().setTitle(_Item.getName());
-
-		// CatalogTask task = new CatalogTask();
-		// task.execute();
-
-		return view;
 	}
 
 	@Override
@@ -148,20 +159,51 @@ public class ItemActivity extends BaseActivity
 		}
 	}
 
-	class CatalogTask extends AsyncTask<Void, Void, Catalog>
+	class LoadTask extends AsyncTask<Void, Void, Void>
 	{
+		public View mainView;
+		ProgressDialog dialog;
+		Throwable exception;
 
 		@Override
-		protected Catalog doInBackground(Void... params)
+		protected void onPreExecute()
 		{
-			WebClient client = new WebClient(ItemActivity.this);
-			return client.getCatalog(Token.getCurrent(), 1);
+			dialog = ProgressDialog.show(ItemActivity.this, "Загрузка",
+					"Получение элемента каталога");
 		}
 
 		@Override
-		protected void onPostExecute(Catalog result)
+		protected Void doInBackground(Void... params)
 		{
-			super.onPostExecute(result);
+			try
+			{
+				WebClient client = new WebClient(ItemActivity.this);
+				Collection<CatalogItem> items = client.getNodeItem(
+						Token.getCurrent(), _itemId);
+				_Item = items.iterator().next();
+			}
+			catch (Throwable ex)
+			{
+				exception = ex;
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result)
+		{
+			dialog.dismiss();
+			
+			if (exception != null)
+			{
+				Toast.makeText(ItemActivity.this,
+						exception.getLocalizedMessage(), Toast.LENGTH_LONG)
+						.show();
+				finish();
+			}
+			else
+				loadUI(mainView);			
 		}
 
 	}
