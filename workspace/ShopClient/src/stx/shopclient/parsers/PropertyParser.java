@@ -107,6 +107,7 @@ public class PropertyParser extends BaseParser<PropertyDescriptor>
 										MIN_NAME));
 						
 							((NumberPropertyDescriptor) item).setRange(_rangeNeeded);
+							((NumberPropertyDescriptor) item).setFloat(false);
 					}
 				}
 				else
