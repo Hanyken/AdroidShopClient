@@ -16,7 +16,7 @@ public class OrderParser extends BaseParser<Order>
 	private final String ORDER_DATE_NAME ="OrderDate";
 	//private final String COUNT_NAME = "Count";
 	//private final String PRICE_NAME = "Price";
-	//private final String ITEM_NAME_NAME = "ItemName";
+	private final String ITEM_NAME_NAME = "ItemName";
 	private final String PROPERTIES_NAME = "Properties";
 	
 	
@@ -28,6 +28,8 @@ public class OrderParser extends BaseParser<Order>
 		item.setId(super.getValueLong(e, ORDER_ID_NAME));
 		item.setItemId(super.getValueLong(e, ITEM_ID_NAME));
 		item.setDate(super.getValueDate(e, ORDER_DATE_NAME));
+		item.setItemName(super.getValue(e, ITEM_NAME_NAME));
+		
 		NodeList pNl = e.getElementsByTagName(PROPERTIES_NAME);
 		if (pNl.getLength() > 0)
 		{
@@ -42,7 +44,6 @@ public class OrderParser extends BaseParser<Order>
 	@Override
 	protected String getElementName()
 	{
-		// TODO Auto-generated method stub
 		return ITEM_NAME;
 	}
 }
