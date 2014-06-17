@@ -27,6 +27,9 @@ import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.entity.Order;
+import stx.shopclient.entity.properties.EnumPropertyDescriptor;
+import stx.shopclient.entity.properties.PropertyDescriptor;
+import stx.shopclient.entity.properties.EnumPropertyDescriptor.EnumValue;
 import stx.shopclient.itemactivity.ItemActivity;
 import stx.shopclient.order_properties_activity.OrderPropertiesActivity;
 import stx.shopclient.repository.ItemsManager;
@@ -164,6 +167,40 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 
 	}
 
+	String getOrderDescription(Collection<PropertyDescriptor> properties)
+	{
+		String description = "";
+
+		for (PropertyDescriptor prop : properties)
+		{
+			if (!description.equals(""))
+				description += ", ";
+
+			if (prop instanceof EnumPropertyDescriptor)
+			{
+				EnumPropertyDescriptor enumProp = (EnumPropertyDescriptor) prop;
+				String value = "";
+
+				for (EnumValue el : enumProp.getCurrentValues())
+				{
+					if (!value.equals(""))
+						value += ",";
+					value += el.getName();
+				}
+
+				String itemDescr = prop.getTitle() + ": " + value;
+				description += itemDescr;
+			}
+			else
+			{
+				String itemDescr = prop.getTitle() + ": " + prop.getStringValue();
+				description += itemDescr;
+			}
+		}
+
+		return description;
+	}
+
 	@Override
 	public boolean onContextItemSelected(MenuItem item)
 	{
@@ -224,14 +261,13 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 			try
 			{
 				WebClient client = createWebClient();
-				
-				
+
 			}
-			catch(Throwable ex)
+			catch (Throwable ex)
 			{
 				exception = ex;
 			}
-			
+
 			return null;
 		}
 
