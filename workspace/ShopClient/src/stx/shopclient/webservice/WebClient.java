@@ -14,21 +14,24 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import stx.shopclient.entity.Catalog;
 import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.entity.CatalogNode;
+import stx.shopclient.entity.CountResultEntity;
 import stx.shopclient.entity.Order;
 import stx.shopclient.entity.OrderProperty;
 import stx.shopclient.entity.Overview;
 import stx.shopclient.entity.Payment;
+import stx.shopclient.entity.ResultEntity;
 import stx.shopclient.entity.Token;
 import stx.shopclient.entity.UpdateResultEntity;
 import stx.shopclient.loaders.HttpArgs;
 import stx.shopclient.parsers.CatalogParser;
+import stx.shopclient.parsers.CountResultParser;
 import stx.shopclient.parsers.ItemParser;
 import stx.shopclient.parsers.NodeParser;
 import stx.shopclient.parsers.OrderParser;
 import stx.shopclient.parsers.OverviewParser;
 import stx.shopclient.parsers.PaymentParser;
+import stx.shopclient.parsers.ResultParser;
 import stx.shopclient.parsers.TokenParser;
-import stx.shopclient.parsers.UpdateResultParser;
 import stx.shopclient.repository.OrdersManager;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.settings.ServerSettings;
@@ -65,11 +68,12 @@ public class WebClient
 			
 			if (str.startsWith("<Result>"))
 			{
-				UpdateResultParser parser = new UpdateResultParser();
-				Collection<UpdateResultEntity> result = parser.parseString(str);
+				ResultParser parser = new ResultParser();
+				Collection<ResultEntity> result = parser.parseString(str);
 				if (result.size() > 0 && result.iterator().next().getCode() == ServiceResponseCode.ACCESS_DENIED)
 				{
-					login(UserAccount.getLogin(), UserAccount.getPassword(), 0, 0);
+					
+					login(UserAccount.getLogin(), UserAccount.getPassword(), UserAccount.getWidth(), UserAccount.getHeight());
 					args.setToken(Token.getCurrent());
 					
 					
@@ -410,7 +414,7 @@ public class WebClient
 			return items.iterator().next();
 	}
 
-	public void editOverview(Token token, long itemId, double rating,
+	public boolean editOverview(Token token, long itemId, double rating,
 			String description)
 	{
 		HttpArgs args = new HttpArgs();
@@ -420,8 +424,10 @@ public class WebClient
 		args.addParam("description", description);
 
 		String response = request("overview/Edit", args, true);
-		UpdateResultParser parser = new UpdateResultParser();
-		Collection<UpdateResultEntity> res = parser.parseString(response);
+		ResultParser parser = new ResultParser();
+		Collection<ResultEntity> items = parser.parseString(response);
+		
+		return items.iterator().next().getCode() == ServiceResponseCode.OK;
 	}
 
 	public Bitmap getImage(Token token, String imgKey)
@@ -444,13 +450,13 @@ public class WebClient
 		args.addParam("date", lastModification);
 
 		String response = request("valid/catalog", args, true);
-		Collection<UpdateResultEntity> items = new UpdateResultParser()
+		Collection<ResultEntity> items = new ResultParser()
 				.parseString(response);
 
 		if (items.size() == 0)
 			throw new RuntimeException("No update returned");
 		else
-			return items.iterator().next();
+			return new UpdateResultEntity(items.iterator().next());
 	}
 
 	public UpdateResultEntity updateSettingsNeeded(Token token,
@@ -461,13 +467,13 @@ public class WebClient
 		args.addParam("date", lastModification);
 
 		String response = request("valid/settings", args, true);
-		Collection<UpdateResultEntity> items = new UpdateResultParser()
+		Collection<ResultEntity> items = new ResultParser()
 				.parseString(response);
 
 		if (items.size() == 0)
 			throw new RuntimeException("No update returned");
 		else
-			return items.iterator().next();
+			return new UpdateResultEntity(items.iterator().next());
 	}
 	
 	// Order
@@ -486,6 +492,21 @@ public class WebClient
 			ordersManager.addOrder(order);
 		}
 		return items;
+	}
+	
+	public long getOrderCount(Token token, long catalogId)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("catalogId", catalogId);
+
+		String response = request("order/count", args, true);
+		Collection<CountResultEntity> items = new CountResultParser().parseString(response);
+		
+		if (items.size() == 0)
+			throw new RuntimeException("No count returned");
+		else
+			return items.iterator().next().getCount();
 	}
 	
 	public void addOrder(Token token, long itemId, double count, Collection<OrderProperty> properties)

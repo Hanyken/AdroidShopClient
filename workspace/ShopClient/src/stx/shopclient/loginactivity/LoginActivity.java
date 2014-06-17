@@ -149,6 +149,8 @@ public class LoginActivity extends Activity
 			Token.setCurrent(result);
 			UserAccount.setLogin(login);
 			UserAccount.setPassword(password);
+			UserAccount.setWidth(width);
+			UserAccount.setHeight(height);
 			UserAccount.save(LoginActivity.this);
 
 			Intent intent = new Intent(LoginActivity.this, MainActivity.class);

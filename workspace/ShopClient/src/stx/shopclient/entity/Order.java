@@ -11,7 +11,7 @@ public class Order
 	private long _itemId;
 	private List<OrderProperty> _properties = new ArrayList<OrderProperty>();
 	private Date _date;
-	private String _itemName;
+	private CatalogItem _item;
 	
 	public long getId()
 	{
@@ -50,12 +50,12 @@ public class Order
 		_date = date;
 	}
 	
-	public String getItemName()
+	public CatalogItem getItem()
 	{
-		return _itemName;
+		return _item;
 	}
-	public void setItemName(String itemName)
+	public void setItem(CatalogItem item)
 	{
-		_itemName = itemName;
+		_item = item;
 	}
 }

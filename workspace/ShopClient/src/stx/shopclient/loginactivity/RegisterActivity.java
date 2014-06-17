@@ -168,7 +168,7 @@ public class RegisterActivity extends Activity
 			{
 				DisplayMetrics displayMetrics = getResources()
 						.getDisplayMetrics();
-
+				
 				TelephonyManager mTelephonyMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 				String simNumber = mTelephonyMgr.getSimSerialNumber();
 				if (StringUtils.isNullOrEmpty(simNumber))
@@ -214,9 +214,14 @@ public class RegisterActivity extends Activity
 					return;
 				}
 
+			DisplayMetrics displayMetrics = getResources()
+					.getDisplayMetrics();
+			
 			Token.setCurrent(result);
 			UserAccount.setLogin(login);
 			UserAccount.setPassword(password);
+			UserAccount.setWidth(displayMetrics.widthPixels);
+			UserAccount.setHeight(displayMetrics.heightPixels);
 			UserAccount.save(RegisterActivity.this);
 
 			Intent intent = new Intent(RegisterActivity.this,

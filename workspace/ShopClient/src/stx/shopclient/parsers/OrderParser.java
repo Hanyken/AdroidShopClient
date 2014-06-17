@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.entity.Order;
 import stx.shopclient.entity.OrderProperty;
 
@@ -16,7 +17,7 @@ public class OrderParser extends BaseParser<Order>
 	private final String ORDER_DATE_NAME ="OrderDate";
 	//private final String COUNT_NAME = "Count";
 	//private final String PRICE_NAME = "Price";
-	private final String ITEM_NAME_NAME = "ItemName";
+	private final String ORDER_ITEM_NAME = "Item";
 	private final String PROPERTIES_NAME = "Properties";
 	
 	
@@ -28,7 +29,15 @@ public class OrderParser extends BaseParser<Order>
 		item.setId(super.getValueLong(e, ORDER_ID_NAME));
 		item.setItemId(super.getValueLong(e, ITEM_ID_NAME));
 		item.setDate(super.getValueDate(e, ORDER_DATE_NAME));
-		item.setItemName(super.getValue(e, ITEM_NAME_NAME));
+		
+		NodeList iNl = e.getElementsByTagName(ORDER_ITEM_NAME);
+		if (iNl.getLength() > 0)
+		{ 
+			ItemParser parser = new ItemParser();
+			Collection<CatalogItem> items = parser.getElements(iNl);
+			if (items.size() > 0)
+				item.setItem(items.iterator().next());
+		}
 		
 		NodeList pNl = e.getElementsByTagName(PROPERTIES_NAME);
 		if (pNl.getLength() > 0)
