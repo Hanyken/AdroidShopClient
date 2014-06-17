@@ -11,7 +11,7 @@ import stx.shopclient.entity.OrderProperty;
 
 public class OrderParser extends BaseParser<Order>
 {
-	public static final String ITEM_NAME = "Order";
+	public static final String ITEM_NAME = "OrderItem";
 	private final String ORDER_ID_NAME = "OrderId";
 	private final String ITEM_ID_NAME = "ItemId";
 	private final String ORDER_DATE_NAME ="OrderDate";

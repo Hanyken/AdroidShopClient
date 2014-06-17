@@ -56,7 +56,7 @@ public class ItemParser extends BaseParser<CatalogItem>
 		CatalogItem item = new CatalogItem();
 
 		item.setRowNumber(super.getValueInt(e, NUMBER_NAME));
-		item.setId(Long.parseLong(super.getValue(e, ID_NAME)));
+		item.setId(super.getValueLong(e, ID_NAME));
 		item.setName(super.getValue(e, NAME_NAME));
 		item.setCatalogId(super.getValueLong(e, CATALOG_ID_NAME));
 		item.setIsLeaf(super.getValueBool(e, IS_LEAF_NAME));
