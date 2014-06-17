@@ -22,4 +22,10 @@ public class BooleanPropertyDescriptor extends PropertyDescriptor {
 	public String getStringValue() {
 		return Boolean.toString(_currentValue);
 	}
+	
+	@Override
+	public boolean isValueDefined()
+	{	
+		return true;
+	}
 }

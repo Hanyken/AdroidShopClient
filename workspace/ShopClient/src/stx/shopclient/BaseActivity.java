@@ -109,13 +109,7 @@ public class BaseActivity extends FragmentActivity
 			{
 
 			}
-		});
-
-		ListView _menuList = (ListView) findViewById(R.id.mainMenuList);
-
-		_mainMenuListAdapter = new MainMenuListAdapter(this);
-		_menuList.setAdapter(_mainMenuListAdapter);
-		_menuList.setOnItemClickListener(new MainMenuOnClickListener());
+		});		
 
 		_mainViewContainer = (LinearLayout) findViewById(R.id.mainViewContainer);
 
@@ -125,6 +119,17 @@ public class BaseActivity extends FragmentActivity
 		{
 			_mainViewContainer.addView(mainView);
 		}
+		
+		ListView _menuList = (ListView) findViewById(R.id.mainMenuList);
+
+		_mainMenuListAdapter = new MainMenuListAdapter(this);
+		_menuList.setAdapter(_mainMenuListAdapter);
+		_menuList.setOnItemClickListener(new MainMenuOnClickListener());
+	}
+	
+	public boolean initMainMenuItem(MainMenuItem item)
+	{
+		return true;
 	}
 
 	protected boolean isNeedRelogin()

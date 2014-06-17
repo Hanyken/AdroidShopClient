@@ -1,5 +1,7 @@
 package stx.shopclient.entity.properties;
 
+import stx.shopclient.utils.StringUtils;
+
 public class StringPropertyDescriptor extends PropertyDescriptor {
 	public static final String TYPE_STRING = "String";
 	
@@ -21,5 +23,11 @@ public class StringPropertyDescriptor extends PropertyDescriptor {
 	@Override
 	public String getStringValue() {
 		return _value;
+	}
+	
+	@Override
+	public boolean isValueDefined()
+	{
+		return !StringUtils.isNullOrEmpty(_value);
 	}
 }

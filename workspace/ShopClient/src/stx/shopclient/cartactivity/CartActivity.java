@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.nfc.cardemulation.CardEmulation;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.MenuItem;
@@ -30,6 +32,7 @@ import stx.shopclient.order_properties_activity.OrderPropertiesActivity;
 import stx.shopclient.repository.ItemsManager;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.utils.ImageDownloadTask;
+import stx.shopclient.webservice.WebClient;
 
 public class CartActivity extends BaseActivity implements OnItemClickListener
 {
@@ -43,7 +46,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 	protected View createMainView(ViewGroup parent)
 	{
 
-		generateData();
+		// generateData();
 
 		getActionBar().setTitle("Корзина");
 
@@ -138,9 +141,10 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 			TextView descrTextView = (TextView) view
 					.findViewById(R.id.descriptionTextView);
 			descrTextView.setText("1 шт.");
-			
-			ImageView imgView = (ImageView)view.findViewById(R.id.imageView);
-//			ImageDownloadTask.startNew(imgView, "file://" + Repository.get(CartActivity.this).getImagesManager().getImagePath(item.item.getIco()));
+
+			ImageView imgView = (ImageView) view.findViewById(R.id.imageView);
+			// ImageDownloadTask.startNew(imgView, "file://" +
+			// Repository.get(CartActivity.this).getImagesManager().getImagePath(item.item.getIco()));
 
 			Button menuButton = (Button) view.findViewById(R.id.menuButton);
 
@@ -173,11 +177,13 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 			intent.putExtra(OrderPropertiesActivity.TITLE_EXTRA_KEY,
 					orderItem.item.getName());
 			startActivity(intent);
-		} else if (item.getItemId() == R.id.delete)
+		}
+		else if (item.getItemId() == R.id.delete)
 		{
 			_cartItems.remove(orderItem);
-			
-			Repository.get(this).getOrderManager().removeOrderItem(orderItem.orderId);
+
+			Repository.get(this).getOrderManager()
+					.removeOrderItem(orderItem.orderId);
 
 			_adapter.notifyDataSetChanged();
 			Toast.makeText(this,
@@ -198,5 +204,48 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 		intent.putExtra(ItemActivity.ITEM_BUY_EXTRA_KEY, false);
 		intent.putExtra("ItemTitle", item.item.getName());
 		startActivity(intent);
+	}
+
+	class LoadTask extends AsyncTask<Void, Void, Void>
+	{
+		Throwable exception;
+		ProgressDialog dialog;
+
+		@Override
+		protected void onPreExecute()
+		{
+			dialog = ProgressDialog.show(CartActivity.this, "Загрузка",
+					"Получение элементов корзины");
+		}
+
+		@Override
+		protected Void doInBackground(Void... params)
+		{
+			try
+			{
+				WebClient client = createWebClient();
+				
+				
+			}
+			catch(Throwable ex)
+			{
+				exception = ex;
+			}
+			
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result)
+		{
+			dialog.dismiss();
+
+			if (exception != null)
+				Toast.makeText(CartActivity.this,
+						exception.getLocalizedMessage(), Toast.LENGTH_LONG)
+						.show();
+			else
+				_adapter.notifyDataSetChanged();
+		}
 	}
 }

@@ -24,8 +24,8 @@ import android.widget.TextView;
 public class ItemAnalogsFragment extends Fragment implements OnClickListener
 {
 	private static final String TITLE_NAME = "Title";
-	private static final String IDS_NAME = "Ids"; 
-	
+	private static final String IDS_NAME = "Ids";
+
 	public static Fragment getIntent(String title, long[] ids)
 	{
 		Fragment fragment = new ItemAnalogsFragment();
@@ -35,31 +35,33 @@ public class ItemAnalogsFragment extends Fragment implements OnClickListener
 		fragment.setArguments(bundle);
 		return fragment;
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState)
 	{
-		View view = inflater.inflate(R.layout.item_activity_analog_fragment, container, false);
-		
+		View view = inflater.inflate(R.layout.item_activity_analog_fragment,
+				container, false);
+
 		Bundle args = getArguments();
-		CatalogSettings settings = Repository.get(getActivity()).getCatalogManager().getSettings();
-		
-		TextView lblTitle = (TextView)view.findViewById(R.id.lblTitle);
+		CatalogSettings settings = Repository.get(getActivity())
+				.getCatalogManager().getSettings();
+
+		TextView lblTitle = (TextView) view.findViewById(R.id.lblTitle);
 		lblTitle.setText(args.getString(TITLE_NAME));
 		lblTitle.setBackgroundColor(settings.getBackground());
 		lblTitle.setTextColor(settings.getForegroundColor());
-		
-		GridLayout glList = (GridLayout)view.findViewById(R.id.glList);
+
+		GridLayout glList = (GridLayout) view.findViewById(R.id.glList);
 		loadGrid(glList, args.getLongArray(IDS_NAME), inflater);
-		
-		LinearLayout llSeparate = (LinearLayout) view.findViewById(R.id.llSeparate);
+
+		LinearLayout llSeparate = (LinearLayout) view
+				.findViewById(R.id.llSeparate);
 		llSeparate.setBackgroundColor(settings.getItemPanelColor());
-		
+
 		return view;
 	}
-	
-	
+
 	void loadGrid(GridLayout view, long[] ids, LayoutInflater inflater)
 	{
 
@@ -67,18 +69,19 @@ public class ItemAnalogsFragment extends Fragment implements OnClickListener
 		DisplayMetrics outMetrics = new DisplayMetrics();
 		display.getMetrics(outMetrics);
 
-		//float density = getResources().getDisplayMetrics().density;
-		//float dpHeight = outMetrics.heightPixels / density;
-		//float dpWidth = outMetrics.widthPixels / density;
+		// float density = getResources().getDisplayMetrics().density;
+		// float dpHeight = outMetrics.heightPixels / density;
+		// float dpWidth = outMetrics.widthPixels / density;
 
 		view.removeAllViews();
 		ItemsManager manager = Repository.get(getActivity()).getItemsManager();
-		
+
 		for (long id : ids)
 		{
 			CatalogItem entity = manager.getItem(id);
-			
-			View itemView = inflater.inflate(R.layout.item_activity_analog_fragment_item, view, false);
+
+			View itemView = inflater.inflate(
+					R.layout.item_activity_analog_fragment_item, view, false);
 
 			itemView.setTag(id);
 			itemView.setOnClickListener(this);
@@ -87,30 +90,34 @@ public class ItemAnalogsFragment extends Fragment implements OnClickListener
 
 			GridLayout.LayoutParams params = (GridLayout.LayoutParams) itemView
 					.getLayoutParams();
-			params.width = (int) (outMetrics.widthPixels / view.getColumnCount());
+			params.width = (int) (outMetrics.widthPixels / view
+					.getColumnCount());
 			params.setGravity(Gravity.TOP);
 			itemView.setLayoutParams(params);
 
 			TextView textView = (TextView) itemView.findViewById(R.id.lblTitle);
 
-			ImageView imgView = (ImageView) itemView
-					.findViewById(R.id.imgIco);
-			
-//			ImageDownloadTask.startNew(imgView,
-//					"file://"
-//							+ Repository.get(getActivity()).getImagesManager()
-//									.getImagePath(entity.getIco()));
-			
+			ImageView imgView = (ImageView) itemView.findViewById(R.id.imgIco);
+
+			if (entity.getIco() != null)
+				ImageDownloadTask.startNew(imgView, getActivity(),
+						entity.getIco());
+
+			// ImageDownloadTask.startNew(imgView,
+			// "file://"
+			// + Repository.get(getActivity()).getImagesManager()
+			// .getImagePath(entity.getIco()));
+
 			textView.setText(entity.getName());
 		}
-		
+
 	}
 
 	@Override
 	public void onClick(View arg0)
 	{
 		Intent intent = new Intent(getActivity(), ItemActivity.class);
-		intent.putExtra(ItemActivity.ITEM_ID_EXTRA_KEY, (Long)arg0.getTag());
+		intent.putExtra(ItemActivity.ITEM_ID_EXTRA_KEY, (Long) arg0.getTag());
 		startActivity(intent);
 	}
 }

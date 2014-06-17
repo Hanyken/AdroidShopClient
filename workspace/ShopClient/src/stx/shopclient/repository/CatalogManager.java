@@ -15,6 +15,7 @@ public class CatalogManager
 {
 	private ArrayList<Catalog> _Items;
 	private ItemsManager _ItemsManager;
+	private CatalogSettings _catalogSettings;
 
 	public CatalogManager(ItemsManager itemsManager)
 	{
@@ -44,6 +45,12 @@ public class CatalogManager
 		// item.setShareImgPress("SharePress.png");
 		item.setCountButtonLableColor(Color.rgb(125, 125, 125));
 		return item;
+		//return _catalogSettings;
+	}
+	
+	public void setSettings(CatalogSettings settings)
+	{
+		_catalogSettings = settings;
 	}
 
 	public Collection<CatalogNode> getNodes()

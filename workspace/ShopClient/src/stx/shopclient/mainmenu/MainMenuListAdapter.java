@@ -3,6 +3,7 @@ package stx.shopclient.mainmenu;
 import java.util.ArrayList;
 import java.util.List;
 
+import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.entity.Message;
 import stx.shopclient.repository.Repository;
@@ -17,19 +18,33 @@ import android.widget.TextView;
 
 public class MainMenuListAdapter extends BaseAdapter
 {
-
 	List<MainMenuItem> _menuItems = new ArrayList<MainMenuItem>();
-	Context _context;
+	List<MainMenuItem> _menuItemsFiltered = new ArrayList<MainMenuItem>();
+	BaseActivity _context;
 
 	MainMenuItem _cartMenuItem;
 	MainMenuItem _messagesMenuItem;
 
-	public MainMenuListAdapter(Context context)
+	public MainMenuListAdapter(BaseActivity context)
 	{
 
 		_context = context;
 
 		addDefaultMenuItems();
+	}
+	
+	@Override
+	public void notifyDataSetChanged()
+	{
+		_menuItemsFiltered.clear();
+		
+		for(MainMenuItem item : _menuItems)
+		{
+			if(_context.initMainMenuItem(item))
+				_menuItemsFiltered.add(item);
+		}
+		
+		super.notifyDataSetChanged();
 	}
 
 	private void addDefaultMenuItems()
@@ -75,33 +90,17 @@ public class MainMenuListAdapter extends BaseAdapter
 		item.setHasIcon(true);
 		_menuItems.add(item);
 	}
-
-	void updateMenuItems()
-	{
-		_cartMenuItem.setCount(Repository.get(_context).getOrderManager()
-				.getOrderItemsCount());
-
-		int unreadMessages = 0;
-		for (Message m : Repository.get(_context).getMessagesManager()
-				.getMessages())
-		{
-			if(!m.isRead())
-				unreadMessages++;
-		}
-		_messagesMenuItem.setCount(unreadMessages);		
-	}
-
+	
 	@Override
 	public int getCount()
-	{
-		updateMenuItems();
-		return _menuItems.size();
+	{		
+		return _menuItemsFiltered.size();
 	}
 
 	@Override
 	public Object getItem(int index)
 	{
-		return _menuItems.get(index);
+		return _menuItemsFiltered.get(index);
 	}
 
 	@Override
@@ -115,7 +114,7 @@ public class MainMenuListAdapter extends BaseAdapter
 	public View getView(int index, View arg1, ViewGroup arg2)
 	{
 
-		MainMenuItem item = _menuItems.get(index);
+		MainMenuItem item = _menuItemsFiltered.get(index);
 
 		LayoutInflater inflater = (LayoutInflater) _context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

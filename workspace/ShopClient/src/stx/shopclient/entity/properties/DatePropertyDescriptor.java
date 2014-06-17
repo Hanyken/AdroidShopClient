@@ -84,4 +84,10 @@ public class DatePropertyDescriptor extends PropertyDescriptor {
 	public String getStringValue() {
 		return _minValue.toString();
 	}
+	
+	@Override
+	public boolean isValueDefined()
+	{		
+		return _isCurrentValueDefined;
+	}
 }

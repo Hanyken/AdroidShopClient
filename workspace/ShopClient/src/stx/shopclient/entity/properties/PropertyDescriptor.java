@@ -8,6 +8,7 @@ public abstract class PropertyDescriptor {
 	private Integer _order;
 	private boolean _multiselect;
 	private boolean _quickSearch;
+	private boolean _isValueDefined;
 	
 	public abstract void clear();
 	
@@ -55,4 +56,15 @@ public abstract class PropertyDescriptor {
 	public void setQuickSearch(Boolean quickSearch){
 		_quickSearch = quickSearch;
 	}
+
+	public boolean isValueDefined()
+	{
+		return _isValueDefined;
+	}
+
+	public void setValueDefined(boolean isValueDefined)
+	{
+		_isValueDefined = isValueDefined;
+	}
+	
 }

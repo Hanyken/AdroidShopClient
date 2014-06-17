@@ -21,6 +21,7 @@ public class OrdersManager
 {
 	private ArrayList<Order> _Orders;
 	private ArrayList<OrderProperty> _Properties;
+	private int _orderCount;
 
 	public OrdersManager()
 	{
@@ -156,6 +157,16 @@ public class OrdersManager
 			}
 		}
 		return itemOrderProperties;
+	}
+
+	public int getOrderCount()
+	{
+		return _orderCount;
+	}
+
+	public void setOrderCount(int orderCount)
+	{
+		_orderCount = orderCount;
 	}
 
 }

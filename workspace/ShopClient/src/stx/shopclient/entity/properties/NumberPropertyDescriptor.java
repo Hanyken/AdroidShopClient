@@ -82,4 +82,10 @@ public class NumberPropertyDescriptor extends PropertyDescriptor {
 	public String getStringValue() {
 		return Double.toString(_currentMaxValue);
 	}
+	
+	@Override
+	public boolean isValueDefined()
+	{	
+		return _isCurrentValueDefined;
+	}
 }

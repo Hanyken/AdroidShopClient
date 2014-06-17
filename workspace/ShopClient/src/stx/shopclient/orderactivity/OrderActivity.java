@@ -82,6 +82,16 @@ public class OrderActivity extends BaseActivity implements OnClickListener
 	@Override
 	public void onClick(View v)
 	{
+		for (PropertyDescriptor el : properties)
+		{
+			if (!el.isValueDefined())
+			{
+				Toast.makeText(this, "Нужно заполнить параметры заказа",
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+		}
+
 		new AddOrderTask().execute();
 	}
 
