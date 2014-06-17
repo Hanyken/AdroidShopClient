@@ -4,38 +4,37 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import stx.shopclient.BaseActivity;
+import stx.shopclient.R;
+import stx.shopclient.entity.Order;
+import stx.shopclient.entity.OrderProperty;
+import stx.shopclient.entity.Token;
+import stx.shopclient.entity.properties.EnumPropertyDescriptor;
+import stx.shopclient.entity.properties.EnumPropertyDescriptor.EnumValue;
+import stx.shopclient.entity.properties.PropertyDescriptor;
+import stx.shopclient.itemactivity.ItemActivity;
+import stx.shopclient.order_properties_activity.OrderPropertiesActivity;
+import stx.shopclient.repository.OrdersManager;
+import stx.shopclient.repository.Repository;
+import stx.shopclient.utils.ImageDownloadTask;
+import stx.shopclient.webservice.WebClient;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.nfc.cardemulation.CardEmulation;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
-import stx.shopclient.BaseActivity;
-import stx.shopclient.R;
-import stx.shopclient.entity.CatalogItem;
-import stx.shopclient.entity.Order;
-import stx.shopclient.entity.properties.EnumPropertyDescriptor;
-import stx.shopclient.entity.properties.PropertyDescriptor;
-import stx.shopclient.entity.properties.EnumPropertyDescriptor.EnumValue;
-import stx.shopclient.itemactivity.ItemActivity;
-import stx.shopclient.order_properties_activity.OrderPropertiesActivity;
-import stx.shopclient.repository.ItemsManager;
-import stx.shopclient.repository.Repository;
-import stx.shopclient.utils.ImageDownloadTask;
-import stx.shopclient.webservice.WebClient;
 
 public class CartActivity extends BaseActivity implements OnItemClickListener
 {
@@ -43,14 +42,11 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 	ListView _list;
 	CartListAdapter _adapter;
 
-	List<OrderItem> _cartItems = new ArrayList<OrderItem>();
+	List<Order> _cartItems = new ArrayList<Order>();
 
 	@Override
 	protected View createMainView(ViewGroup parent)
 	{
-
-		// generateData();
-
 		getActionBar().setTitle("Корзина");
 
 		View view = getLayoutInflater().inflate(R.layout.cart_activity, parent,
@@ -65,26 +61,9 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 
 		registerForContextMenu(_list);
 
-		return view;
-	}
+		new LoadTask().execute();
 
-	void generateData()
-	{
-		/*
-		 * for (int i = 1; i <= 5; i++) { CatalogItem item = new CatalogItem();
-		 * item.setName("Товар " + Integer.toString(i)); _cartItems.add(item); }
-		 */
-		ItemsManager manager = Repository.get(this).getItemsManager();
-		Collection<Order> orderItems = Repository.get(this).getOrderManager()
-				.getOrderItems();
-		for (Order el : orderItems)
-		{
-			OrderItem item = new OrderItem();
-			item.item = manager.getItem(el.getItemId());
-			item.orderId = el.getId();
-			// item.setName("Товар: " + item.getName());
-			_cartItems.add(item);
-		}
+		return view;
 	}
 
 	@Override
@@ -95,12 +74,6 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 		super.onCreateContextMenu(menu, v, menuInfo);
 
 		getMenuInflater().inflate(R.menu.cart_activity_item_menu, menu);
-	}
-
-	static class OrderItem
-	{
-		public CatalogItem item;
-		public long orderId;
 	}
 
 	class CartListAdapter extends BaseAdapter
@@ -130,28 +103,31 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 		public View getView(int index, View arg1, ViewGroup container)
 		{
 
-			OrderItem item = _cartItems.get(index);
+			Order order = _cartItems.get(index);
 
 			final View view = getLayoutInflater().inflate(
 					R.layout.cart_activity_item, container, false);
 
-			view.setTag(item);
+			view.setTag(order);
 
 			TextView nameTextView = (TextView) view
 					.findViewById(R.id.nameTextView);
-			nameTextView.setText(item.item.getName());
+			nameTextView.setText(order.getItem().getName());
 
 			TextView descrTextView = (TextView) view
 					.findViewById(R.id.descriptionTextView);
-			descrTextView.setText("1 шт.");
+			descrTextView.setText(getOrderDescription(order.getProperties(),
+					order.getItem().getOrderProperties()));
 
 			ImageView imgView = (ImageView) view.findViewById(R.id.imageView);
-			// ImageDownloadTask.startNew(imgView, "file://" +
-			// Repository.get(CartActivity.this).getImagesManager().getImagePath(item.item.getIco()));
+
+			if (order.getItem().getIco() != null)
+				ImageDownloadTask.startNew(imgView, CartActivity.this, order
+						.getItem().getIco());
 
 			Button menuButton = (Button) view.findViewById(R.id.menuButton);
 
-			menuButton.setTag(item);
+			menuButton.setTag(order);
 			menuButton.setOnClickListener(new View.OnClickListener()
 			{
 
@@ -167,8 +143,13 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 
 	}
 
-	String getOrderDescription(Collection<PropertyDescriptor> properties)
+	String getOrderDescription(Collection<OrderProperty> orderProperties,
+			Collection<PropertyDescriptor> itemOrderProperties)
 	{
+		Collection<PropertyDescriptor> properties = OrdersManager
+				.getOrderPropertiesAsDescriptiors(itemOrderProperties,
+						orderProperties);
+
 		String description = "";
 
 		for (PropertyDescriptor prop : properties)
@@ -193,7 +174,8 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 			}
 			else
 			{
-				String itemDescr = prop.getTitle() + ": " + prop.getStringValue();
+				String itemDescr = prop.getTitle() + ": "
+						+ prop.getStringValue();
 				description += itemDescr;
 			}
 		}
@@ -206,25 +188,25 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 	{
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 				.getMenuInfo();
-		OrderItem orderItem = _cartItems.get(info.position);
+		Order order = _cartItems.get(info.position);
 
 		if (item.getItemId() == R.id.edit)
 		{
 			Intent intent = new Intent(this, OrderPropertiesActivity.class);
-			intent.putExtra(OrderPropertiesActivity.TITLE_EXTRA_KEY,
-					orderItem.item.getName());
+			intent.putExtra(OrderPropertiesActivity.TITLE_EXTRA_KEY, order
+					.getItem().getName());
 			startActivity(intent);
 		}
 		else if (item.getItemId() == R.id.delete)
 		{
-			_cartItems.remove(orderItem);
+			_cartItems.remove(order);
 
 			Repository.get(this).getOrderManager()
-					.removeOrderItem(orderItem.orderId);
+					.removeOrderItem(order.getId());
 
 			_adapter.notifyDataSetChanged();
 			Toast.makeText(this,
-					String.format("Удалено (%s)", orderItem.item.getName()),
+					String.format("Удалено (%s)", order.getItem().getName()),
 					Toast.LENGTH_SHORT).show();
 		}
 
@@ -234,12 +216,12 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View view, int arg2, long arg3)
 	{
-		OrderItem item = (OrderItem) view.getTag();
+		Order order = (Order) view.getTag();
 
 		Intent intent = new Intent(this, ItemActivity.class);
-		intent.putExtra(ItemActivity.ITEM_ID_EXTRA_KEY, item.item.getId());
+		intent.putExtra(ItemActivity.ITEM_ID_EXTRA_KEY, order.getItem().getId());
 		intent.putExtra(ItemActivity.ITEM_BUY_EXTRA_KEY, false);
-		intent.putExtra("ItemTitle", item.item.getName());
+		intent.putExtra("ItemTitle", order.getItem().getName());
 		startActivity(intent);
 	}
 
@@ -261,7 +243,10 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 			try
 			{
 				WebClient client = createWebClient();
-
+				Collection<Order> orders = client.getOrders(Token.getCurrent(),
+						Repository.CatalogId);
+				_cartItems.clear();
+				_cartItems.addAll(orders);
 			}
 			catch (Throwable ex)
 			{

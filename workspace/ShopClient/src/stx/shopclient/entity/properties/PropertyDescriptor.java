@@ -4,8 +4,8 @@ public abstract class PropertyDescriptor {
 	private String _type;
 	private String _name;
 	private String _title;
-	private Boolean _required;
-	private Integer _order;
+	private boolean _required;
+	private int _order;
 	private boolean _multiselect;
 	private boolean _quickSearch;
 	private boolean _isValueDefined;
@@ -67,4 +67,15 @@ public abstract class PropertyDescriptor {
 		_isValueDefined = isValueDefined;
 	}
 	
+	public PropertyDescriptor cloneProperty()
+	{
+		try
+		{
+			return (PropertyDescriptor)this.clone();
+		}
+		catch (CloneNotSupportedException e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
 }

@@ -54,7 +54,7 @@ public class OrdersManager
 
 		_Orders.add(item);
 	}
-	
+
 	public void removeOrderItem(long orderId)
 	{
 		for (Order order : _Orders)
@@ -80,7 +80,7 @@ public class OrdersManager
 	public boolean existsItem(long itemId)
 	{
 		boolean flag = false;
-		for(Order el : _Orders)
+		for (Order el : _Orders)
 		{
 			if (el.getItemId() == itemId)
 			{
@@ -90,7 +90,7 @@ public class OrdersManager
 		}
 		return flag;
 	}
-	
+
 	public Collection<OrderProperty> getOrderProperties(long orderId)
 	{
 		ArrayList<OrderProperty> items = new ArrayList<OrderProperty>();
@@ -103,42 +103,68 @@ public class OrdersManager
 		}
 		return items;
 	}
-	
-	public Collection<PropertyDescriptor> getOrderPropertiesAsDescriptiors(Collection<PropertyDescriptor> itemOrderProperties, long orderId)
+
+	public Collection<PropertyDescriptor> getOrderPropertiesAsDescriptiors(
+			Collection<PropertyDescriptor> itemOrderProperties, long orderId)
 	{
 		Collection<OrderProperty> orderItems = getOrderProperties(orderId);
-		for(PropertyDescriptor prop : itemOrderProperties)
+
+		return getOrderPropertiesAsDescriptiors(itemOrderProperties, orderItems);
+	}
+
+	public static Collection<PropertyDescriptor> getOrderPropertiesAsDescriptiors(
+			Collection<PropertyDescriptor> itemOrderProperties,
+			Collection<OrderProperty> orderItems)
+	{
+		List<PropertyDescriptor> result = new ArrayList<PropertyDescriptor>();
+
+		for (PropertyDescriptor prop : itemOrderProperties)
 		{
-			for(OrderProperty op : orderItems)
+			result.add(prop.cloneProperty());
+		}
+
+		for (PropertyDescriptor prop : result)
+		{
+			for (OrderProperty op : orderItems)
 			{
 				if (prop.getName().equals(op.getName()))
 				{
 					if (prop.getClass() == NumberPropertyDescriptor.class)
 					{
-						((NumberPropertyDescriptor)prop).setCurrentMaxValue(Double.parseDouble(op.getValue()));
+						((NumberPropertyDescriptor) prop)
+								.setCurrentMaxValue(Double.parseDouble(op
+										.getValue()));
 					}
 					else if (prop.getClass() == DatePropertyDescriptor.class)
 					{
 						try
 						{
-						DateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-						GregorianCalendar calendar = new GregorianCalendar();
-						calendar.setTime(dateParser.parse(op.getValue()));
-						((DatePropertyDescriptor)prop).setCurrentMaxValue(calendar);
+							DateFormat dateParser = new SimpleDateFormat(
+									"yyyy-MM-dd'T'HH:mm:ss");
+							GregorianCalendar calendar = new GregorianCalendar();
+							calendar.setTime(dateParser.parse(op.getValue()));
+							((DatePropertyDescriptor) prop)
+									.setCurrentMaxValue(calendar);
 						}
-						catch(Exception ex){}
+						catch (Exception ex)
+						{
+						}
 					}
 					else if (prop.getClass() == BooleanPropertyDescriptor.class)
 					{
-						((BooleanPropertyDescriptor)prop).setCurrentValue(Boolean.parseBoolean(op.getValue()));
+						((BooleanPropertyDescriptor) prop)
+								.setCurrentValue(Boolean.parseBoolean(op
+										.getValue()));
 					}
 					else if (prop.getClass() == EnumPropertyDescriptor.class)
 					{
 						List<EnumValue> enumValues = new ArrayList<EnumValue>();
-						String[] values = op.getValue().split(EnumPropertyDescriptor.SEPARATE_STRING);
-						for(int i=0; i< values.length; i++)
+						String[] values = op.getValue().split(
+								EnumPropertyDescriptor.SEPARATE_STRING);
+						for (int i = 0; i < values.length; i++)
 						{
-							for(EnumValue val : ((EnumPropertyDescriptor)prop).getValues())
+							for (EnumValue val : ((EnumPropertyDescriptor) prop)
+									.getValues())
 							{
 								if (val.getName().equals(values[i]))
 								{
@@ -146,17 +172,19 @@ public class OrdersManager
 								}
 							}
 						}
-						((EnumPropertyDescriptor)prop).setCurrentValues(enumValues);
-						
+						((EnumPropertyDescriptor) prop)
+								.setCurrentValues(enumValues);
+
 					}
 					else if (prop.getClass() == StringPropertyDescriptor.class)
 					{
-						((StringPropertyDescriptor)prop).setValue(op.getValue());
+						((StringPropertyDescriptor) prop).setValue(op
+								.getValue());
 					}
-				}	
+				}
 			}
 		}
-		return itemOrderProperties;
+		return result;
 	}
 
 	public int getOrderCount()
