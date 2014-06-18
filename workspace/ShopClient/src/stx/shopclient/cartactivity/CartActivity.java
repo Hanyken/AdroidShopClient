@@ -199,15 +199,9 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 		}
 		else if (item.getItemId() == R.id.delete)
 		{
-			_cartItems.remove(order);
-
-			Repository.get(this).getOrderManager()
-					.removeOrderItem(order.getId());
-
-			_adapter.notifyDataSetChanged();
-			Toast.makeText(this,
-					String.format("Удалено (%s)", order.getItem().getName()),
-					Toast.LENGTH_SHORT).show();
+			RemoveTask task = new RemoveTask();
+			task.order = order;
+			task.execute();			
 		}
 
 		return true;
@@ -267,6 +261,56 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 						.show();
 			else
 				_adapter.notifyDataSetChanged();
+		}
+	}
+
+	class RemoveTask extends AsyncTask<Void, Void, Void>
+	{
+		Throwable exception;
+		ProgressDialog dialog;
+		public Order order;
+
+		@Override
+		protected void onPreExecute()
+		{
+			dialog = ProgressDialog.show(CartActivity.this, "Загрузка",
+					"Удаление элемента корзины");
+		}
+
+		@Override
+		protected Void doInBackground(Void... params)
+		{
+			try
+			{
+				WebClient client = createWebClient();
+				client.deleteOrder(Token.getCurrent(), order.getId());				
+			}
+			catch (Throwable ex)
+			{
+				exception = ex;
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result)
+		{
+			dialog.dismiss();
+
+			if (exception != null)
+				Toast.makeText(CartActivity.this,
+						exception.getLocalizedMessage(), Toast.LENGTH_LONG)
+						.show();
+			else
+			{
+				Toast.makeText(
+						CartActivity.this,
+						String.format("Удалено (%s)", order.getItem().getName()),
+						Toast.LENGTH_LONG).show();
+				_cartItems.remove(order);
+				_adapter.notifyDataSetChanged();
+			}
 		}
 	}
 }
