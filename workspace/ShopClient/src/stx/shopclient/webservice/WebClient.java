@@ -516,15 +516,12 @@ public class WebClient
 			Collection<OrderProperty> properties)
 	{
 		HttpArgs args = new HttpArgs();
-		args.addParam("token", token);
-		args.addParam("itemId", itemId);
-		args.addParam("count", count);
 		for (OrderProperty prop : properties)
 		{
 			args.addParam(prop.getName(), prop.getValue());
 		}
 
-		request("order/add", args, false);
+		String str = request("order/add?token="+token.getToken()+"&itemId="+Long.toString(itemId)+"&count="+Double.toString(count), args, false);
 	}
 
 	public void deleteOrder(Token token, long orderId)
