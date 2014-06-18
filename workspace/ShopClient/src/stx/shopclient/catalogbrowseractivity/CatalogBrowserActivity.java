@@ -104,6 +104,12 @@ public class CatalogBrowserActivity extends BaseActivity implements
 
 		return view;
 	}
+	
+	@Override
+	protected long getSearchActivityNodeId()
+	{
+		return _rootNodeId;
+	}
 
 	class LoadItemsTask extends AsyncTask<Void, Void, Void>
 	{

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.lang3.SerializationUtils;
+
 import stx.shopclient.entity.properties.PropertyDescriptor;
 
 public class CatalogNode
@@ -20,7 +22,7 @@ public class CatalogNode
 	private double _minPrice;
 	private double _maxPrice;
 	private String _groupField;
-	
+
 	private List<PropertyDescriptor> _properties = new ArrayList<PropertyDescriptor>();
 
 	public int getRowNumber()
@@ -32,7 +34,7 @@ public class CatalogNode
 	{
 		_rowNumber = rowNumber;
 	}
-	
+
 	public long getId()
 	{
 		return _id;
@@ -132,7 +134,7 @@ public class CatalogNode
 	{
 		_maxPrice = maxPrice;
 	}
-	
+
 	public String getGroupField()
 	{
 		return _groupField;
@@ -152,5 +154,17 @@ public class CatalogNode
 	{
 		_properties.clear();
 		_properties.addAll(properties);
+	}
+
+	public Collection<PropertyDescriptor> getPropertiesCopy()
+	{
+		List<PropertyDescriptor> list = new ArrayList<PropertyDescriptor>();
+
+		for (PropertyDescriptor prop : _properties)
+		{
+			list.add((PropertyDescriptor) SerializationUtils.clone(prop));
+		}
+
+		return list;
 	}
 }

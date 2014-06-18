@@ -3,6 +3,9 @@ package stx.shopclient.entity.properties;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 public class EnumPropertyDescriptor extends PropertyDescriptor
 {
 	public static final String TYPE_STRING = "Enum";
@@ -93,5 +96,28 @@ public class EnumPropertyDescriptor extends PropertyDescriptor
 	public boolean isValueDefined()
 	{
 		return _currentValues.size() > 0;
+	}
+
+	@Override
+	public void appendSearchPropertyXml(Element root)
+	{
+		if (!isValueDefined())
+			return;
+
+		Document doc = root.getOwnerDocument();
+		Element el = doc.createElement(getName());
+
+		Element elRange = doc.createElement("Range");
+
+		for (EnumValue enumValue : _currentValues)
+		{
+			Element elValue = doc.createElement("Value");
+			elValue.setTextContent(enumValue.getValue());
+			elRange.appendChild(elValue);
+		}
+		
+		el.appendChild(elRange);		
+
+		root.appendChild(el);
 	}
 }

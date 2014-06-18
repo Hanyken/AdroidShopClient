@@ -27,12 +27,14 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
+import stx.shopclient.entity.CatalogNode;
 import stx.shopclient.entity.properties.BooleanPropertyDescriptor;
 import stx.shopclient.entity.properties.DatePropertyDescriptor;
 import stx.shopclient.entity.properties.EnumPropertyDescriptor;
 import stx.shopclient.entity.properties.NumberPropertyDescriptor;
 import stx.shopclient.entity.properties.PropertyDescriptor;
 import stx.shopclient.entity.properties.StringPropertyDescriptor;
+import stx.shopclient.repository.Repository;
 import stx.shopclient.searchresultsactivity.SearchResultsActivity;
 import stx.shopclient.ui.common.properties.PropertiesList;
 import stx.shopclient.utils.DisplayUtil;
@@ -42,83 +44,15 @@ public class SearchActivity extends BaseActivity {
 	public static final int LIST_ITEM_HEIGHT = 50;
 
 	public static final String TITLE_EXTRA_KEY = "Title";
+	public static final String NODE_ID_EXTRA_KEY = "nodeId";
+	
+	long _nodeId;
 	
 	PropertiesList _propsList;
 
 	List<PropertyDescriptor> _props = new ArrayList<PropertyDescriptor>();
 
 	SimpleDateFormat _dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-
-	void generateData() {
-		Random random = new Random();
-
-		for (int i = 0; i < 30; i++) {
-
-			int type = random.nextInt(5);
-
-			if (type == 1) {
-				BooleanPropertyDescriptor prop = new BooleanPropertyDescriptor();
-				prop.setTitle("Boolean " + Integer.toString(i));
-				prop.setName("bool");
-				prop.setType(BooleanPropertyDescriptor.TYPE_STRING);
-				_props.add(prop);
-			} else if (type == 2) {
-				NumberPropertyDescriptor prop = new NumberPropertyDescriptor();
-				prop.setTitle("Numeric " + Integer.toString(i));
-				prop.setName("number");
-				prop.setFloat(false);
-				prop.setRange(false);
-				prop.setType(NumberPropertyDescriptor.TYPE_STRING);
-				prop.setMinValue(random.nextInt(10));
-				prop.setMaxValue(random.nextInt(50) + 10);
-				_props.add(prop);
-			} else if (type == 3) {
-				DatePropertyDescriptor prop = new DatePropertyDescriptor();
-				prop.setTitle("Date" + Integer.toString(i));
-				prop.setName("date");
-				prop.setRange(false);
-				prop.setType(DatePropertyDescriptor.TYPE_STRING);
-				prop.setMinValue(new GregorianCalendar(1997, 1, 1));
-				prop.setMaxValue(new GregorianCalendar(2020, 1, 1));
-				_props.add(prop);
-			} else if (type == 4) {
-				StringPropertyDescriptor prop = new StringPropertyDescriptor();
-				prop.setTitle("String" + Integer.toString(i));
-				prop.setName("string");
-				prop.setType(StringPropertyDescriptor.TYPE_STRING);
-				_props.add(prop);
-			} else {
-				EnumPropertyDescriptor prop = new EnumPropertyDescriptor();
-				prop.setName("OS");
-				if (i == 0)
-					prop.setTitle("Платформа");
-				else
-					prop.setTitle("Enumeration " + Integer.toString(i));
-
-				if (i == 0) {
-					prop.getValues()
-							.add(new EnumPropertyDescriptor.EnumValue("1",
-									"Android"));
-					prop.getValues().add(
-							new EnumPropertyDescriptor.EnumValue("2", "iOS"));
-					prop.getValues().add(
-							new EnumPropertyDescriptor.EnumValue("3",
-									"Windows Phone"));
-				} else {
-					int size = random.nextInt(20) + 2;
-					for (int j = 0; j < size; j++) {
-						prop.getValues().add(
-								new EnumPropertyDescriptor.EnumValue(Integer
-										.toString(j), "Значение"
-										+ Integer.toString(j)));
-					}
-				}
-				prop.setType(EnumPropertyDescriptor.TYPE_STRING);
-
-				_props.add(prop);
-			}
-		}
-	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +61,7 @@ public class SearchActivity extends BaseActivity {
 
 		String title = intent.getStringExtra(TITLE_EXTRA_KEY);
 		getActionBar().setTitle(title);
+		_nodeId = intent.getLongExtra(NODE_ID_EXTRA_KEY, 0);
 
 		super.onCreate(savedInstanceState);
 	}
@@ -134,7 +69,9 @@ public class SearchActivity extends BaseActivity {
 	@Override
 	protected View createMainView(ViewGroup parent) {
 		
-		generateData();
+		CatalogNode node = Repository.get(null).getCatalogManager().getNodeById(_nodeId);
+		_props.clear();
+		_props.addAll(node.getPropertiesCopy());
 		
 		View view = getLayoutInflater().inflate(R.layout.search_activity,
 				parent, false);
@@ -166,7 +103,9 @@ public class SearchActivity extends BaseActivity {
 	}
 
 	void onButtonSearchClicked() {
+		SearchResultsActivity.searchProperties = _props;
 		Intent intent = new Intent(this, SearchResultsActivity.class);
+		intent.putExtra(SearchResultsActivity.EXTRA_KEY_NODE_ID, _nodeId);
 		startActivity(intent);
 	}
 

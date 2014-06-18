@@ -45,9 +45,9 @@ public class CatalogManager
 		// item.setShareImgPress("SharePress.png");
 		item.setCountButtonLableColor(Color.rgb(125, 125, 125));
 		return item;
-		//return _catalogSettings;
+		// return _catalogSettings;
 	}
-	
+
 	public void setSettings(CatalogSettings settings)
 	{
 		_catalogSettings = settings;
@@ -76,6 +76,19 @@ public class CatalogManager
 				items.add(el);
 		}
 		return items;
+	}
+
+	public CatalogNode getNodeById(long nodeId)
+	{
+		Catalog item = getCatalog();
+
+		for (CatalogNode el : item.getNodes())
+		{
+			if (el.getCatalogId() == item.getId() && el.getId() == nodeId)
+				return el;
+		}
+		
+		return null;
 	}
 
 	public void addCatalog(Catalog item)

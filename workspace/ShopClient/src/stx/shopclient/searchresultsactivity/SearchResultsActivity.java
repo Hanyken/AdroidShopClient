@@ -29,6 +29,7 @@ import stx.shopclient.R;
 import stx.shopclient.catalogbrowseractivity.CatalogBrowserActivity;
 import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.entity.Token;
+import stx.shopclient.entity.properties.PropertyDescriptor;
 import stx.shopclient.itemactivity.ItemActivity;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.utils.ImageDownloadTask;
@@ -39,6 +40,7 @@ public class SearchResultsActivity extends BaseActivity implements
 {
 	public static final String EXTRA_KEY_QUICKSEARCH = "quick_earch";
 	public static final String EXTRA_KEY_QUICKSEARCH_QUERY = "quickquery_query";
+	public static final String EXTRA_KEY_NODE_ID = "nodeId";
 
 	boolean _isQuickSearch = false;
 	String _quickSearchQuery;
@@ -47,6 +49,10 @@ public class SearchResultsActivity extends BaseActivity implements
 	ListAdapter _adapter;
 
 	List<CatalogItem> _items = new ArrayList<CatalogItem>();
+
+	Collection<PropertyDescriptor> _searchProperties;
+	long _nodeId;
+	public static Collection<PropertyDescriptor> searchProperties;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -58,6 +64,9 @@ public class SearchResultsActivity extends BaseActivity implements
 				false);
 		_quickSearchQuery = getIntent().getStringExtra(
 				EXTRA_KEY_QUICKSEARCH_QUERY);
+		_nodeId = getIntent().getLongExtra(EXTRA_KEY_NODE_ID, 0);
+
+		_searchProperties = searchProperties;
 
 		getActionBar().setTitle("Результаты поиска");
 	}
@@ -137,8 +146,19 @@ public class SearchResultsActivity extends BaseActivity implements
 			try
 			{
 				WebClient client = createWebClient();
-				items = client.quickSearchItems(Token.getCurrent(),
-						Repository.CatalogId, _quickSearchQuery, 1, 10);
+
+				if (_isQuickSearch)
+				{
+					items = client.quickSearchItems(Token.getCurrent(),
+							Repository.CatalogId, _quickSearchQuery, 1, 10);
+				}
+				else
+				{
+					String filterXml = PropertyDescriptor.getSearchPropertiesXML(_searchProperties);
+					
+					items = client.searchItems(Token.getCurrent(), _nodeId,
+							_items.size() + 1, 50, 0, true, filterXml);
+				}
 			}
 			catch (Throwable ex)
 			{
@@ -212,14 +232,14 @@ public class SearchResultsActivity extends BaseActivity implements
 
 			nameTextView.setText(item.getName());
 			descriptionTextView.setText(Double.toString(item.getPrice())
-					+ " рублей");			
+					+ " рублей");
 
 			ratingBar.setRating((float) item.getRating());
-			
+
 			ImageView imgView = (ImageView) view.findViewById(R.id.imageView);
 			if (item.getIco() != null)
-				ImageDownloadTask.startNew(imgView,
-						SearchResultsActivity.this, item.getIco());
+				ImageDownloadTask.startNew(imgView, SearchResultsActivity.this,
+						item.getIco());
 		}
 
 		@Override

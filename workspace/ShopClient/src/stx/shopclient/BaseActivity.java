@@ -284,6 +284,8 @@ public class BaseActivity extends FragmentActivity
 			Intent intent = new Intent(this, SearchActivity.class);
 			intent.putExtra(SearchActivity.TITLE_EXTRA_KEY,
 					getSearchActivityTitle());
+			intent.putExtra(SearchActivity.NODE_ID_EXTRA_KEY,
+					getSearchActivityNodeId());
 			startActivity(intent);
 		}
 		else if (item.getId() == MainMenuItem.CART_MENU_ITEM_ID)
@@ -311,6 +313,11 @@ public class BaseActivity extends FragmentActivity
 	protected String getSearchActivityTitle()
 	{
 		return getActionBar().getTitle().toString();
+	}
+	
+	protected long getSearchActivityNodeId()
+	{
+		return 0;
 	}
 
 	protected View createMainView(ViewGroup parent)
