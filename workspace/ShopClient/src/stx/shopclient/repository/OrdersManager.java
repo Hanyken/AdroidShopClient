@@ -132,8 +132,9 @@ public class OrdersManager
 					if (prop.getClass() == NumberPropertyDescriptor.class)
 					{
 						((NumberPropertyDescriptor) prop)
-								.setCurrentMaxValue(Double.parseDouble(op
+								.setCurrentMinValue(Double.parseDouble(op
 										.getValue()));
+						((NumberPropertyDescriptor) prop).setCurrentValueDefined(true);
 					}
 					else if (prop.getClass() == DatePropertyDescriptor.class)
 					{
@@ -144,7 +145,8 @@ public class OrdersManager
 							GregorianCalendar calendar = new GregorianCalendar();
 							calendar.setTime(dateParser.parse(op.getValue()));
 							((DatePropertyDescriptor) prop)
-									.setCurrentMaxValue(calendar);
+									.setCurrentMinValue(calendar);
+							((DatePropertyDescriptor) prop).setCurrentValueDefined(true);
 						}
 						catch (Exception ex)
 						{
