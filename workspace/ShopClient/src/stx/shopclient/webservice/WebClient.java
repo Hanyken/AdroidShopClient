@@ -61,28 +61,29 @@ public class WebClient
 	private String request(String relativeUrl, HttpArgs args, boolean isGet)
 	{
 		try
-		{			
+		{
 			InputStream stream = requestStream(relativeUrl, args, isGet);
 
 			String str = convertStreamToString(stream);
-			
+
 			if (str.startsWith("<Result>"))
 			{
 				ResultParser parser = new ResultParser();
 				Collection<ResultEntity> result = parser.parseString(str);
-				if (result.size() > 0 && result.iterator().next().getCode() == ServiceResponseCode.ACCESS_DENIED)
+				if (result.size() > 0
+						&& result.iterator().next().getCode() == ServiceResponseCode.ACCESS_DENIED)
 				{
-					
-					login(UserAccount.getLogin(), UserAccount.getPassword(), UserAccount.getWidth(), UserAccount.getHeight());
+
+					login(UserAccount.getLogin(), UserAccount.getPassword(),
+							UserAccount.getWidth(), UserAccount.getHeight());
 					args.setToken(Token.getCurrent());
-					
-					
+
 					stream = requestStream(relativeUrl, args, isGet);
 					str = convertStreamToString(stream);
 
 				}
 			}
-			
+
 			return str;
 		}
 		catch (Throwable ex)
@@ -91,7 +92,8 @@ public class WebClient
 		}
 	}
 
-	private InputStream requestStream(String relativeUrl, HttpArgs args, boolean isGet)
+	private InputStream requestStream(String relativeUrl, HttpArgs args,
+			boolean isGet)
 	{
 		try
 		{
@@ -273,7 +275,7 @@ public class WebClient
 		Repository.get(null).getItemsManager().addAll(items);
 		return items;
 	}
-	
+
 	public Collection<CatalogItem> getNodeItem(Token token, long itemId)
 	{
 		HttpArgs args = new HttpArgs();
@@ -420,13 +422,13 @@ public class WebClient
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
 		args.addParam("itemId", itemId);
-		args.addParam("rating", (byte)rating);
+		args.addParam("rating", (byte) rating);
 		args.addParam("description", description);
 
 		String response = request("overview/Edit", args, true);
 		ResultParser parser = new ResultParser();
 		Collection<ResultEntity> items = parser.parseString(response);
-		
+
 		return items.iterator().next().getCode() == ServiceResponseCode.OK;
 	}
 
@@ -475,7 +477,7 @@ public class WebClient
 		else
 			return new UpdateResultEntity(items.iterator().next());
 	}
-	
+
 	// Order
 	public Collection<Order> getOrders(Token token, long catalogId)
 	{
@@ -485,15 +487,15 @@ public class WebClient
 
 		String response = request("order/get", args, true);
 		Collection<Order> items = new OrderParser().parseString(response);
-		
+
 		OrdersManager ordersManager = Repository.get(null).getOrderManager();
-		for(Order order : items)
+		for (Order order : items)
 		{
 			ordersManager.addOrder(order);
 		}
 		return items;
 	}
-	
+
 	public long getOrderCount(Token token, long catalogId)
 	{
 		HttpArgs args = new HttpArgs();
@@ -501,28 +503,30 @@ public class WebClient
 		args.addParam("catalogId", catalogId);
 
 		String response = request("order/count", args, true);
-		Collection<CountResultEntity> items = new CountResultParser().parseString(response);
-		
+		Collection<CountResultEntity> items = new CountResultParser()
+				.parseString(response);
+
 		if (items.size() == 0)
 			throw new RuntimeException("No count returned");
 		else
 			return items.iterator().next().getCount();
 	}
-	
-	public void addOrder(Token token, long itemId, double count, Collection<OrderProperty> properties)
+
+	public void addOrder(Token token, long itemId, double count,
+			Collection<OrderProperty> properties)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
 		args.addParam("itemId", itemId);
 		args.addParam("count", count);
-		for(OrderProperty prop : properties)
+		for (OrderProperty prop : properties)
 		{
 			args.addParam(prop.getName(), prop.getValue());
 		}
 
 		request("order/add", args, false);
 	}
-	
+
 	public void deleteOrder(Token token, long orderId)
 	{
 		HttpArgs args = new HttpArgs();
@@ -531,7 +535,7 @@ public class WebClient
 
 		request("order/delete", args, true);
 	}
-	
+
 	public Collection<Payment> getPayments(Token token, long catalogId)
 	{
 		HttpArgs args = new HttpArgs();
@@ -540,11 +544,10 @@ public class WebClient
 
 		String response = request("payment/get", args, true);
 		Collection<Payment> items = new PaymentParser().parseString(response);
-		
 
 		return items;
 	}
-	
+
 	public void addPayment(Token token, long catalogId)
 	{
 		HttpArgs args = new HttpArgs();
@@ -553,6 +556,5 @@ public class WebClient
 
 		request("payment/add", args, true);
 	}
-	
-	
+
 }

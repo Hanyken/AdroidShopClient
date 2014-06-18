@@ -80,7 +80,7 @@ public class NumberPropertyDescriptor extends PropertyDescriptor {
 	
 	@Override
 	public String getStringValue() {
-		return Double.toString(_currentMaxValue);
+		return Double.toString(getCurrentValue());
 	}
 	
 	@Override

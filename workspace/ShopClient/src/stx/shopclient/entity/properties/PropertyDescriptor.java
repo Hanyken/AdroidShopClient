@@ -1,6 +1,10 @@
 package stx.shopclient.entity.properties;
 
-public abstract class PropertyDescriptor {
+import java.io.Serializable;
+
+import org.apache.commons.lang3.SerializationUtils;
+
+public abstract class PropertyDescriptor implements Serializable {
 	private String _type;
 	private String _name;
 	private String _title;
@@ -69,13 +73,6 @@ public abstract class PropertyDescriptor {
 	
 	public PropertyDescriptor cloneProperty()
 	{
-		try
-		{
-			return (PropertyDescriptor)this.clone();
-		}
-		catch (CloneNotSupportedException e)
-		{
-			throw new RuntimeException(e);
-		}
+		return (PropertyDescriptor)SerializationUtils.clone(this);
 	}
 }
