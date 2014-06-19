@@ -10,6 +10,7 @@ public class Catalog
 	private long _id;
 	private String _name;
 	private String _description;
+	private String _logo;
 	private Date _lastModification;
 	private int _nodeCount;
 	private List<CatalogNode> _nodes = new ArrayList<CatalogNode>();
@@ -45,6 +46,16 @@ public class Catalog
 	public void setDescription(String description)
 	{
 		_description = description;
+	}
+	
+	public String getLogo()
+	{
+		return _logo;
+	}
+
+	public void setLogo(String logo)
+	{
+		_logo = logo;
 	}
 	
 	public Date getLastModification()
