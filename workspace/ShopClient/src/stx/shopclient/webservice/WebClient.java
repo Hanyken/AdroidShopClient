@@ -310,15 +310,21 @@ public class WebClient
 			int start, int offset, int orderType, boolean deep, String filter)
 	{
 		HttpArgs args = new HttpArgs();
-		/*args.addParam("token", token);
-		args.addParam("catalogNodeId", catalogNodeId);
-		args.addParam("start", start);
-		args.addParam("offset", offset);
-		args.addParam("orderType", offset);
-		args.addParam("deep", deep);*/
+		/*
+		 * args.addParam("token", token); args.addParam("catalogNodeId",
+		 * catalogNodeId); args.addParam("start", start);
+		 * args.addParam("offset", offset); args.addParam("orderType", offset);
+		 * args.addParam("deep", deep);
+		 */
 		args.addParam("filter", filter);
 
-		String response = request("item/get?token="+token.getToken()+"&catalogNodeId="+Long.toString(catalogNodeId)+"&start="+Integer.toString(start)+"&offset="+Integer.toString(offset)+"&orderType="+Integer.toString(orderType)+"&deep="+Boolean.toString(deep), args, false);
+		String response = request(
+				"item/get?token=" + token.getToken() + "&catalogNodeId="
+						+ Long.toString(catalogNodeId) + "&start="
+						+ Integer.toString(start) + "&offset="
+						+ Integer.toString(offset) + "&orderType="
+						+ Integer.toString(orderType) + "&deep="
+						+ Boolean.toString(deep), args, false);
 		Collection<CatalogItem> items = new ItemParser().parseString(response);
 		Repository.get(null).getItemsManager().addAll(items);
 		return items;
@@ -359,7 +365,7 @@ public class WebClient
 		Repository.get(null).getItemsManager().addAll(items);
 		return items;
 	}
-	
+
 	public Collection<CatalogItem> getCrosssale(Token token, long itemId)
 	{
 		HttpArgs args = new HttpArgs();
@@ -371,8 +377,9 @@ public class WebClient
 		Repository.get(null).getItemsManager().addAll(items);
 		return items;
 	}
-	
-	public Collection<CatalogItem> getGroupItems(Token token, long itemId, long groupId)
+
+	public Collection<CatalogItem> getGroupItems(Token token, long itemId,
+			long groupId)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
@@ -537,28 +544,41 @@ public class WebClient
 			return items.iterator().next().getCount();
 	}
 
-	public void addOrder(Token token, long itemId, double count,
+	public void addOrder(Token token, long itemId,
 			Collection<OrderProperty> properties)
 	{
 		HttpArgs args = new HttpArgs();
+		String count = "0";
+
 		for (OrderProperty prop : properties)
 		{
 			args.addParam(prop.getName(), prop.getValue());
+
+			if (prop.getName().equals(OrderProperty.COUNT_PROPERTY_NAME))
+				count = prop.getValue();
 		}
 
-		request("order/add?token="+token.getToken()+"&itemId="+Long.toString(itemId)+"&count="+Double.toString(count), args, false);
+		request("order/add?token=" + token.getToken() + "&itemId="
+				+ Long.toString(itemId) + "&count=" + count, args, false);
 	}
-	
-	public void editOrder(Token token, long orderId, double count,
+
+	public void editOrder(Token token, long orderId,
 			Collection<OrderProperty> properties)
 	{
 		HttpArgs args = new HttpArgs();
+		String count = "0";
+		
 		for (OrderProperty prop : properties)
 		{
 			args.addParam(prop.getName(), prop.getValue());
+			
+			if (prop.getName().equals(OrderProperty.COUNT_PROPERTY_NAME))
+				count = prop.getValue();
 		}
 
-		request("order/edit?token="+token.getToken()+"&orderId="+Long.toString(orderId)+"&count="+Double.toString(count), args, false);
+		request("order/edit?token=" + token.getToken() + "&orderId="
+				+ Long.toString(orderId) + "&count=" + count,
+				args, false);
 	}
 
 	public void deleteOrder(Token token, long orderId)

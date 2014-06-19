@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
 
     <stx.shopclient.ui.common.properties.PropertiesList
         android:id="@+id/propertiesList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="100dp"
+        android:layout_above="@+id/btnEditorder"
+        android:layout_alignParentTop="true" >
     </stx.shopclient.ui.common.properties.PropertiesList>
 
-</LinearLayout>
+    <Button
+        android:id="@+id/btnEditorder"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:text="Применить" />
+
+</RelativeLayout>

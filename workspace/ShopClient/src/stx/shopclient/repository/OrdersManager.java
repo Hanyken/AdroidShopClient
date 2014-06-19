@@ -21,7 +21,7 @@ public class OrdersManager
 {
 	private ArrayList<Order> _Orders;
 	private ArrayList<OrderProperty> _Properties;
-	private int _orderCount;
+	private long _orderCount;
 
 	public OrdersManager()
 	{
@@ -91,6 +91,16 @@ public class OrdersManager
 		return flag;
 	}
 
+	public Order getOrderById(long id)
+	{
+		for (Order order : _Orders)
+		{
+			if (order.getId() == id)
+				return order;
+		}
+		return null;
+	}
+
 	public Collection<OrderProperty> getOrderProperties(long orderId)
 	{
 		ArrayList<OrderProperty> items = new ArrayList<OrderProperty>();
@@ -134,7 +144,8 @@ public class OrdersManager
 						((NumberPropertyDescriptor) prop)
 								.setCurrentMinValue(Double.parseDouble(op
 										.getValue()));
-						((NumberPropertyDescriptor) prop).setCurrentValueDefined(true);
+						((NumberPropertyDescriptor) prop)
+								.setCurrentValueDefined(true);
 					}
 					else if (prop.getClass() == DatePropertyDescriptor.class)
 					{
@@ -146,7 +157,8 @@ public class OrdersManager
 							calendar.setTime(dateParser.parse(op.getValue()));
 							((DatePropertyDescriptor) prop)
 									.setCurrentMinValue(calendar);
-							((DatePropertyDescriptor) prop).setCurrentValueDefined(true);
+							((DatePropertyDescriptor) prop)
+									.setCurrentValueDefined(true);
 						}
 						catch (Exception ex)
 						{
@@ -189,12 +201,28 @@ public class OrdersManager
 		return result;
 	}
 
-	public int getOrderCount()
+	public static List<OrderProperty> getOrderPropertiesFromDescriptors(
+			Collection<PropertyDescriptor> properties)
+	{
+		ArrayList<OrderProperty> items = new ArrayList<OrderProperty>();
+		
+		for (PropertyDescriptor el : properties)
+		{
+			OrderProperty item = new OrderProperty();
+			item.setName(el.getName());
+			item.setValue(el.getStringValue());
+			items.add(item);
+		}
+		
+		return items;
+	}
+
+	public long getOrderCount()
 	{
 		return _orderCount;
 	}
 
-	public void setOrderCount(int orderCount)
+	public void setOrderCount(long orderCount)
 	{
 		_orderCount = orderCount;
 	}

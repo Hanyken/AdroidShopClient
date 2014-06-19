@@ -32,18 +32,18 @@ public class MainMenuListAdapter extends BaseAdapter
 
 		addDefaultMenuItems();
 	}
-	
+
 	@Override
 	public void notifyDataSetChanged()
 	{
 		_menuItemsFiltered.clear();
-		
-		for(MainMenuItem item : _menuItems)
+
+		for (MainMenuItem item : _menuItems)
 		{
-			if(_context.initMainMenuItem(item))
+			if (_context.initMainMenuItem(item))
 				_menuItemsFiltered.add(item);
 		}
-		
+
 		super.notifyDataSetChanged();
 	}
 
@@ -67,8 +67,8 @@ public class MainMenuListAdapter extends BaseAdapter
 		_cartMenuItem.setName("Корзина");
 		_cartMenuItem.setHasIcon(true);
 		_cartMenuItem.setIconId(R.drawable.img_shopping_cart);
-		_cartMenuItem.setCount(Repository.get(_context).getOrderManager()
-				.getOrderItemsCount());
+		_cartMenuItem.setCount((int) Repository.get(_context).getOrderManager()
+				.getOrderCount());
 		_menuItems.add(_cartMenuItem);
 
 		item = new MainMenuItem();
@@ -90,10 +90,10 @@ public class MainMenuListAdapter extends BaseAdapter
 		item.setHasIcon(true);
 		_menuItems.add(item);
 	}
-	
+
 	@Override
 	public int getCount()
-	{		
+	{
 		return _menuItemsFiltered.size();
 	}
 
@@ -131,7 +131,8 @@ public class MainMenuListAdapter extends BaseAdapter
 		{
 			if (item.getIconId() != 0)
 				image.setImageResource(item.getIconId());
-		} else
+		}
+		else
 		{
 			image.setVisibility(View.INVISIBLE);
 		}

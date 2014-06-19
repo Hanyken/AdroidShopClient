@@ -65,6 +65,12 @@ public class ItemActivity extends BaseActivity
 
 		return view;
 	}
+	
+	@Override
+	protected long getSearchActivityNodeId()
+	{
+		return _Item.getNodeId();
+	}
 
 	void loadUI(View view)
 	{

@@ -67,6 +67,15 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 	}
 
 	@Override
+	protected void onStart()
+	{
+		super.onStart();
+
+		if (_adapter != null)
+			_adapter.notifyDataSetChanged();
+	}
+
+	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo)
 	{
@@ -195,13 +204,15 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 			Intent intent = new Intent(this, OrderPropertiesActivity.class);
 			intent.putExtra(OrderPropertiesActivity.TITLE_EXTRA_KEY, order
 					.getItem().getName());
+			intent.putExtra(OrderPropertiesActivity.ORDER_ID_EXTRA_KEY,
+					order.getId());
 			startActivity(intent);
 		}
 		else if (item.getItemId() == R.id.delete)
 		{
 			RemoveTask task = new RemoveTask();
 			task.order = order;
-			task.execute();			
+			task.execute();
 		}
 
 		return true;
@@ -283,7 +294,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 			try
 			{
 				WebClient client = createWebClient();
-				client.deleteOrder(Token.getCurrent(), order.getId());				
+				client.deleteOrder(Token.getCurrent(), order.getId());
 			}
 			catch (Throwable ex)
 			{

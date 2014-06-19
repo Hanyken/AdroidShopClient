@@ -5,6 +5,7 @@ import java.util.GregorianCalendar;
 import stx.shopclient.cartactivity.CartActivity;
 import stx.shopclient.discountactivity.DiscountListActivity;
 import stx.shopclient.entity.Catalog;
+import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.entity.Token;
 import stx.shopclient.entity.UpdateResultEntity;
 import stx.shopclient.loginactivity.LoginActivity;
@@ -16,6 +17,7 @@ import stx.shopclient.repository.Repository;
 import stx.shopclient.searchactivity.SearchActivity;
 import stx.shopclient.settings.UserAccount;
 import stx.shopclient.settingsactivity.SettingsActivity;
+import stx.shopclient.styles.ColorButtonDrawable;
 import stx.shopclient.utils.ImageDownloadTask;
 import stx.shopclient.webservice.ServiceResponseCode;
 import stx.shopclient.webservice.WebClient;
@@ -27,7 +29,9 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -71,6 +75,14 @@ public class BaseActivity extends FragmentActivity
 		task.execute();
 	}
 
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+
+		new GetOrderCountTask().execute();
+	}
+
 	void loadUI()
 	{
 		ActionBar actionBar = getActionBar();
@@ -109,7 +121,7 @@ public class BaseActivity extends FragmentActivity
 			{
 
 			}
-		});		
+		});
 
 		_mainViewContainer = (LinearLayout) findViewById(R.id.mainViewContainer);
 
@@ -119,14 +131,14 @@ public class BaseActivity extends FragmentActivity
 		{
 			_mainViewContainer.addView(mainView);
 		}
-		
+
 		ListView _menuList = (ListView) findViewById(R.id.mainMenuList);
 
 		_mainMenuListAdapter = new MainMenuListAdapter(this);
 		_menuList.setAdapter(_mainMenuListAdapter);
 		_menuList.setOnItemClickListener(new MainMenuOnClickListener());
 	}
-	
+
 	public boolean initMainMenuItem(MainMenuItem item)
 	{
 		return true;
@@ -314,7 +326,7 @@ public class BaseActivity extends FragmentActivity
 	{
 		return getActionBar().getTitle().toString();
 	}
-	
+
 	protected long getSearchActivityNodeId()
 	{
 		return 0;
@@ -409,6 +421,21 @@ public class BaseActivity extends FragmentActivity
 		ImageDownloadTask.startNew(view, this, key);
 	}
 
+	public static Drawable getButtonDrawable(CatalogSettings settings)
+	{
+		StateListDrawable drawable = new StateListDrawable();
+		Drawable normal = new ColorButtonDrawable(settings.getBackground());
+		Drawable press = new ColorButtonDrawable(settings.getPressedColor());
+		Drawable disable = new ColorButtonDrawable(settings.getDisableColor());
+
+		drawable.addState(new int[]
+		{ android.R.attr.state_pressed }, press);
+		drawable.addState(new int[]
+		{ -android.R.attr.state_enabled }, disable);
+		drawable.addState(new int[0], normal);
+		return drawable;
+	}
+
 	class CatalogLoadTask extends AsyncTask<Void, Void, Void>
 	{
 		Throwable exception = null;
@@ -484,5 +511,28 @@ public class BaseActivity extends FragmentActivity
 				dialog.show();
 			}
 		}
+	}
+
+	class GetOrderCountTask extends AsyncTask<Void, Void, Void>
+	{
+
+		@Override
+		protected Void doInBackground(Void... params)
+		{
+			try
+			{
+				WebClient client = createWebClient();
+				long count = client.getOrderCount(Token.getCurrent(),
+						Repository.CatalogId);
+				Repository.get(null).getOrderManager().setOrderCount(count);
+			}
+			catch (Throwable ex)
+			{
+				Log.e("GetOrderCountTask", ex.getLocalizedMessage(), ex);
+			}
+
+			return null;
+		}
+
 	}
 }

@@ -1,6 +1,7 @@
 package stx.shopclient.orderactivity;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import android.app.ProgressDialog;
@@ -25,13 +26,15 @@ import stx.shopclient.entity.OrderProperty;
 import stx.shopclient.entity.Token;
 import stx.shopclient.entity.properties.PropertyDescriptor;
 import stx.shopclient.itemactivity.ItemActivity;
+import stx.shopclient.repository.OrdersManager;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.styles.ColorButtonDrawable;
 import stx.shopclient.ui.common.properties.PropertiesList;
+import stx.shopclient.utils.ImageDownloadTask;
 import stx.shopclient.webservice.WebClient;
 
 public class OrderActivity extends BaseActivity implements OnClickListener
-{
+{	
 	private long ItemId;
 	private TextView lblItemName;
 	private ImageView imgIco;
@@ -39,6 +42,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener
 	private LinearLayout llCountable;
 	private Button btnOrder;
 	List<PropertyDescriptor> properties = new ArrayList<PropertyDescriptor>();
+	CatalogItem _item;
 
 	@Override
 	protected View createMainView(ViewGroup parent)
@@ -51,8 +55,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener
 
 		CatalogSettings settings = Repository.get(this).getCatalogManager()
 				.getSettings();
-		CatalogItem item = Repository.get(this).getItemsManager()
-				.getItem(ItemId);
+		_item = Repository.get(this).getItemsManager().getItem(ItemId);
 
 		lblItemName = (TextView) view.findViewById(R.id.lblItemName);
 		plProperies = (PropertiesList) view.findViewById(R.id.plProperties);
@@ -62,22 +65,22 @@ public class OrderActivity extends BaseActivity implements OnClickListener
 
 		llCountable.setVisibility(View.GONE);
 
-		lblItemName.setText(item.getName());
+		lblItemName.setText(_item.getName());
 
 		btnOrder.setOnClickListener(this);
-		btnOrder.setBackground(getBueButtonDrawable(settings));
+		btnOrder.setBackground(getButtonDrawable(settings));
 		btnOrder.setTextColor(settings.getForegroundColor());
 
 		plProperies.setAllowClear(false);
 
-		imgIco.setImageBitmap(Repository.get(this).getImagesManager()
-				.getImage(item.getIco()));
+		if (_item.getIco() != null)
+			ImageDownloadTask.startNew(imgIco, this, _item.getIco());
 
-		properties.addAll(item.getOrderProperties());
+		properties.addAll(_item.getOrderProperties());
 		plProperies.setProperties(properties);
 
 		return view;
-	}
+	}	
 
 	@Override
 	public void onClick(View v)
@@ -94,22 +97,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener
 
 		new AddOrderTask().execute();
 	}
-
-	private Drawable getBueButtonDrawable(CatalogSettings settings)
-	{
-		StateListDrawable drawable = new StateListDrawable();
-		Drawable normal = new ColorButtonDrawable(settings.getBackground());
-		Drawable press = new ColorButtonDrawable(settings.getPressedColor());
-		Drawable disable = new ColorButtonDrawable(settings.getDisableColor());
-
-		drawable.addState(new int[]
-		{ android.R.attr.state_pressed }, press);
-		drawable.addState(new int[]
-		{ -android.R.attr.state_enabled }, disable);
-		drawable.addState(new int[0], normal);
-		return drawable;
-	}
-
+	
 	class AddOrderTask extends AsyncTask<Void, Void, Void>
 	{
 		ProgressDialog dialog;
@@ -127,22 +115,10 @@ public class OrderActivity extends BaseActivity implements OnClickListener
 		{
 			try
 			{
-				ArrayList<OrderProperty> items = new ArrayList<OrderProperty>();
-				double count = 0;
-				for (PropertyDescriptor el : properties)
-				{
-					OrderProperty item = new OrderProperty();
-					item.setName(el.getName());
-					item.setValue(el.getStringValue());
-					items.add(item);
-
-					if (item.getName()
-							.equals(OrderProperty.COUNT_PROPERTY_NAME))
-						count = Double.parseDouble(item.getValue());
-				}
+				Collection<OrderProperty> orderProps = OrdersManager.getOrderPropertiesFromDescriptors(properties);
 
 				WebClient client = createWebClient();
-				client.addOrder(Token.getCurrent(), ItemId, count, items);
+				client.addOrder(Token.getCurrent(), ItemId, orderProps);
 			}
 			catch (Throwable ex)
 			{

@@ -1,61 +1,131 @@
 package stx.shopclient.order_properties_activity;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
+import stx.shopclient.entity.CatalogSettings;
+import stx.shopclient.entity.Order;
+import stx.shopclient.entity.OrderProperty;
+import stx.shopclient.entity.Token;
 import stx.shopclient.entity.properties.DatePropertyDescriptor;
 import stx.shopclient.entity.properties.NumberPropertyDescriptor;
 import stx.shopclient.entity.properties.PropertyDescriptor;
+import stx.shopclient.orderactivity.OrderActivity;
+import stx.shopclient.repository.OrdersManager;
+import stx.shopclient.repository.Repository;
 import stx.shopclient.ui.common.properties.PropertiesList;
+import stx.shopclient.webservice.WebClient;
 
-public class OrderPropertiesActivity extends BaseActivity {
-	
+public class OrderPropertiesActivity extends BaseActivity
+{
+
 	public static final String TITLE_EXTRA_KEY = "title";
-	
+	public static final String ORDER_ID_EXTRA_KEY = "orderId";
+
+	long _orderId;
+	Order _order;
 	PropertiesList _list;
 	List<PropertyDescriptor> _properties = new ArrayList<PropertyDescriptor>();
-	
+
 	@Override
-	protected View createMainView(ViewGroup parent) {
-		generateData();
-		
+	protected View createMainView(ViewGroup parent)
+	{
+		_orderId = getIntent().getLongExtra(ORDER_ID_EXTRA_KEY, 0);
+		_order = Repository.get(null).getOrderManager().getOrderById(_orderId);
+
+		Collection<PropertyDescriptor> properties = OrdersManager
+				.getOrderPropertiesAsDescriptiors(_order.getItem()
+						.getOrderProperties(), _order.getProperties());
+		_properties.addAll(properties);
+
 		getActionBar().setTitle(getIntent().getStringExtra(TITLE_EXTRA_KEY));
-		
-		View view = getLayoutInflater().inflate(R.layout.order_properties_activity, parent, false);
-		
-		_list = (PropertiesList)view.findViewById(R.id.propertiesList);
-		
+
+		View view = getLayoutInflater().inflate(
+				R.layout.order_properties_activity, parent, false);
+
+		_list = (PropertiesList) view.findViewById(R.id.propertiesList);
+
 		_list.setAllowClear(false);
 		_list.setProperties(_properties);
-		
+
+		Button applyButton = (Button) view.findViewById(R.id.btnEditorder);
+		CatalogSettings settings = Repository.get(null).getCatalogManager()
+				.getSettings();
+		applyButton.setTextColor(settings.getForegroundColor());
+		applyButton.setBackground(BaseActivity.getButtonDrawable(settings));
+		applyButton.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				applyButtonClick();
+			}
+		});
+
 		return view;
 	}
-	
-	void generateData(){
-		NumberPropertyDescriptor prop = new NumberPropertyDescriptor();
-		prop.setName("qwe");
-		prop.setTitle("Количество");
-		prop.setMinValue(1);
-		prop.setMaxValue(99999);
-		prop.setFloat(false);
-		prop.setRange(false);
-		prop.setCurrentMinValue(1);
-		prop.setCurrentValueDefined(true);		
-		_properties.add(prop);
-		
-		DatePropertyDescriptor prop1 = new DatePropertyDescriptor();
-		prop1.setName("asd");
-		prop1.setTitle("Дата");
-		prop1.setMinValue(new GregorianCalendar(1997, 1, 1));
-		prop1.setMaxValue(new GregorianCalendar(2020, 1, 1));
-		prop1.setCurrentMinValue(new GregorianCalendar(2015, 1, 1));
-		prop1.setCurrentValueDefined(true);
-		prop1.setRange(false);
-		_properties.add(prop1);
+
+	void applyButtonClick()
+	{
+		new EditOrderTask().execute();
+	}
+
+	class EditOrderTask extends AsyncTask<Void, Void, Void>
+	{
+		ProgressDialog dialog;
+		Throwable exception;
+
+		@Override
+		protected void onPreExecute()
+		{
+			dialog = ProgressDialog.show(OrderPropertiesActivity.this,
+					"Загрузка", "Изменение параметров заказа");
+		}
+
+		@Override
+		protected Void doInBackground(Void... params)
+		{
+			try
+			{
+				Collection<OrderProperty> orderProps = OrdersManager
+						.getOrderPropertiesFromDescriptors(_properties);
+
+				WebClient client = createWebClient();
+				client.editOrder(Token.getCurrent(), _orderId, orderProps);
+			}
+			catch (Throwable ex)
+			{
+				exception = ex;
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result)
+		{
+			dialog.dismiss();
+
+			if (exception != null)
+				Toast.makeText(OrderPropertiesActivity.this,
+						exception.getLocalizedMessage(), Toast.LENGTH_LONG)
+						.show();
+			else
+			{
+				Toast.makeText(OrderPropertiesActivity.this, "Заказ изменен",
+						Toast.LENGTH_LONG).show();
+				finish();
+			}
+		}
 	}
 }

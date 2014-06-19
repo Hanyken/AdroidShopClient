@@ -2,6 +2,7 @@ package stx.shopclient.itemactivity;
 
 import java.text.DecimalFormat;
 
+import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.repository.Repository;
@@ -70,7 +71,7 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 
 		rlButtonPanel.setBackgroundColor(settings.getItemPanelColor());
 		btnOrder.setTextColor(settings.getForegroundColor());
-		btnOrder.setBackground(getBueButtonDrawable());
+		btnOrder.setBackground(BaseActivity.getButtonDrawable(settings));
 
 		btnShare.setBackground(getShareButtonDrawable());
 		btnOverview.setBackground(getCommentButtonDrawable());
@@ -121,22 +122,6 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 		((ItemActivity) getActivity()).onBarButtonClick(view);
 	}
 
-	
-	
-	
-	private Drawable getBueButtonDrawable()
-	{
-		StateListDrawable drawable = new StateListDrawable();
-		Drawable normal = new ColorButtonDrawable(settings.getBackground());
-		Drawable press = new ColorButtonDrawable(settings.getPressedColor());
-		Drawable disable = new ColorButtonDrawable(settings.getDisableColor());
-
-		drawable.addState(new int[] { android.R.attr.state_pressed }, press);
-		drawable.addState(new int[] { -android.R.attr.state_enabled }, disable);
-		drawable.addState(new int[0], normal);
-		return drawable;
-	}
-	
 	private Drawable getShareButtonDrawable()
 	{
 		StateListDrawable drawable = new StateListDrawable();
