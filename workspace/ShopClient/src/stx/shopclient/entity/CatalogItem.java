@@ -30,6 +30,8 @@ public class CatalogItem
 	private List<Overview> _overviews = new ArrayList<Overview>();
 	private List<PropertyDescriptor> _properties = new ArrayList<PropertyDescriptor>();
 	private List<PropertyDescriptor> _orderProperties = new ArrayList<PropertyDescriptor>();
+	
+	private List<CatalogItemGroup> _groups = new ArrayList<CatalogItemGroup>();
 
 	public long getRowNumber()
 	{
@@ -155,6 +157,16 @@ public class CatalogItem
 	{
 		_orderProperties.clear();
 		_orderProperties.addAll(orderProperties);
+	}
+	
+	public Collection<CatalogItemGroup> getGroups()
+	{
+		return _groups;
+	}
+	public void setGroups(Collection<CatalogItemGroup> groups)
+	{
+		_groups.clear();
+		_groups.addAll(groups);
 	}
 	
 	public Double getPrice()

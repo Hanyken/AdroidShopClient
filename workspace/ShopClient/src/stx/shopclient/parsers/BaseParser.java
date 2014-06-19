@@ -50,6 +50,12 @@ public abstract class BaseParser<T>
 		NodeList nl = doc.getElementsByTagName(getElementName());
 		return getElements(nl);
 	}
+	
+	public Collection<T> parseElement(Element e)
+	{
+		NodeList nl = e.getElementsByTagName(getElementName());
+		return getElements(nl);
+	}
 
 	public Collection<T> getElements(NodeList nl)
 	{
