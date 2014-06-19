@@ -102,6 +102,8 @@ public class OrderPropertiesActivity extends BaseActivity
 
 				WebClient client = createWebClient();
 				client.editOrder(Token.getCurrent(), _orderId, orderProps);
+				
+				_order.setProperties(orderProps);
 			}
 			catch (Throwable ex)
 			{

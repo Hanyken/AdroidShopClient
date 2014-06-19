@@ -133,6 +133,11 @@ public class BaseActivity extends FragmentActivity
 		}
 
 		ListView _menuList = (ListView) findViewById(R.id.mainMenuList);
+		_menuList.setBackgroundDrawable(new ColorDrawable(Repository.get(this)
+				.getCatalogManager().getSettings().getBackground()));
+		_menuList.setDivider(new ColorDrawable(Repository.get(this)
+				.getCatalogManager().getSettings().getForegroundColor()));
+		_menuList.setDividerHeight(1);
 
 		_mainMenuListAdapter = new MainMenuListAdapter(this);
 		_menuList.setAdapter(_mainMenuListAdapter);
@@ -141,6 +146,10 @@ public class BaseActivity extends FragmentActivity
 
 	public boolean initMainMenuItem(MainMenuItem item)
 	{
+		if (item.getId() == MainMenuItem.CART_MENU_ITEM_ID)
+			item.setCount((int) Repository.get(null).getOrderManager()
+					.getOrderCount());
+
 		return true;
 	}
 

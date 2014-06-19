@@ -295,6 +295,18 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 			{
 				WebClient client = createWebClient();
 				client.deleteOrder(Token.getCurrent(), order.getId());
+				
+				try
+				{
+					long orderCount = client.getOrderCount(Token.getCurrent(),
+							Repository.CatalogId);
+					Repository.get(null).getOrderManager()
+							.setOrderCount(orderCount);
+				}
+				catch (Throwable ex)
+				{
+
+				}
 			}
 			catch (Throwable ex)
 			{

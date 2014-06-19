@@ -34,7 +34,7 @@ import stx.shopclient.utils.ImageDownloadTask;
 import stx.shopclient.webservice.WebClient;
 
 public class OrderActivity extends BaseActivity implements OnClickListener
-{	
+{
 	private long ItemId;
 	private TextView lblItemName;
 	private ImageView imgIco;
@@ -80,7 +80,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener
 		plProperies.setProperties(properties);
 
 		return view;
-	}	
+	}
 
 	@Override
 	public void onClick(View v)
@@ -97,7 +97,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener
 
 		new AddOrderTask().execute();
 	}
-	
+
 	class AddOrderTask extends AsyncTask<Void, Void, Void>
 	{
 		ProgressDialog dialog;
@@ -115,10 +115,23 @@ public class OrderActivity extends BaseActivity implements OnClickListener
 		{
 			try
 			{
-				Collection<OrderProperty> orderProps = OrdersManager.getOrderPropertiesFromDescriptors(properties);
+				Collection<OrderProperty> orderProps = OrdersManager
+						.getOrderPropertiesFromDescriptors(properties);
 
 				WebClient client = createWebClient();
 				client.addOrder(Token.getCurrent(), ItemId, orderProps);
+
+				try
+				{
+					long orderCount = client.getOrderCount(Token.getCurrent(),
+							Repository.CatalogId);
+					Repository.get(null).getOrderManager()
+							.setOrderCount(orderCount);
+				}
+				catch (Throwable ex)
+				{
+
+				}
 			}
 			catch (Throwable ex)
 			{
