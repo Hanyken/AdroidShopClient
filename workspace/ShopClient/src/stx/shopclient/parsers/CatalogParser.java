@@ -35,6 +35,7 @@ public class CatalogParser extends BaseParser<Catalog>
 		
 		item.setId(super.getValueLong(e, ID_NAME));
 		item.setName(super.getValue(e, NAME_NAME));
+		item.setLogo(super.getValue(e, LOGO_NAME));
 		item.setDescription(super.getValue(e, DESCRIPTION_NAME));
 		item.setLastModification(super.getValueDate(e, LAST_MODIFICATION_NAME));
 		item.setNodeCount(super.getValueInt(e, NODE_COUNT_NAME));
