@@ -1,5 +1,6 @@
 package stx.shopclient.entity.properties;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class EnumPropertyDescriptor extends PropertyDescriptor
 		_currentValues = currentValues;
 	}
 
-	public static class EnumValue
+	public static class EnumValue implements Serializable
 	{
 		private String _value;
 		private String _name;
