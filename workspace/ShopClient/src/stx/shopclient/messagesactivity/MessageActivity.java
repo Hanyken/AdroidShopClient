@@ -6,6 +6,7 @@ import android.webkit.WebView;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.entity.Message;
+import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.repository.Repository;
 
 public class MessageActivity extends BaseActivity
@@ -30,5 +31,14 @@ public class MessageActivity extends BaseActivity
 		webView.loadData(_message.getText(), "text/html", "utf-8");
 		
 		return view;
+	}
+	
+	@Override
+	public boolean initMainMenuItem(MainMenuItem item)
+	{
+		if (item.getId() == MainMenuItem.SEARCH_MENU_ITEM_ID)
+			return false;
+		else
+			return super.initMainMenuItem(item);
 	}
 }

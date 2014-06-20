@@ -23,18 +23,8 @@
         android:id="@+id/buttonSearch"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_alignLeft="@+id/titleText"
-        android:layout_alignParentBottom="true"
-        android:text="Поиск" />
-
-    <Button
-        android:id="@+id/buttonClear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/propertiesList"
-        android:layout_toLeftOf="@+id/buttonSearch"
-        android:text="Очистить" />
+        android:text="Поиск" />
 
 </RelativeLayout>

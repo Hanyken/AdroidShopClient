@@ -19,6 +19,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.entity.Message;
+import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.ui.common.LoadMoreListAdapter;
 
@@ -57,6 +58,15 @@ public class MessagesListActivity extends BaseActivity implements
 		_listView.setAdapter(_adapter);
 
 		return view;
+	}
+	
+	@Override
+	public boolean initMainMenuItem(MainMenuItem item)
+	{
+		if (item.getId() == MainMenuItem.SEARCH_MENU_ITEM_ID)
+			return false;
+		else
+			return super.initMainMenuItem(item);
 	}
 	
 	class RefreshTask extends AsyncTask<Void, Void, Void>

@@ -26,6 +26,7 @@ import stx.shopclient.entity.OrderProperty;
 import stx.shopclient.entity.Token;
 import stx.shopclient.entity.properties.PropertyDescriptor;
 import stx.shopclient.itemactivity.ItemActivity;
+import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.repository.OrdersManager;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.styles.ColorButtonDrawable;
@@ -80,6 +81,15 @@ public class OrderActivity extends BaseActivity implements OnClickListener
 		plProperies.setProperties(properties);
 
 		return view;
+	}
+	
+	@Override
+	public boolean initMainMenuItem(MainMenuItem item)
+	{
+		if (item.getId() == MainMenuItem.SEARCH_MENU_ITEM_ID)
+			return false;
+		else
+			return super.initMainMenuItem(item);
 	}
 
 	@Override

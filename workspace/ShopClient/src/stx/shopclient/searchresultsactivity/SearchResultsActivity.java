@@ -31,6 +31,7 @@ import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.entity.Token;
 import stx.shopclient.entity.properties.PropertyDescriptor;
 import stx.shopclient.itemactivity.ItemActivity;
+import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.utils.ImageDownloadTask;
 import stx.shopclient.webservice.WebClient;
@@ -117,6 +118,15 @@ public class SearchResultsActivity extends BaseActivity implements
 			item.setRating(random.nextInt(5));
 			_items.add(item);
 		}
+	}
+	
+	@Override
+	public boolean initMainMenuItem(MainMenuItem item)
+	{
+		if (item.getId() == MainMenuItem.SEARCH_MENU_ITEM_ID)
+			return false;
+		else
+			return super.initMainMenuItem(item);
 	}
 
 	class LoadTask extends AsyncTask<Void, Void, Void>

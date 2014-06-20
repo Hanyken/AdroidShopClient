@@ -21,6 +21,7 @@ import stx.shopclient.entity.Token;
 import stx.shopclient.entity.properties.DatePropertyDescriptor;
 import stx.shopclient.entity.properties.NumberPropertyDescriptor;
 import stx.shopclient.entity.properties.PropertyDescriptor;
+import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.orderactivity.OrderActivity;
 import stx.shopclient.repository.OrdersManager;
 import stx.shopclient.repository.Repository;
@@ -74,6 +75,15 @@ public class OrderPropertiesActivity extends BaseActivity
 		});
 
 		return view;
+	}
+	
+	@Override
+	public boolean initMainMenuItem(MainMenuItem item)
+	{
+		if (item.getId() == MainMenuItem.SEARCH_MENU_ITEM_ID)
+			return false;
+		else
+			return super.initMainMenuItem(item);
 	}
 
 	void applyButtonClick()

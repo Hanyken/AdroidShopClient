@@ -11,6 +11,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.LayoutParams;
@@ -28,26 +30,29 @@ import android.widget.AdapterView.OnItemClickListener;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.entity.CatalogNode;
+import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.entity.properties.BooleanPropertyDescriptor;
 import stx.shopclient.entity.properties.DatePropertyDescriptor;
 import stx.shopclient.entity.properties.EnumPropertyDescriptor;
 import stx.shopclient.entity.properties.NumberPropertyDescriptor;
 import stx.shopclient.entity.properties.PropertyDescriptor;
 import stx.shopclient.entity.properties.StringPropertyDescriptor;
+import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.searchresultsactivity.SearchResultsActivity;
 import stx.shopclient.ui.common.properties.PropertiesList;
 import stx.shopclient.utils.DisplayUtil;
 
-public class SearchActivity extends BaseActivity {
+public class SearchActivity extends BaseActivity
+{
 
 	public static final int LIST_ITEM_HEIGHT = 50;
 
 	public static final String TITLE_EXTRA_KEY = "Title";
 	public static final String NODE_ID_EXTRA_KEY = "nodeId";
-	
+
 	long _nodeId;
-	
+
 	PropertiesList _propsList;
 
 	List<PropertyDescriptor> _props = new ArrayList<PropertyDescriptor>();
@@ -55,7 +60,8 @@ public class SearchActivity extends BaseActivity {
 	SimpleDateFormat _dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 
 		Intent intent = getIntent();
 
@@ -67,34 +73,61 @@ public class SearchActivity extends BaseActivity {
 	}
 
 	@Override
-	protected View createMainView(ViewGroup parent) {
-		
-		CatalogNode node = Repository.get(null).getCatalogManager().getNodeById(_nodeId);
+	public boolean initMainMenuItem(MainMenuItem item)
+	{
+		if (item.getId() == MainMenuItem.SEARCH_MENU_ITEM_ID)
+			return false;
+		else
+			return super.initMainMenuItem(item);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		getMenuInflater().inflate(R.menu.search_activity_menu, menu);
+
+		return true;
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		if (item.getItemId() == R.id.reset)
+		{
+			clearSearchParams();
+			return true;
+		}
+		else
+			return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected View createMainView(ViewGroup parent)
+	{
+
+		CatalogNode node = Repository.get(null).getCatalogManager()
+				.getNodeById(_nodeId);
 		_props.clear();
 		_props.addAll(node.getPropertiesCopy());
-		
+
 		View view = getLayoutInflater().inflate(R.layout.search_activity,
 				parent, false);
 
-		_propsList = (PropertiesList)view.findViewById(R.id.propertiesList);
+		_propsList = (PropertiesList) view.findViewById(R.id.propertiesList);
 		_propsList.setProperties(_props);
-		
-		Button buttonClear = (Button) view.findViewById(R.id.buttonClear);		
 
-		buttonClear.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				clearSearchParams();
-			}
-		});
+		CatalogSettings settings = Repository.get(null).getCatalogManager()
+				.getSettings();
 
 		Button buttonSearch = (Button) view.findViewById(R.id.buttonSearch);
+		buttonSearch.setTextColor(settings.getForegroundColor());
+		buttonSearch.setBackground(BaseActivity.getButtonDrawable(settings));
 
-		buttonSearch.setOnClickListener(new View.OnClickListener() {
+		buttonSearch.setOnClickListener(new View.OnClickListener()
+		{
 
 			@Override
-			public void onClick(View v) {
+			public void onClick(View v)
+			{
 				onButtonSearchClicked();
 			}
 		});
@@ -102,14 +135,16 @@ public class SearchActivity extends BaseActivity {
 		return view;
 	}
 
-	void onButtonSearchClicked() {
+	void onButtonSearchClicked()
+	{
 		SearchResultsActivity.searchProperties = _props;
 		Intent intent = new Intent(this, SearchResultsActivity.class);
 		intent.putExtra(SearchResultsActivity.EXTRA_KEY_NODE_ID, _nodeId);
 		startActivity(intent);
 	}
 
-	void clearSearchParams() {
+	void clearSearchParams()
+	{
 		_propsList.clear();
 	}
 }

@@ -21,6 +21,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.entity.Discount;
+import stx.shopclient.mainmenu.MainMenuItem;
 
 public class DiscountListActivity extends BaseActivity implements
 		OnItemClickListener, SearchView.OnQueryTextListener, SearchView.OnCloseListener {
@@ -70,6 +71,15 @@ public class DiscountListActivity extends BaseActivity implements
 		_discountFilteredList.add(disc);
 
 		_discountList.addAll(_discountFilteredList);
+	}
+	
+	@Override
+	public boolean initMainMenuItem(MainMenuItem item)
+	{
+		if (item.getId() == MainMenuItem.SEARCH_MENU_ITEM_ID)
+			return false;
+		else
+			return super.initMainMenuItem(item);
 	}
 
 	@Override

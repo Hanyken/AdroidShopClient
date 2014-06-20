@@ -112,7 +112,7 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 
 	public void addAnalogs(String title, long[] ids)
 	{
-		Fragment analogFragment = ItemAnalogsFragment.getIntent(title, ids);
+		Fragment analogFragment = ItemAnalogsFragment.getIntent(title, ids);		
 		getFragmentManager().beginTransaction().add(R.id.llAnalogs, analogFragment).commit();
 	}
 	

@@ -27,7 +27,7 @@ public class ItemImageActivity extends Activity
 		
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setTitle("");
+		actionBar.setTitle("");		
 
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		

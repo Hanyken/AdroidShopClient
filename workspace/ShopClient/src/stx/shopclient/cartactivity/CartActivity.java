@@ -13,6 +13,7 @@ import stx.shopclient.entity.properties.EnumPropertyDescriptor;
 import stx.shopclient.entity.properties.EnumPropertyDescriptor.EnumValue;
 import stx.shopclient.entity.properties.PropertyDescriptor;
 import stx.shopclient.itemactivity.ItemActivity;
+import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.order_properties_activity.OrderPropertiesActivity;
 import stx.shopclient.repository.OrdersManager;
 import stx.shopclient.repository.Repository;
@@ -73,6 +74,15 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 
 		if (_adapter != null)
 			_adapter.notifyDataSetChanged();
+	}
+	
+	@Override
+	public boolean initMainMenuItem(MainMenuItem item)
+	{
+		if (item.getId() == MainMenuItem.SEARCH_MENU_ITEM_ID)
+			return false;
+		else
+			return super.initMainMenuItem(item);
 	}
 
 	@Override

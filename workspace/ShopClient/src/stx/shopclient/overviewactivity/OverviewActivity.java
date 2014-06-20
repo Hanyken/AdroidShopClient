@@ -13,6 +13,7 @@ import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.entity.Overview;
 import stx.shopclient.entity.Token;
 import stx.shopclient.itemactivity.ItemActivity;
+import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.styles.ColorButtonDrawable;
 import stx.shopclient.webservice.WebClient;
@@ -42,6 +43,8 @@ import android.widget.Toast;
 
 public class OverviewActivity extends BaseActivity implements OnClickListener
 {
+	public static final int OVERVIEW_REQUEST = 1;
+
 	private final int MI_COMMENT = 1;
 
 	private LinearLayout llOverview;
@@ -80,8 +83,7 @@ public class OverviewActivity extends BaseActivity implements OnClickListener
 		btnOk.setBackground(getBueButtonDrawable(settings));
 		btnCancel.setBackground(getBueButtonDrawable(settings));
 
-		_adapter = new OverviewAdapter(this, lstMain,
-				_ItemId);
+		_adapter = new OverviewAdapter(this, lstMain, _ItemId);
 
 		lstMain.setAdapter(_adapter);
 		lstMain.setOnRefreshListener(new OnRefreshListener<ListView>()
@@ -89,7 +91,7 @@ public class OverviewActivity extends BaseActivity implements OnClickListener
 			@Override
 			public void onRefresh(PullToRefreshBase<ListView> refreshView)
 			{
-				_adapter.RefreshData(false);
+				_adapter.loadData(false);
 			}
 
 		});
@@ -99,12 +101,21 @@ public class OverviewActivity extends BaseActivity implements OnClickListener
 
 		return view;
 	}
-	
+
+	@Override
+	public boolean initMainMenuItem(MainMenuItem item)
+	{
+		if (item.getId() == MainMenuItem.SEARCH_MENU_ITEM_ID)
+			return false;
+		else
+			return super.initMainMenuItem(item);
+	}
+
 	@Override
 	protected void onDestroy()
 	{
 		_adapter.setActivityDestroyed(true);
-		
+
 		super.onDestroy();
 	}
 
@@ -359,6 +370,9 @@ public class OverviewActivity extends BaseActivity implements OnClickListener
 				Toast.makeText(OverviewActivity.this,
 						getString(R.string.overview_add_message),
 						Toast.LENGTH_SHORT).show();
+
+				_adapter.refreshData();
+				setResult(1);
 			}
 		}
 	}

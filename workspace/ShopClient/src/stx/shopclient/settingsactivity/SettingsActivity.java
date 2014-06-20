@@ -4,6 +4,7 @@ import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.entity.Token;
 import stx.shopclient.loginactivity.LoginActivity;
+import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.settings.UserAccount;
 import android.content.Intent;
 import android.view.View;
@@ -39,6 +40,15 @@ public class SettingsActivity extends BaseActivity
 		loginTextView.setText(UserAccount.getLogin());
 
 		return view;
+	}
+	
+	@Override
+	public boolean initMainMenuItem(MainMenuItem item)
+	{
+		if (item.getId() == MainMenuItem.SEARCH_MENU_ITEM_ID)
+			return false;
+		else
+			return super.initMainMenuItem(item);
 	}
 
 	void logoutButtonClick()

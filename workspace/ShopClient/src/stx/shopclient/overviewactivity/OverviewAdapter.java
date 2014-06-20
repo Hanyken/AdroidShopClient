@@ -40,7 +40,7 @@ public class OverviewAdapter extends BaseAdapter
 	public OverviewAdapter(Context context, PullToRefreshListView lstView,
 			long itemId)
 	{
-		_Context = context;			
+		_Context = context;
 		settings = Repository.get(context).getCatalogManager().getSettings();
 		_listView = lstView;
 		_Inflater = (LayoutInflater) context
@@ -48,9 +48,9 @@ public class OverviewAdapter extends BaseAdapter
 		_Items = new ArrayList<Overview>();
 		_Item = Repository.get(context).getItemsManager().getItem(itemId);
 
-		RefreshData(true);
+		loadData(true);
 	}
-	
+
 	public void setActivityDestroyed(boolean val)
 	{
 		_activityDestroyed = val;
@@ -96,15 +96,23 @@ public class OverviewAdapter extends BaseAdapter
 		return view;
 	}
 
-	public void RefreshData(boolean isFirstLoad)
+	public void loadData(boolean isFirstLoad)
 	{
 		LoadTask task = new LoadTask(isFirstLoad);
+		task.execute();
+	}
+
+	public void refreshData()
+	{
+		LoadTask task = new LoadTask(true);
+		task.isRefresh = true;
 		task.execute();
 	}
 
 	class LoadTask extends AsyncTask<Void, Void, Void>
 	{
 		boolean isFirstLoad;
+		boolean isRefresh;
 		Throwable exception;
 		Collection<Overview> overviews;
 
@@ -116,9 +124,9 @@ public class OverviewAdapter extends BaseAdapter
 		@Override
 		protected void onPreExecute()
 		{
-			if(_activityDestroyed)
+			if (_activityDestroyed)
 				return;
-			
+
 			if (isFirstLoad)
 				_progressDialog = ProgressDialog.show(_Context, "Загрузка",
 						"Выполняется загрузка отзывов");
@@ -130,8 +138,12 @@ public class OverviewAdapter extends BaseAdapter
 			try
 			{
 				WebClient client = new WebClient(_Context);
-				overviews = client.getOverviews(Token.getCurrent(),
-						_Item.getId(), _Items.size() + 1, 50);
+				if (isRefresh)
+					overviews = client.getOverviews(Token.getCurrent(),
+							_Item.getId(), 1, _Items.size() + 1);
+				else
+					overviews = client.getOverviews(Token.getCurrent(),
+							_Item.getId(), _Items.size() + 1, 50);
 			}
 			catch (Throwable ex)
 			{
@@ -144,9 +156,9 @@ public class OverviewAdapter extends BaseAdapter
 		@Override
 		protected void onPostExecute(Void result)
 		{
-			if(_activityDestroyed)
+			if (_activityDestroyed)
 				return;
-			
+
 			if (isFirstLoad)
 				_progressDialog.dismiss();
 			else
@@ -161,7 +173,13 @@ public class OverviewAdapter extends BaseAdapter
 			{
 				if (overviews != null && overviews.size() > 0)
 				{
-					_Items.addAll(overviews);
+					if (isRefresh)
+					{
+						_Items.clear();
+						_Items.addAll(overviews);
+					}
+					else
+						_Items.addAll(overviews);
 					notifyDataSetChanged();
 				}
 			}

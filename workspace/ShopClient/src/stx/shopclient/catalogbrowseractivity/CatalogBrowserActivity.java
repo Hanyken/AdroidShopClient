@@ -14,6 +14,8 @@ import android.content.Intent;
 import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -22,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
@@ -32,6 +35,7 @@ import stx.shopclient.entity.CatalogNode;
 import stx.shopclient.entity.Token;
 import stx.shopclient.itemactivity.ItemActivity;
 import stx.shopclient.repository.Repository;
+import stx.shopclient.searchactivity.SearchActivity;
 import stx.shopclient.ui.common.LoadMoreListAdapter;
 import stx.shopclient.utils.ImageDownloadTask;
 import stx.shopclient.webservice.WebClient;
@@ -55,7 +59,7 @@ public class CatalogBrowserActivity extends BaseActivity implements
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
-	{
+	{	
 		Intent intent = getIntent();
 
 		_rootNodeId = intent.getLongExtra(NODE_ID_EXTRA_KEY, 0);
@@ -104,11 +108,36 @@ public class CatalogBrowserActivity extends BaseActivity implements
 
 		return view;
 	}
-	
+
 	@Override
 	protected long getSearchActivityNodeId()
 	{
 		return _rootNodeId;
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		getMenuInflater().inflate(R.menu.catalog_browser_activity_menu, menu);
+
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		if (item.getItemId() == R.id.search)
+		{
+			Intent intent = new Intent(this, SearchActivity.class);
+			intent.putExtra(SearchActivity.TITLE_EXTRA_KEY,
+					getSearchActivityTitle());
+			intent.putExtra(SearchActivity.NODE_ID_EXTRA_KEY,
+					getSearchActivityNodeId());
+			startActivity(intent);
+			return true;
+		}
+		else
+			return super.onOptionsItemSelected(item);
 	}
 
 	class LoadItemsTask extends AsyncTask<Void, Void, Void>

@@ -59,7 +59,7 @@ public class MainMenuListAdapter extends BaseAdapter
 		item.setId(MainMenuItem.SEARCH_MENU_ITEM_ID);
 		item.setName("Поиск");
 		item.setHasIcon(true);
-		item.setIconId(R.drawable.img_search_menu_icon);
+		item.setIconId(android.R.drawable.ic_menu_search);
 		_menuItems.add(item);
 
 		_cartMenuItem = new MainMenuItem();

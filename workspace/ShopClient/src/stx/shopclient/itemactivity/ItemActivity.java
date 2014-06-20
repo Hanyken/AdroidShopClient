@@ -8,6 +8,7 @@ import stx.shopclient.entity.AnalogGroup;
 import stx.shopclient.entity.Catalog;
 import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.entity.CatalogSettings;
+import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.orderactivity.OrderActivity;
 import stx.shopclient.overviewactivity.OverviewActivity;
 import stx.shopclient.repository.Repository;
@@ -30,16 +31,18 @@ public class ItemActivity extends BaseActivity
 {
 	private CatalogItem _Item;
 	private long _itemId;
+	private View _mainView;
 
 	public static final String ITEM_ID_EXTRA_KEY = "ItemID";
 	public static final String ITEM_BUY_EXTRA_KEY = "CanBuyItem";
 
 	private ItemButtonBarFragment buttonBar;
+	private boolean _analogsAdded = false;
 
 	@Override
 	protected View createMainView(ViewGroup parent)
 	{
-		View view = getLayoutInflater().inflate(R.layout.item_activity, parent,
+		_mainView = getLayoutInflater().inflate(R.layout.item_activity, parent,
 				false);
 
 		Intent intent = getIntent();
@@ -52,24 +55,35 @@ public class ItemActivity extends BaseActivity
 
 		_itemId = intent.getLongExtra(ITEM_ID_EXTRA_KEY, 0);
 
-		_Item = null;//Repository.get(this).getItemsManager().getItem(_itemId);
+		_Item = null;// Repository.get(this).getItemsManager().getItem(_itemId);
 
 		if (_Item != null)
-			loadUI(view);
+			loadUI(_mainView);
 		else
 		{
 			LoadTask task = new LoadTask();
-			task.mainView = view;
+			task.mainView = _mainView;
 			task.execute();
 		}
 
-		return view;
+		return _mainView;
 	}
-	
+
 	@Override
 	protected long getSearchActivityNodeId()
 	{
 		return _Item.getNodeId();
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		if (requestCode == OverviewActivity.OVERVIEW_REQUEST && resultCode == 1)
+		{
+			LoadTask task = new LoadTask();
+			task.mainView = _mainView;
+			task.execute();
+		}
 	}
 
 	void loadUI(View view)
@@ -87,11 +101,15 @@ public class ItemActivity extends BaseActivity
 		buttonBar.setOverviewCount(_Item.getOverviewsCount());
 		buttonBar.setCanBuy(true);
 
-		Collection<AnalogGroup> groups = Repository.get(this).getItemsManager()
-				.getAnalogs(_itemId);
-		for (AnalogGroup el : groups)
+		if (!_analogsAdded)
 		{
-			buttonBar.addAnalogs(el.getName(), el.getIds());
+			Collection<AnalogGroup> groups = Repository.get(this)
+					.getItemsManager().getAnalogs(_itemId);
+			for (AnalogGroup el : groups)
+			{
+				buttonBar.addAnalogs(el.getName(), el.getIds());
+			}
+			_analogsAdded = true;
 		}
 
 		setProperty(txtProperty);
@@ -120,6 +138,15 @@ public class ItemActivity extends BaseActivity
 		txtProperty.setText(str);
 	}
 
+	@Override
+	public boolean initMainMenuItem(MainMenuItem item)
+	{
+		if (item.getId() == MainMenuItem.SEARCH_MENU_ITEM_ID)
+			return false;
+		else
+			return super.initMainMenuItem(item);
+	}
+
 	public void onBarButtonClick(View view)
 	{
 		switch (view.getId())
@@ -127,7 +154,7 @@ public class ItemActivity extends BaseActivity
 		case R.id.btnOverview:
 			Intent intent = new Intent(this, OverviewActivity.class);
 			intent.putExtra(ITEM_ID_EXTRA_KEY, _Item.getId());
-			startActivity(intent);
+			startActivityForResult(intent, OverviewActivity.OVERVIEW_REQUEST);
 			break;
 
 		case R.id.btnShare:
@@ -189,7 +216,7 @@ public class ItemActivity extends BaseActivity
 		protected void onPostExecute(Void result)
 		{
 			dialog.dismiss();
-			
+
 			if (exception != null)
 			{
 				Toast.makeText(ItemActivity.this,
@@ -198,7 +225,7 @@ public class ItemActivity extends BaseActivity
 				finish();
 			}
 			else
-				loadUI(mainView);			
+				loadUI(mainView);
 		}
 
 	}

@@ -6,6 +6,7 @@ import android.widget.TextView;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.entity.Discount;
+import stx.shopclient.mainmenu.MainMenuItem;
 
 public class DiscountActivity extends BaseActivity {
 	Discount _discount;
@@ -43,5 +44,14 @@ public class DiscountActivity extends BaseActivity {
 					+ " рублей");
 
 		return view;
+	}
+	
+	@Override
+	public boolean initMainMenuItem(MainMenuItem item)
+	{
+		if (item.getId() == MainMenuItem.SEARCH_MENU_ITEM_ID)
+			return false;
+		else
+			return super.initMainMenuItem(item);
 	}
 }
