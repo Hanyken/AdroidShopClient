@@ -85,8 +85,7 @@ public class ItemActivity extends BaseActivity
 		buttonBar.setPrice(_Item.getPrice());
 		buttonBar.setRating(_Item.getRating());
 		buttonBar.setOverviewCount(_Item.getOverviewsCount());
-		buttonBar.setCanBuy(!Repository.get(this).getOrderManager()
-				.existsItem(_Item.getId()));
+		buttonBar.setCanBuy(true);
 
 		Collection<AnalogGroup> groups = Repository.get(this).getItemsManager()
 				.getAnalogs(_itemId);
@@ -97,16 +96,6 @@ public class ItemActivity extends BaseActivity
 
 		setProperty(txtProperty);
 		getActionBar().setTitle(_Item.getName());
-	}
-
-	@Override
-	protected void onStart()
-	{
-		super.onStart();
-
-		if (_Item != null)
-			buttonBar.setCanBuy(!Repository.get(this).getOrderManager()
-					.existsItem(_Item.getId()));
 	}
 
 	public void setProperty(TextView txtProperty)
