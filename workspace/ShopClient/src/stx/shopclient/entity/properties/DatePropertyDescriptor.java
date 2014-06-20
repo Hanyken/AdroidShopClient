@@ -6,6 +6,8 @@ import java.util.GregorianCalendar;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import stx.shopclient.parsers.BaseParser;
+
 public class DatePropertyDescriptor extends PropertyDescriptor
 {
 	public static final String TYPE_STRING = "Date";
@@ -109,7 +111,7 @@ public class DatePropertyDescriptor extends PropertyDescriptor
 	@Override
 	public String getStringValue()
 	{
-		return _minValue.toString();
+		return BaseParser.dateParser.format(_currentMaxValue.getTime());
 	}
 
 	@Override

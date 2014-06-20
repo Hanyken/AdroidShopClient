@@ -90,10 +90,12 @@ public class ItemPropertyParser extends BaseParser<PropertyDescriptor>
 							if (propType.equals(BooleanPropertyDescriptor.TYPE_STRING))
 							{
 								item = new BooleanPropertyDescriptor();
+								((BooleanPropertyDescriptor)item).setCurrentValue(super.getValueBool(e, VALUE_NAME));
 							}
 							else
 							{
 								item = new StringPropertyDescriptor();
+								((StringPropertyDescriptor)item).setValue(super.getValue(e, VALUE_NAME));
 							}
 		
 		item.setName(super.getValue(e, NAME_NAME));
