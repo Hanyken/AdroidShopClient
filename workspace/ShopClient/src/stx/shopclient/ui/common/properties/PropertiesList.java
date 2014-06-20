@@ -36,7 +36,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class PropertiesList extends FrameLayout implements OnItemClickListener,
-		DialogResultProcessor {
+		DialogResultProcessor
+{
 
 	public static final int LIST_ITEM_HEIGHT = 50;
 
@@ -47,7 +48,8 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 
 	SimpleDateFormat _dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 
-	public PropertiesList(Context context, AttributeSet attrs) {
+	public PropertiesList(Context context, AttributeSet attrs)
+	{
 		super(context, attrs);
 
 		this.addView(createView());
@@ -55,38 +57,45 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 		_list.setOnItemClickListener(this);
 	}
 
-	public List<PropertyDescriptor> getProperties() {
+	public List<PropertyDescriptor> getProperties()
+	{
 		return _props;
 	}
 
-	public void setProperties(List<PropertyDescriptor> props) {
+	public void setProperties(List<PropertyDescriptor> props)
+	{
 		_props = props;
 
 		adapter = new PropertiesListAdapter(getContext());
 		_list.setAdapter(adapter);
 	}
 
-	public void clear() {
+	public void clear()
+	{
 
-		for (PropertyDescriptor prop : _props) {
+		for (PropertyDescriptor prop : _props)
+		{
 			prop.clear();
 		}
 
 		adapter.notifyDataSetChanged();
 	}
 
-	View createView() {
+	View createView()
+	{
 		_list = new ListView(getContext());
 
 		return _list;
 	}
 
-	LayoutInflater getLayoutInflater() {
+	LayoutInflater getLayoutInflater()
+	{
 		return (LayoutInflater) getContext().getSystemService(
 				Context.LAYOUT_INFLATER_SERVICE);
 	}
 
-	FragmentManager getFragmentManager() {
+	FragmentManager getFragmentManager()
+	{
 
 		if (!(getContext() instanceof FragmentActivity))
 			throw new RuntimeException(
@@ -96,10 +105,12 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View view, int arg2, long arg3) {
+	public void onItemClick(AdapterView<?> arg0, View view, int arg2, long arg3)
+	{
 		PropertyDescriptor prop = (PropertyDescriptor) view.getTag();
 
-		if (prop instanceof EnumPropertyDescriptor) {
+		if (prop instanceof EnumPropertyDescriptor)
+		{
 
 			EnumSelectDialog dialog = new EnumSelectDialog();
 			dialog.setItemView(view);
@@ -107,7 +118,9 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 			dialog.setResultProcessor(this);
 			dialog.show(getFragmentManager(), prop.getName());
 
-		} else if (prop instanceof NumberPropertyDescriptor) {
+		}
+		else if (prop instanceof NumberPropertyDescriptor)
+		{
 
 			NumberSelectDialog dialog = new NumberSelectDialog();
 			dialog.setItemView(view);
@@ -115,14 +128,18 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 			dialog.setResultProcessor(this);
 			dialog.show(getFragmentManager(), prop.getName());
 
-		} else if (prop instanceof DatePropertyDescriptor) {
+		}
+		else if (prop instanceof DatePropertyDescriptor)
+		{
 
 			DateTimeRangeSelectDialog dialog = new DateTimeRangeSelectDialog();
 			dialog.setItemView(view);
 			dialog.setProperty((DatePropertyDescriptor) prop);
 			dialog.setResultProcessor(this);
 			dialog.show(getFragmentManager(), prop.getName());
-		} else if (prop instanceof StringPropertyDescriptor) {
+		}
+		else if (prop instanceof StringPropertyDescriptor)
+		{
 
 			StringEditDialog dialog = new StringEditDialog();
 			dialog.setItemView(view);
@@ -133,7 +150,8 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 	}
 
 	@Override
-	public void onPositiveDialogResult(View view) {
+	public void onPositiveDialogResult(View view)
+	{
 		if (view.getTag() instanceof EnumPropertyDescriptor)
 			updateEnumListItem(view, (EnumPropertyDescriptor) view.getTag());
 		else if (view.getTag() instanceof NumberPropertyDescriptor)
@@ -143,49 +161,59 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 	}
 
 	@Override
-	public void onNegativeDialogResult(View view) {
+	public void onNegativeDialogResult(View view)
+	{
 
 	}
 
 	class PropertiesListAdapter extends BaseAdapter implements
-			CompoundButton.OnCheckedChangeListener {
+			CompoundButton.OnCheckedChangeListener
+	{
 
 		Context _context;
 
-		public PropertiesListAdapter(Context context) {
+		public PropertiesListAdapter(Context context)
+		{
 			_context = context;
 		}
 
 		@Override
-		public int getCount() {
+		public int getCount()
+		{
 			return _props.size();
 		}
 
 		@Override
-		public Object getItem(int arg0) {
+		public Object getItem(int arg0)
+		{
 			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
-		public long getItemId(int arg0) {
+		public long getItemId(int arg0)
+		{
 			// TODO Auto-generated method stub
 			return 0;
 		}
 
 		@Override
-		public View getView(int idx, View arg1, ViewGroup parent) {
+		public View getView(int idx, View arg1, ViewGroup parent)
+		{
 			PropertyDescriptor propDescriptor = _props.get(idx);
 
 			View view = null;
 
-			if (propDescriptor instanceof EnumPropertyDescriptor) {
+			if (propDescriptor instanceof EnumPropertyDescriptor)
+			{
 				view = getLayoutInflater().inflate(
 						R.layout.search_activity_item, parent, false);
 				view.setTag(propDescriptor);
 
 				initEnumListItem(view, (EnumPropertyDescriptor) propDescriptor);
-			} else if (propDescriptor instanceof BooleanPropertyDescriptor) {
+			}
+			else if (propDescriptor instanceof BooleanPropertyDescriptor)
+			{
 				BooleanPropertyDescriptor prop = (BooleanPropertyDescriptor) propDescriptor;
 
 				CheckBox checkBox = new CheckBox(_context);
@@ -200,33 +228,41 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 				checkBox.setOnCheckedChangeListener(this);
 
 				view = checkBox;
-			} else if (propDescriptor instanceof NumberPropertyDescriptor) {
+			}
+			else if (propDescriptor instanceof NumberPropertyDescriptor)
+			{
 				view = getLayoutInflater().inflate(
 						R.layout.search_activity_item, parent, false);
 				view.setTag(propDescriptor);
 
 				initNumberListItem(view,
 						(NumberPropertyDescriptor) propDescriptor);
-			} else if (propDescriptor instanceof DatePropertyDescriptor) {
+			}
+			else if (propDescriptor instanceof DatePropertyDescriptor)
+			{
 				view = getLayoutInflater().inflate(
 						R.layout.search_activity_item, parent, false);
 				view.setTag(propDescriptor);
 
 				initDateListItem(view, (DatePropertyDescriptor) propDescriptor);
-			} else if (propDescriptor instanceof StringPropertyDescriptor) {
+			}
+			else if (propDescriptor instanceof StringPropertyDescriptor)
+			{
 				view = getLayoutInflater().inflate(
 						R.layout.search_activity_item, parent, false);
 				view.setTag(propDescriptor);
 
 				initStringListItem(view,
 						(StringPropertyDescriptor) propDescriptor);
-			} else
+			}
+			else
 				throw new RuntimeException("Unknown PropertyDescriptor");
 
 			return view;
 		}
 
-		void initDateListItem(View view, DatePropertyDescriptor prop) {
+		void initDateListItem(View view, DatePropertyDescriptor prop)
+		{
 			final View itemView = view;
 			final DatePropertyDescriptor property = prop;
 
@@ -235,17 +271,20 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 
 			updateDateListItem(itemView, property);
 
-			resetImage.setOnClickListener(new View.OnClickListener() {
+			resetImage.setOnClickListener(new View.OnClickListener()
+			{
 
 				@Override
-				public void onClick(View arg0) {
+				public void onClick(View arg0)
+				{
 					property.clear();
 					updateDateListItem(itemView, property);
 				}
 			});
 		}
 
-		void initEnumListItem(View view, EnumPropertyDescriptor prop) {
+		void initEnumListItem(View view, EnumPropertyDescriptor prop)
+		{
 			final View itemView = view;
 			final EnumPropertyDescriptor property = prop;
 
@@ -254,17 +293,20 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 
 			updateEnumListItem(itemView, property);
 
-			resetImage.setOnClickListener(new View.OnClickListener() {
+			resetImage.setOnClickListener(new View.OnClickListener()
+			{
 
 				@Override
-				public void onClick(View v) {
+				public void onClick(View v)
+				{
 					property.clear();
 					updateEnumListItem(itemView, property);
 				}
 			});
 		}
 
-		void initNumberListItem(View view, NumberPropertyDescriptor prop) {
+		void initNumberListItem(View view, NumberPropertyDescriptor prop)
+		{
 			final View itemView = view;
 			final NumberPropertyDescriptor property = prop;
 
@@ -272,18 +314,21 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 					.findViewById(R.id.imageView);
 
 			updateNumberListItem(itemView, property);
-			
-			resetImage.setOnClickListener(new View.OnClickListener() {
+
+			resetImage.setOnClickListener(new View.OnClickListener()
+			{
 
 				@Override
-				public void onClick(View v) {
+				public void onClick(View v)
+				{
 					property.clear();
 					updateNumberListItem(itemView, property);
 				}
 			});
 		}
 
-		void initStringListItem(View view, StringPropertyDescriptor prop) {
+		void initStringListItem(View view, StringPropertyDescriptor prop)
+		{
 			final View itemView = view;
 			final StringPropertyDescriptor property = prop;
 
@@ -292,10 +337,12 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 
 			updateStringListItem(itemView, property);
 
-			resetImage.setOnClickListener(new View.OnClickListener() {
+			resetImage.setOnClickListener(new View.OnClickListener()
+			{
 
 				@Override
-				public void onClick(View v) {
+				public void onClick(View v)
+				{
 					property.clear();
 					updateStringListItem(itemView, property);
 				}
@@ -304,115 +351,99 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 
 		@Override
 		public void onCheckedChanged(CompoundButton buttonView,
-				boolean isChecked) {
+				boolean isChecked)
+		{
 			BooleanPropertyDescriptor prop = (BooleanPropertyDescriptor) buttonView
 					.getTag();
 			prop.setCurrentValue(isChecked);
 		}
 	}
 
-	void updateEnumListItem(View view, EnumPropertyDescriptor prop) {
+	void updateEnumListItem(View view, EnumPropertyDescriptor prop)
+	{
 		ImageView resetImage = (ImageView) view.findViewById(R.id.imageView);
 		TextView captionTextView = (TextView) view.findViewById(R.id.textView);
 
 		captionTextView.setText(prop.getTitle());
 
-		if (prop.getCurrentValues().size() > 0) {
+		if (prop.getCurrentValues().size() > 0)
+		{
 			resetImage.setVisibility(View.VISIBLE);
 			captionTextView.setText(prop.getTitle()
 					+ String.format(" (%d)", prop.getCurrentValues().size()));
-		} else
+		}
+		else
 			resetImage.setVisibility(View.GONE);
-		
+
 		if (!_allowClear)
 			resetImage.setVisibility(View.GONE);
 	}
 
-	void updateNumberListItem(View view, NumberPropertyDescriptor prop) {
+	void updateNumberListItem(View view, NumberPropertyDescriptor prop)
+	{
 		ImageView resetImage = (ImageView) view.findViewById(R.id.imageView);
 		TextView captionTextView = (TextView) view.findViewById(R.id.textView);
 
 		captionTextView.setText(prop.getTitle());
 
-		if (prop.isCurrentValueDefined()) {
+		if (prop.isCurrentValueDefined())
+		{
 			resetImage.setVisibility(View.VISIBLE);
-
-			if (prop.isRange()) {
-				if (prop.isFloat())
-					captionTextView.setText(prop.getTitle()
-							+ String.format(" (%.2f - %.2f)",
-									prop.getCurrentMinValue(),
-									prop.getCurrentMaxValue()));
-				else
-					captionTextView.setText(prop.getTitle()
-							+ String.format(" (%d - %d)",
-									(int) (prop.getCurrentMinValue()),
-									(int) (prop.getCurrentMaxValue())));
-			} else {
-				if (prop.isFloat())
-					captionTextView.setText(prop.getTitle()
-							+ String.format(" (%.2f)",
-									prop.getCurrentMinValue()));
-				else
-					captionTextView.setText(prop.getTitle()
-							+ String.format(" (%d)",
-									(int) prop.getCurrentMinValue()));
-			}
-		} else
+			captionTextView.append(": " + prop.getDescription());
+		}
+		else
 			resetImage.setVisibility(View.GONE);
-		
+
 		if (!_allowClear)
 			resetImage.setVisibility(View.GONE);
 	}
 
-	void updateDateListItem(View view, DatePropertyDescriptor prop) {
+	void updateDateListItem(View view, DatePropertyDescriptor prop)
+	{
 		ImageView resetImage = (ImageView) view.findViewById(R.id.imageView);
 		TextView captionTextView = (TextView) view.findViewById(R.id.textView);
 
 		captionTextView.setText(prop.getTitle());
 
-		if (prop.isCurrentValueDefined()) {
+		if (prop.isCurrentValueDefined())
+		{
 			resetImage.setVisibility(View.VISIBLE);
-
-			if (prop.isRange()) {
-				captionTextView.setText(prop.getTitle()
-						+ String.format(" (%s - %s)", _dateFormat.format(prop
-								.getCurrentMinValue().getTime()), _dateFormat
-								.format(prop.getCurrentMaxValue().getTime())));
-			} else {
-				captionTextView.setText(prop.getTitle()
-						+ String.format(" (%s)", _dateFormat.format(prop
-								.getCurrentMinValue().getTime())));
-			}
-		} else
+			captionTextView.append(": " + prop.getDescription());
+		}
+		else
 			resetImage.setVisibility(View.GONE);
-		
+
 		if (!_allowClear)
 			resetImage.setVisibility(View.GONE);
 	}
 
-	void updateStringListItem(View view, StringPropertyDescriptor prop) {
+	void updateStringListItem(View view, StringPropertyDescriptor prop)
+	{
 		ImageView resetImage = (ImageView) view.findViewById(R.id.imageView);
 		TextView captionTextView = (TextView) view.findViewById(R.id.textView);
 
 		captionTextView.setText(prop.getTitle());
 
-		if (prop.getValue() != null && !prop.getValue().equals("")) {
+		if (prop.getValue() != null && !prop.getValue().equals(""))
+		{
 			resetImage.setVisibility(View.VISIBLE);
 			captionTextView.setText(prop.getTitle()
 					+ String.format(" (%s)", prop.getValue()));
-		} else
+		}
+		else
 			resetImage.setVisibility(View.GONE);
-		
+
 		if (!_allowClear)
 			resetImage.setVisibility(View.GONE);
 	}
 
-	public boolean isAllowClear() {
+	public boolean isAllowClear()
+	{
 		return _allowClear;
 	}
 
-	public void setAllowClear(boolean allowClear) {
+	public void setAllowClear(boolean allowClear)
+	{
 		_allowClear = allowClear;
 	}
 

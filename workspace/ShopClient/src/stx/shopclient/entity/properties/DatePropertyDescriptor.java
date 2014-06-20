@@ -12,11 +12,16 @@ public class DatePropertyDescriptor extends PropertyDescriptor
 
 	private static DatePropertyDescriptor _currentEditedProperty;
 
+	static SimpleDateFormat _dateFormat = new SimpleDateFormat(
+			"dd.MM.yyyy HH:mm");
+
 	private GregorianCalendar _minValue;
 	private GregorianCalendar _maxValue;
 	private GregorianCalendar _currentMinValue;
 	private GregorianCalendar _currentMaxValue;
 	private boolean _isCurrentValueDefined = false;
+	private boolean _isCurrentMinValueDefined = false;
+	private boolean _isCurrentMaxValueDefined = false;
 	private boolean _isRange = true;
 
 	public GregorianCalendar getMinValue()
@@ -120,19 +125,25 @@ public class DatePropertyDescriptor extends PropertyDescriptor
 			return;
 
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		
+
 		Document doc = root.getOwnerDocument();
 		Element el = doc.createElement(getName());
 
 		if (_isRange)
 		{
-			Element elMin = doc.createElement("Min");
-			elMin.setTextContent(format.format(_currentMinValue.getTime()));
-			el.appendChild(elMin);
+			if (_isCurrentMinValueDefined)
+			{
+				Element elMin = doc.createElement("Min");
+				elMin.setTextContent(format.format(_currentMinValue.getTime()));
+				el.appendChild(elMin);
+			}
 
-			Element elMax = doc.createElement("Max");
-			elMax.setTextContent(format.format(_currentMaxValue.getTime()));
-			el.appendChild(elMax);
+			if (_isCurrentMaxValueDefined)
+			{
+				Element elMax = doc.createElement("Max");
+				elMax.setTextContent(format.format(_currentMaxValue.getTime()));
+				el.appendChild(elMax);
+			}
 		}
 		else
 		{
@@ -142,5 +153,53 @@ public class DatePropertyDescriptor extends PropertyDescriptor
 		}
 
 		root.appendChild(el);
+	}
+
+	String getStringValue(GregorianCalendar value)
+	{
+		return _dateFormat.format(value.getTime());
+	}
+
+	@Override
+	public String getDescription()
+	{
+		if (_isRange)
+		{
+			String descr = "";
+			if (isCurrentMinValueDefined())
+				descr += "от " + getStringValue(_currentMinValue);
+			if (isCurrentMaxValueDefined())
+			{
+				if (isCurrentMinValueDefined())
+					descr += " ";
+				descr += "до " + getStringValue(_currentMaxValue);
+			}
+
+			return descr;
+		}
+		else
+		{
+			return getStringValue(_currentMinValue);
+		}
+	}
+
+	public boolean isCurrentMinValueDefined()
+	{
+		return _isCurrentMinValueDefined;
+	}
+
+	public void setCurrentMinValueDefined(boolean isCurrentMinValueDefined)
+	{
+		_isCurrentMinValueDefined = isCurrentMinValueDefined;
+	}
+
+	public boolean isCurrentMaxValueDefined()
+	{
+		return _isCurrentMaxValueDefined;
+	}
+
+	public void setCurrentMaxValueDefined(boolean isCurrentMaxValueDefined)
+	{
+		_isCurrentMaxValueDefined = isCurrentMaxValueDefined;
 	}
 }

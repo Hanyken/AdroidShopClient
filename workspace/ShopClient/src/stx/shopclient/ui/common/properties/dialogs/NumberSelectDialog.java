@@ -1,5 +1,7 @@
 package stx.shopclient.ui.common.properties.dialogs;
 
+import org.apache.commons.lang3.StringUtils;
+
 import stx.shopclient.R;
 import stx.shopclient.entity.properties.NumberPropertyDescriptor;
 import android.app.Activity;
@@ -41,39 +43,66 @@ public class NumberSelectDialog extends DialogFragment implements
 			@Override
 			public void onClick(DialogInterface dialog, int which)
 			{
-
-				if (_numberFromEditText.getText().length() != 0
-						&& (!_property.isRange() || _numberToEditText.getText()
-								.length() != 0))
+				if (_property.isRange())
 				{
-
-					double val1 = Double.parseDouble(_numberFromEditText
-							.getText().toString());
-
-					if (val1 < _property.getMinValue())
-						val1 = _property.getMinValue();
-					if (val1 > _property.getMaxValue())
-						val1 = _property.getMaxValue();
-
-					if (_property.isRange())
+					if (_numberFromEditText.getText().length() != 0)
 					{
-						double val2 = Double.parseDouble(_numberToEditText
+						double val = Double.parseDouble(_numberFromEditText
 								.getText().toString());
 
-						if (val2 < _property.getMinValue())
-							val2 = _property.getMinValue();
-						if (val2 > _property.getMaxValue())
-							val2 = _property.getMaxValue();
+						if (val < _property.getMinValue())
+							val = _property.getMinValue();
+						if (val > _property.getMaxValue())
+							val = _property.getMaxValue();
 
-						_property.setCurrentMinValue(val1 < val2 ? val1 : val2);
-						_property.setCurrentMaxValue(val1 > val2 ? val1 : val2);
+						_property.setCurrentMinValue(val);
+						_property.setCurrentMinValueDefined(true);
 					}
 					else
-						_property.setCurrentMinValue(val1);
+						_property.setCurrentMinValueDefined(false);
 
-					_property.setCurrentValueDefined(true);
+					if (_numberToEditText.getText().length() != 0)
+					{
+						double val = Double.parseDouble(_numberToEditText
+								.getText().toString());
 
-					_resultProcessor.onPositiveDialogResult(_itemView);
+						if (val < _property.getMinValue())
+							val = _property.getMinValue();
+						if (val > _property.getMaxValue())
+							val = _property.getMaxValue();
+
+						_property.setCurrentMaxValue(val);
+						_property.setCurrentMaxValueDefined(true);
+					}
+					else
+						_property.setCurrentMaxValueDefined(false);
+
+					if (_property.isCurrentMinValueDefined()
+							|| _property.isCurrentMaxValueDefined())
+					{
+						_property.setCurrentValueDefined(true);
+						_resultProcessor.onPositiveDialogResult(_itemView);
+					}
+				}
+				else
+				{
+					if (_numberFromEditText.getText().length() != 0)
+					{
+						double val = Double.parseDouble(_numberFromEditText
+								.getText().toString());
+
+						if (val < _property.getMinValue())
+							val = _property.getMinValue();
+						if (val > _property.getMaxValue())
+							val = _property.getMaxValue();
+
+						_property.setCurrentMinValue(val);
+						_property.setCurrentMinValueDefined(true);
+						_property.setCurrentValueDefined(true);
+						_resultProcessor.onPositiveDialogResult(_itemView);
+					}
+					else
+						_property.setCurrentMinValueDefined(false);
 				}
 			}
 		});
@@ -114,8 +143,12 @@ public class NumberSelectDialog extends DialogFragment implements
 
 		if (_property.isCurrentValueDefined())
 		{
-			setEditTextValue(_numberFromEditText, _property.getCurrentMinValue());			
-			setEditTextValue(_numberToEditText, _property.getCurrentMaxValue());			
+			if (_property.isCurrentMinValueDefined())
+				setEditTextValue(_numberFromEditText,
+						_property.getCurrentMinValue());
+			if (_property.isCurrentMaxValueDefined())
+				setEditTextValue(_numberToEditText,
+						_property.getCurrentMaxValue());
 		}
 
 		_numberFromEditText.post(new Runnable()
@@ -158,10 +191,10 @@ public class NumberSelectDialog extends DialogFragment implements
 
 	void setEditTextValue(EditText edit, double value)
 	{
-		if(_property.isFloat())
+		if (_property.isFloat())
 			edit.setText(Double.toString(value));
 		else
-			edit.setText(Integer.toString((int)value));
+			edit.setText(Integer.toString((int) value));
 	}
 
 	@Override
@@ -185,7 +218,7 @@ public class NumberSelectDialog extends DialogFragment implements
 			}
 			else if (val > _property.getMaxValue())
 			{
-				setEditTextValue(edit, _property.getMaxValue());				
+				setEditTextValue(edit, _property.getMaxValue());
 			}
 		}
 	}

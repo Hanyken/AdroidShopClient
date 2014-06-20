@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.Toast;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
+import stx.shopclient.cartactivity.CartActivity;
 import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.entity.Order;
 import stx.shopclient.entity.OrderProperty;
@@ -126,6 +127,7 @@ public class OrderPropertiesActivity extends BaseActivity
 			{
 				Toast.makeText(OrderPropertiesActivity.this, "Заказ изменен",
 						Toast.LENGTH_LONG).show();
+				setResult(1);
 				finish();
 			}
 		}

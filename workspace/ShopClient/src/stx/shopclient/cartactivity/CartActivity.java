@@ -38,7 +38,7 @@ import android.widget.Toast;
 
 public class CartActivity extends BaseActivity implements OnItemClickListener
 {
-
+	public static final int EDIT_ORDER_REQUEST = 1;
 	ListView _list;
 	CartListAdapter _adapter;
 
@@ -206,7 +206,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 					.getItem().getName());
 			intent.putExtra(OrderPropertiesActivity.ORDER_ID_EXTRA_KEY,
 					order.getId());
-			startActivity(intent);
+			startActivityForResult(intent, EDIT_ORDER_REQUEST);
 		}
 		else if (item.getItemId() == R.id.delete)
 		{
@@ -228,6 +228,15 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 		intent.putExtra(ItemActivity.ITEM_BUY_EXTRA_KEY, false);
 		intent.putExtra("ItemTitle", order.getItem().getName());
 		startActivity(intent);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		if (requestCode == EDIT_ORDER_REQUEST && resultCode == 1)
+		{
+			new LoadTask().execute();
+		}
 	}
 
 	class LoadTask extends AsyncTask<Void, Void, Void>
@@ -295,7 +304,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 			{
 				WebClient client = createWebClient();
 				client.deleteOrder(Token.getCurrent(), order.getId());
-				
+
 				try
 				{
 					long orderCount = client.getOrderCount(Token.getCurrent(),

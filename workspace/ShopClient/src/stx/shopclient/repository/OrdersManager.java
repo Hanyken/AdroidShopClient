@@ -146,6 +146,8 @@ public class OrdersManager
 										.getValue()));
 						((NumberPropertyDescriptor) prop)
 								.setCurrentValueDefined(true);
+						((NumberPropertyDescriptor) prop)
+								.setCurrentMinValueDefined(true);
 					}
 					else if (prop.getClass() == DatePropertyDescriptor.class)
 					{
@@ -205,7 +207,7 @@ public class OrdersManager
 			Collection<PropertyDescriptor> properties)
 	{
 		ArrayList<OrderProperty> items = new ArrayList<OrderProperty>();
-		
+
 		for (PropertyDescriptor el : properties)
 		{
 			OrderProperty item = new OrderProperty();
@@ -213,7 +215,7 @@ public class OrdersManager
 			item.setValue(el.getStringValue());
 			items.add(item);
 		}
-		
+
 		return items;
 	}
 

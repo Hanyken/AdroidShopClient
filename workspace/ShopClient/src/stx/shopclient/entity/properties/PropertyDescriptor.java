@@ -132,8 +132,8 @@ public abstract class PropertyDescriptor implements Serializable
 
 			for (PropertyDescriptor prop : properties)
 				prop.appendSearchPropertyXml(searchEl);
-			
-			doc.appendChild(searchEl);			
+
+			doc.appendChild(searchEl);
 
 			Transformer transformer = TransformerFactory.newInstance()
 					.newTransformer();
@@ -148,5 +148,10 @@ public abstract class PropertyDescriptor implements Serializable
 		{
 			throw new RuntimeException(ex);
 		}
+	}
+
+	public String getDescription()
+	{
+		return "";
 	}
 }

@@ -17,6 +17,8 @@ public class NumberPropertyDescriptor extends PropertyDescriptor
 	private double _currentMaxValue;
 
 	private boolean _isCurrentValueDefined = false;
+	private boolean _isCurrentMinValueDefined = false;
+	private boolean _isCurrentMaxValueDefined = false;
 	private boolean _isRange = true;
 	private boolean _isFloat = true;
 
@@ -79,6 +81,8 @@ public class NumberPropertyDescriptor extends PropertyDescriptor
 	public void clear()
 	{
 		_isCurrentValueDefined = false;
+		_isCurrentMinValueDefined = false;
+		_isCurrentMaxValueDefined = false;
 	}
 
 	public boolean isRange()
@@ -124,13 +128,19 @@ public class NumberPropertyDescriptor extends PropertyDescriptor
 
 		if (_isRange)
 		{
-			Element elMin = doc.createElement("Min");
-			elMin.setTextContent(Double.toString(_currentMinValue));
-			el.appendChild(elMin);
+			if (_isCurrentMinValueDefined)
+			{
+				Element elMin = doc.createElement("Min");
+				elMin.setTextContent(Double.toString(_currentMinValue));
+				el.appendChild(elMin);
+			}
 
-			Element elMax = doc.createElement("Max");
-			elMax.setTextContent(Double.toString(_currentMaxValue));
-			el.appendChild(elMax);
+			if (_isCurrentMaxValueDefined)
+			{
+				Element elMax = doc.createElement("Max");
+				elMax.setTextContent(Double.toString(_currentMaxValue));
+				el.appendChild(elMax);
+			}
 		}
 		else
 		{
@@ -140,5 +150,56 @@ public class NumberPropertyDescriptor extends PropertyDescriptor
 		}
 
 		root.appendChild(el);
+	}
+
+	public boolean isCurrentMinValueDefined()
+	{
+		return _isCurrentMinValueDefined;
+	}
+
+	public void setCurrentMinValueDefined(boolean isCurrentMinValueDefined)
+	{
+		_isCurrentMinValueDefined = isCurrentMinValueDefined;
+	}
+
+	public boolean isCurrentMaxValueDefined()
+	{
+		return _isCurrentMaxValueDefined;
+	}
+
+	public void setCurrentMaxValueDefined(boolean isCurrentMaxValueDefined)
+	{
+		_isCurrentMaxValueDefined = isCurrentMaxValueDefined;
+	}
+
+	String getStringValue(double value)
+	{
+		if (_isFloat)
+			return String.format("%.2f", value);
+		else
+			return String.format("%d", (int) value);
+	}
+
+	@Override
+	public String getDescription()
+	{
+		if (_isRange)
+		{
+			String descr = "";
+			if (_isCurrentMinValueDefined)
+				descr += "от " + getStringValue(_currentMinValue);
+			if (_isCurrentMaxValueDefined)
+			{
+				if (_isCurrentMinValueDefined)
+					descr += " ";
+				descr += "до " + getStringValue(_currentMaxValue);
+			}
+
+			return descr;
+		}
+		else
+		{
+			return getStringValue(_currentMinValue);
+		}
 	}
 }
