@@ -31,7 +31,7 @@ public class StxDatePicker extends FrameLayout implements
 		super(context, attrs);
 
 		this.addView(createView());
-	}
+	}	
 
 	View createView() {
 		View view = inflate(getContext(), R.layout.stx_datepicker, null);

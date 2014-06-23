@@ -1,9 +1,14 @@
 package stx.shopclient.itemactivity;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
+import stx.shopclient.entity.CatalogItem;
+import stx.shopclient.entity.CatalogItemGroup;
 import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.styles.ColorButtonDrawable;
@@ -37,6 +42,8 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 
 	CatalogSettings settings;
 
+	List<ItemAnalogsFragment> _analogFragments = new ArrayList<ItemAnalogsFragment>();
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState)
@@ -52,7 +59,7 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 		btnOverview = (Button) view.findViewById(R.id.btnOverview);
 		btnShare = (Button) view.findViewById(R.id.btnShare);
 		btnOrder = (Button) view.findViewById(R.id.btnOrder);
-		
+
 		setThems(view);
 
 		btnShare.setOnClickListener(this);
@@ -64,7 +71,8 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 
 	private void setThems(View view)
 	{
-		settings = Repository.get(getActivity()).getCatalogManager().getSettings();
+		settings = Repository.get(getActivity()).getCatalogManager()
+				.getSettings();
 
 		RelativeLayout rlButtonPanel = (RelativeLayout) view
 				.findViewById(R.id.rlButtonPanel);
@@ -75,10 +83,10 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 
 		btnShare.setBackground(getShareButtonDrawable());
 		btnOverview.setBackground(getCommentButtonDrawable());
-		
+
 		lblOverview.setTextColor(settings.getCountButtonLableColor());
 		lblRepost.setTextColor(settings.getCountButtonLableColor());
-		
+
 		LayerDrawable stars = (LayerDrawable) rtgRating.getProgressDrawable();
 		stars.getDrawable(2).setColorFilter(settings.getRatingColor(),
 				PorterDuff.Mode.SRC_ATOP);
@@ -110,12 +118,25 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 		btnOrder.setEnabled(value);
 	}
 
-	public void addAnalogs(String title, long[] ids)
+	public void clearAnalogs()
 	{
-		Fragment analogFragment = ItemAnalogsFragment.getIntent(title, ids);		
-		getFragmentManager().beginTransaction().add(R.id.llAnalogs, analogFragment).commit();
+		for (ItemAnalogsFragment analogFragment : _analogFragments)
+			getFragmentManager().beginTransaction().remove(analogFragment)
+					.commit();
 	}
-	
+
+	public void addAnalogs(CatalogItemGroup group, Collection<CatalogItem> items)
+	{
+		ItemAnalogsFragment analogFragment = new ItemAnalogsFragment();
+		analogFragment.setGroup(group);
+		analogFragment.setItems(items);
+
+		getFragmentManager().beginTransaction()
+				.add(R.id.llAnalogs, analogFragment).commit();
+
+		_analogFragments.add(analogFragment);
+	}
+
 	@Override
 	public void onClick(View view)
 	{
@@ -125,25 +146,33 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 	private Drawable getShareButtonDrawable()
 	{
 		StateListDrawable drawable = new StateListDrawable();
-		Bitmap bmp = settings.getImageFromPath(getResources(), "Share"); //BitmapFactory.decodeResource(getResources(), R.drawable.img_share);
+		Bitmap bmp = settings.getImageFromPath(getResources(), "Share"); // BitmapFactory.decodeResource(getResources(),
+																			// R.drawable.img_share);
 		Drawable normal = new ImageButtonDrawable(bmp);
-		Bitmap bmpPress = settings.getImageFromPath(getResources(), "SharePress"); //BitmapFactory.decodeResource(getResources(), R.drawable.img_share_press);
+		Bitmap bmpPress = settings.getImageFromPath(getResources(),
+				"SharePress"); // BitmapFactory.decodeResource(getResources(),
+								// R.drawable.img_share_press);
 		Drawable press = new ImageButtonDrawable(bmpPress);
 
-		drawable.addState(new int[] { android.R.attr.state_pressed }, press);
+		drawable.addState(new int[]
+		{ android.R.attr.state_pressed }, press);
 		drawable.addState(new int[0], normal);
 		return drawable;
 	}
-	
+
 	private Drawable getCommentButtonDrawable()
 	{
 		StateListDrawable drawable = new StateListDrawable();
-		Bitmap bmp = settings.getImageFromPath(getResources(), "Comment"); //BitmapFactory.decodeResource(getResources(), R.drawable.img_share);
+		Bitmap bmp = settings.getImageFromPath(getResources(), "Comment"); // BitmapFactory.decodeResource(getResources(),
+																			// R.drawable.img_share);
 		Drawable normal = new ImageButtonDrawable(bmp);
-		Bitmap bmpPress = settings.getImageFromPath(getResources(), "CommentPress"); //BitmapFactory.decodeResource(getResources(), R.drawable.img_share_press);
+		Bitmap bmpPress = settings.getImageFromPath(getResources(),
+				"CommentPress"); // BitmapFactory.decodeResource(getResources(),
+									// R.drawable.img_share_press);
 		Drawable press = new ImageButtonDrawable(bmpPress);
 
-		drawable.addState(new int[] { android.R.attr.state_pressed }, press);
+		drawable.addState(new int[]
+		{ android.R.attr.state_pressed }, press);
 		drawable.addState(new int[0], normal);
 		return drawable;
 	}

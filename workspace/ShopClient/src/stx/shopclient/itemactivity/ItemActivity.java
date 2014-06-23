@@ -1,12 +1,16 @@
 package stx.shopclient.itemactivity;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.entity.AnalogGroup;
 import stx.shopclient.entity.Catalog;
 import stx.shopclient.entity.CatalogItem;
+import stx.shopclient.entity.CatalogItemGroup;
 import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.orderactivity.OrderActivity;
@@ -37,7 +41,8 @@ public class ItemActivity extends BaseActivity
 	public static final String ITEM_BUY_EXTRA_KEY = "CanBuyItem";
 
 	private ItemButtonBarFragment buttonBar;
-	private boolean _analogsAdded = false;
+
+	private Map<CatalogItemGroup, Collection<CatalogItem>> _groupItems = new HashMap<CatalogItemGroup, Collection<CatalogItem>>();
 
 	@Override
 	protected View createMainView(ViewGroup parent)
@@ -101,15 +106,11 @@ public class ItemActivity extends BaseActivity
 		buttonBar.setOverviewCount(_Item.getOverviewsCount());
 		buttonBar.setCanBuy(true);
 
-		if (!_analogsAdded)
+		buttonBar.clearAnalogs();
+
+		for (CatalogItemGroup group : _groupItems.keySet())
 		{
-			Collection<AnalogGroup> groups = Repository.get(this)
-					.getItemsManager().getAnalogs(_itemId);
-			for (AnalogGroup el : groups)
-			{
-				buttonBar.addAnalogs(el.getName(), el.getIds());
-			}
-			_analogsAdded = true;
+			buttonBar.addAnalogs(group, _groupItems.get(group));
 		}
 
 		setProperty(txtProperty);
@@ -203,6 +204,22 @@ public class ItemActivity extends BaseActivity
 				Collection<CatalogItem> items = client.getNodeItem(
 						Token.getCurrent(), _itemId);
 				_Item = items.iterator().next();
+
+				_groupItems.clear();
+
+				if (_Item != null)
+				{
+					for (CatalogItemGroup group : _Item.getGroups())
+					{
+						Collection<CatalogItem> groupItems = client
+								.getGroupItems(Token.getCurrent(), _itemId,
+										group.getId());
+						if (groupItems != null && groupItems.size() > 0)
+						{
+							_groupItems.put(group, groupItems);
+						}
+					}
+				}
 			}
 			catch (Throwable ex)
 			{

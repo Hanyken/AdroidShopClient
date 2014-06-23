@@ -1,7 +1,10 @@
 package stx.shopclient.itemactivity;
 
+import java.util.Collection;
+
 import stx.shopclient.R;
 import stx.shopclient.entity.CatalogItem;
+import stx.shopclient.entity.CatalogItemGroup;
 import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.repository.ItemsManager;
 import stx.shopclient.repository.Repository;
@@ -26,15 +29,18 @@ public class ItemAnalogsFragment extends Fragment implements OnClickListener
 	private static final String TITLE_NAME = "Title";
 	private static final String IDS_NAME = "Ids";
 
-	public static Fragment getIntent(String title, long[] ids)
-	{
-		Fragment fragment = new ItemAnalogsFragment();
-		Bundle bundle = new Bundle();
-		bundle.putString(TITLE_NAME, title);
-		bundle.putLongArray(IDS_NAME, ids);
-		fragment.setArguments(bundle);
-		return fragment;
-	}
+	private CatalogItemGroup _group;
+	private Collection<CatalogItem> _items;
+
+	// public static Fragment getIntent(String title, long[] ids)
+	// {
+	// Fragment fragment = new ItemAnalogsFragment();
+	// Bundle bundle = new Bundle();
+	// bundle.putString(TITLE_NAME, title);
+	// bundle.putLongArray(IDS_NAME, ids);
+	// fragment.setArguments(bundle);
+	// return fragment;
+	// }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,12 +54,12 @@ public class ItemAnalogsFragment extends Fragment implements OnClickListener
 				.getCatalogManager().getSettings();
 
 		TextView lblTitle = (TextView) view.findViewById(R.id.lblTitle);
-		lblTitle.setText(args.getString(TITLE_NAME));
+		lblTitle.setText(_group.getName());
 		lblTitle.setBackgroundColor(settings.getBackground());
 		lblTitle.setTextColor(settings.getForegroundColor());
 
 		GridLayout glList = (GridLayout) view.findViewById(R.id.glList);
-		loadGrid(glList, args.getLongArray(IDS_NAME), inflater);
+		loadGrid(glList, inflater);
 
 		LinearLayout llSeparate = (LinearLayout) view
 				.findViewById(R.id.llSeparate);
@@ -62,7 +68,7 @@ public class ItemAnalogsFragment extends Fragment implements OnClickListener
 		return view;
 	}
 
-	void loadGrid(GridLayout view, long[] ids, LayoutInflater inflater)
+	void loadGrid(GridLayout view, LayoutInflater inflater)
 	{
 
 		Display display = getActivity().getWindowManager().getDefaultDisplay();
@@ -76,14 +82,12 @@ public class ItemAnalogsFragment extends Fragment implements OnClickListener
 		view.removeAllViews();
 		ItemsManager manager = Repository.get(getActivity()).getItemsManager();
 
-		for (long id : ids)
+		for (CatalogItem entity : _items)
 		{
-			CatalogItem entity = manager.getItem(id);
-
 			View itemView = inflater.inflate(
 					R.layout.item_activity_analog_fragment_item, view, false);
 
-			itemView.setTag(id);
+			itemView.setTag(entity);
 			itemView.setOnClickListener(this);
 
 			view.addView(itemView);
@@ -114,10 +118,31 @@ public class ItemAnalogsFragment extends Fragment implements OnClickListener
 	}
 
 	@Override
-	public void onClick(View arg0)
+	public void onClick(View view)
 	{
 		Intent intent = new Intent(getActivity(), ItemActivity.class);
-		intent.putExtra(ItemActivity.ITEM_ID_EXTRA_KEY, (Long) arg0.getTag());
+		CatalogItem item = (CatalogItem) view.getTag();
+		intent.putExtra(ItemActivity.ITEM_ID_EXTRA_KEY, item.getId());
 		startActivity(intent);
+	}
+
+	public CatalogItemGroup getGroup()
+	{
+		return _group;
+	}
+
+	public void setGroup(CatalogItemGroup group)
+	{
+		_group = group;
+	}
+
+	public Collection<CatalogItem> getItems()
+	{
+		return _items;
+	}
+
+	public void setItems(Collection<CatalogItem> items)
+	{
+		_items = items;
 	}
 }
