@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,7 @@ import android.widget.Toast;
 public class CartActivity extends BaseActivity implements OnItemClickListener
 {
 	public static final int EDIT_ORDER_REQUEST = 1;
+	private static final int MENU_PAYMENT = 1;
 	ListView _list;
 	CartListAdapter _adapter;
 
@@ -93,6 +95,30 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 		super.onCreateContextMenu(menu, v, menuInfo);
 
 		getMenuInflater().inflate(R.menu.cart_activity_item_menu, menu);
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu)
+	{
+		menu.clear();
+		if (Repository.get(null).getOrderManager().getOrderCount() > 0)
+		{
+			MenuItem paymentItem = menu.add(0, MENU_PAYMENT, 0, "Оплатить");
+			paymentItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		}
+		return super.onPrepareOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item)
+	{
+		switch(item.getItemId())
+		{
+			case MENU_PAYMENT:
+				new PaymentTask().execute();
+				break;
+		}
+		return super.onMenuItemSelected(featureId, item);
 	}
 
 	class CartListAdapter extends BaseAdapter
@@ -351,6 +377,64 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 						String.format("Удалено (%s)", order.getItem().getName()),
 						Toast.LENGTH_LONG).show();
 				_cartItems.remove(order);
+				_adapter.notifyDataSetChanged();
+			}
+		}
+	}
+	
+	class PaymentTask extends AsyncTask<Void, Void, Void>
+	{
+		Throwable exception;
+		ProgressDialog dialog;
+
+		@Override
+		protected void onPreExecute()
+		{
+			dialog = ProgressDialog.show(CartActivity.this, "Загрузка",
+					"Оформирование заказа");
+		}
+
+		@Override
+		protected Void doInBackground(Void... params)
+		{
+			try
+			{
+				WebClient client = createWebClient();
+				client.addPayment(Token.getCurrent(), Repository.CatalogId);
+
+				try
+				{
+					long orderCount = client.getOrderCount(Token.getCurrent(),
+							Repository.CatalogId);
+					Repository.get(null).getOrderManager()
+							.setOrderCount(orderCount);
+				}
+				catch (Throwable ex)
+				{
+
+				}
+			}
+			catch (Throwable ex)
+			{
+				exception = ex;
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result)
+		{
+			dialog.dismiss();
+
+			if (exception != null)
+				Toast.makeText(CartActivity.this,
+						exception.getLocalizedMessage(), Toast.LENGTH_LONG)
+						.show();
+			else
+			{
+				Toast.makeText(CartActivity.this, "Заказ оформлен", Toast.LENGTH_LONG).show();
+				_cartItems.clear();
 				_adapter.notifyDataSetChanged();
 			}
 		}

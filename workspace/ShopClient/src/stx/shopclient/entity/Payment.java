@@ -1,9 +1,6 @@
 package stx.shopclient.entity;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 public class Payment
 {
@@ -12,7 +9,6 @@ public class Payment
 	private Date _date;
 	private double _sum;
 	private int _state;
-	private List<Order> _orders = new ArrayList<Order>();
 	
 	public long getId()
 	{
@@ -57,15 +53,5 @@ public class Payment
 	public void setState(int state)
 	{
 		_state = state;
-	}
-	
-	public List<Order> getOrders()
-	{
-		return _orders;
-	}
-	public void setOrders(Collection<Order> orders)
-	{
-		_orders.clear();
-		_orders.addAll(orders);
 	}
 }

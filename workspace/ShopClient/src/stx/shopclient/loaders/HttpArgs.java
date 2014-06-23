@@ -101,7 +101,7 @@ public class HttpArgs
 		
 		String value = sb.toString();
 		if (value.endsWith("&"))
-			value = value.substring(0, value.length()-2);
+			value = value.substring(0, value.length()-1);
 		
 		return new HttpGet(sb.toString());
 	}

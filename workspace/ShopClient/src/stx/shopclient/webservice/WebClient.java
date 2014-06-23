@@ -601,6 +601,23 @@ public class WebClient
 
 		return items;
 	}
+	
+	public Collection<Order> getPaymentOrders(Token token, long paymentId)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("paymentId", paymentId);
+
+		String response = request("payment/orders", args, true);
+		Collection<Order> items = new OrderParser().parseString(response);
+
+		OrdersManager ordersManager = Repository.get(null).getOrderManager();
+		for (Order order : items)
+		{
+			ordersManager.addOrder(order);
+		}
+		return items;
+	}
 
 	public void addPayment(Token token, long catalogId)
 	{
