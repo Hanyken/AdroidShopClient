@@ -21,6 +21,7 @@ import stx.shopclient.utils.ImageDownloadTask;
 import stx.shopclient.webservice.WebClient;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.nfc.cardemulation.CardEmulation;
 import android.os.AsyncTask;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -378,6 +379,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 						Toast.LENGTH_LONG).show();
 				_cartItems.remove(order);
 				_adapter.notifyDataSetChanged();
+				CartActivity.this.invalidateOptionsMenu(); // ќбновл€ю кнопку "ќфрмить"
 			}
 		}
 	}
