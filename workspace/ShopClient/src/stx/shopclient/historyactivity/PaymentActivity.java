@@ -5,30 +5,42 @@ import java.util.Collection;
 import java.util.List;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
+import stx.shopclient.cartactivity.CartActivity;
 import stx.shopclient.entity.CatalogSettings;
+import stx.shopclient.entity.Order;
 import stx.shopclient.entity.Payment;
 import stx.shopclient.entity.Token;
 import stx.shopclient.parsers.BaseParser;
 import stx.shopclient.repository.Repository;
+import stx.shopclient.utils.ImageDownloadTask;
 import stx.shopclient.webservice.WebClient;
 
-public class PaymentActivity extends BaseActivity implements OnItemClickListener
+public class PaymentActivity extends BaseActivity
 {
-	ListView lstMain;
-	List<Payment> _paymentItems = new ArrayList<Payment>();
-	PaymentListAdapter _adapter;
+	public static final String PAYMENT_ID_NAME= "PaymentId";
+	public static final String PAYMENT_NUMBER_NAME= "PaymentNumber";
+	public static final String PAYMENT_CREATE_DATE_NAME= "PaymentCreateDate";
+	public static final String PAYMENT_SUM_NAME= "PaymentSum";
+	public static final String PAYMENT_STATE_NAME= "PaymentState";
+	public static final String PAYMENT_PAY_DATE_NAME= "PaymentPayDate";
+	public static final String PAYMENT_ORDER_COUNT_NAME= "PaymentOrderCount";
+	
+	private Payment _Item;
+	private List<Order> _orderItems = new ArrayList<Order>();
+	private OrderListAdapter _adapter;
 	
 	@Override
 	protected View createMainView(ViewGroup parent)
@@ -39,37 +51,43 @@ public class PaymentActivity extends BaseActivity implements OnItemClickListener
 				.getSettings();
 
 		getActionBar().setBackgroundDrawable(new ColorDrawable(settings.getBackground()));
-
-		_adapter = new PaymentListAdapter();
 		
-		lstMain = (ListView)mainView.findViewById(R.id.lstMain);
-		lstMain.setOnItemClickListener(this);
-		lstMain.setAdapter(_adapter);
-
+		Intent intent = getIntent();
+		try
+		{
+			_Item = new Payment();
+			_Item.setId(intent.getLongExtra(PAYMENT_ID_NAME, 0));
+			_Item.setNumber(intent.getLongExtra(PAYMENT_NUMBER_NAME, 0));
+			_Item.setCreateDate(BaseParser.dateParser.parse(intent.getStringExtra(PAYMENT_CREATE_DATE_NAME)));
+			_Item.setState(intent.getIntExtra(PAYMENT_STATE_NAME, 0));
+			if (intent.hasExtra(PAYMENT_PAY_DATE_NAME))
+				_Item.setPayDate(BaseParser.dateParser.parse(intent.getStringExtra(PAYMENT_PAY_DATE_NAME)));
+			_Item.setOrderCount(intent.getIntExtra(PAYMENT_ORDER_COUNT_NAME, 0));
+		}
+		catch(Exception ex){}
+		TextView lblNumber = (TextView)mainView.findViewById(R.id.lblNumber);
+		ListView lstOrders = (ListView)mainView.findViewById(R.id.lstOrders);
+		
+		_adapter = new OrderListAdapter();
+		
+		lblNumber.setText("Номер заказа: "+Long.toString(_Item.getNumber()) + "\n Кол-во элементов:" + Integer.toString(_Item.getOrderCount())+ "\n Дата заказа: "+ BaseParser.dateParser.format(_Item.getCreateDate()));
+		lstOrders.setAdapter(_adapter);
+		
 		new LoadTask().execute();
 		
 		return mainView;
 	}
-
-	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
-	{
-		// TODO Auto-generated method stub
-		
-	}
 	
 	
 	
 	
-	
-	
-	class PaymentListAdapter extends BaseAdapter
+	class OrderListAdapter extends BaseAdapter
 	{
 
 		@Override
 		public int getCount()
 		{
-			return _paymentItems.size();
+			return _orderItems.size();
 		}
 
 		@Override
@@ -88,16 +106,27 @@ public class PaymentActivity extends BaseActivity implements OnItemClickListener
 		public View getView(int index, View arg1, ViewGroup container)
 		{
 
-			Payment item = _paymentItems.get(index);
+			Order order = _orderItems.get(index);
 
 			final View view = getLayoutInflater().inflate(
 					R.layout.payment_activity_item, container, false);
 
-			TextView lblNumber = (TextView)view.findViewById(R.id.lblNumber);
-			
-			lblNumber.setText("Номер заказа: "+Long.toString(item.getNumber()) + "\n Кол-во элементов:" + Integer.toString(item.getOrderCount())+ "\n Дата заказа: "+ BaseParser.dateParser.format(item.getCreateDate()));
-			
-			view.setTag(item);
+			view.setTag(order);
+
+			TextView nameTextView = (TextView) view
+					.findViewById(R.id.nameTextView);
+			nameTextView.setText(order.getItem().getName());
+
+			TextView descrTextView = (TextView) view
+					.findViewById(R.id.descriptionTextView);
+			descrTextView.setText(CartActivity.getOrderDescription(order.getProperties(),
+					order.getItem().getOrderProperties()));
+
+			ImageView imgView = (ImageView) view.findViewById(R.id.imageView);
+
+			if (order.getItem().getIco() != null)
+				ImageDownloadTask.startNew(imgView, PaymentActivity.this, order
+						.getItem().getIco());
 
 			return view;
 		}
@@ -122,10 +151,9 @@ public class PaymentActivity extends BaseActivity implements OnItemClickListener
 			try
 			{
 				WebClient client = createWebClient();
-				Collection<Payment> payments = client.getPayments(Token.getCurrent(),
-						Repository.CatalogId);
-				_paymentItems.clear();
-				_paymentItems.addAll(payments);
+				Collection<Order> payments = client.getPaymentOrders(Token.getCurrent(), _Item.getId());
+				_orderItems.clear();
+				_orderItems.addAll(payments);
 			}
 			catch (Throwable ex)
 			{

@@ -8,7 +8,7 @@ import stx.shopclient.entity.Catalog;
 import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.entity.Token;
 import stx.shopclient.entity.UpdateResultEntity;
-import stx.shopclient.historyactivity.PaymentActivity;
+import stx.shopclient.historyactivity.PaymentListActivity;
 import stx.shopclient.loginactivity.LoginActivity;
 import stx.shopclient.mainactivity.MainActivity;
 import stx.shopclient.mainmenu.MainMenuItem;
@@ -335,7 +335,7 @@ public class BaseActivity extends FragmentActivity
 		}
 		else if (item.getId() == MainMenuItem.HISTORY_MENU_ITEM)
 		{
-			Intent intent = new Intent(this, PaymentActivity.class);
+			Intent intent = new Intent(this, PaymentListActivity.class);
 			startActivity(intent);
 		}
 	}

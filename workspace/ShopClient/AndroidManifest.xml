@@ -95,8 +95,12 @@
             android:label="@string/default_title" >
         </activity>
         <activity
-            android:name="stx.shopclient.historyactivity.PaymentActivity"
+            android:name="stx.shopclient.historyactivity.PaymentListActivity"
             android:label="@string/payment_activity_name" >
+        </activity>
+        <activity
+            android:name="stx.shopclient.historyactivity.PaymentActivity"
+            android:label="@string/default_title" >
         </activity>
     </application>
 

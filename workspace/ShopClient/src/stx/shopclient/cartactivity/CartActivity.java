@@ -189,7 +189,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 
 	}
 
-	String getOrderDescription(Collection<OrderProperty> orderProperties,
+	 public static String getOrderDescription(Collection<OrderProperty> orderProperties,
 			Collection<PropertyDescriptor> itemOrderProperties)
 	{
 		Collection<PropertyDescriptor> properties = OrdersManager
