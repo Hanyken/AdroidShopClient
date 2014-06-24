@@ -89,6 +89,12 @@ public class MainMenuListAdapter extends BaseAdapter
 		item.setName("Настройки");
 		item.setHasIcon(true);
 		_menuItems.add(item);
+		
+		item = new MainMenuItem();
+		item.setId(MainMenuItem.HISTORY_MENU_ITEM);
+		item.setName("История");
+		item.setHasIcon(true);
+		_menuItems.add(item);
 	}
 
 	@Override

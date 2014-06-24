@@ -176,7 +176,7 @@ public class CatalogItem
 		{
 			if (prop.getName().equals(PRICE_PROPERTY_NAME) && (prop instanceof NumberPropertyDescriptor))
 			{
-				price = ((NumberPropertyDescriptor)prop).getCurrentMaxValue();
+				price = ((NumberPropertyDescriptor)prop).getCurrentMinValue();
 				break;
 			}
 		}

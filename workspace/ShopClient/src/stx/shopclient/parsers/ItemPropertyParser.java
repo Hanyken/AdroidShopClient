@@ -66,13 +66,13 @@ public class ItemPropertyParser extends BaseParser<PropertyDescriptor>
 				if (propType.equals(PropertyParser.INTEGER_TYPE))
 				{
 					item = new NumberPropertyDescriptor();
-					((NumberPropertyDescriptor) item).setCurrentMaxValue(super.getValueInt(e, VALUE_NAME));
+					((NumberPropertyDescriptor) item).setCurrentMinValue(super.getValueInt(e, VALUE_NAME));
 				}
 				else
 					if (propType.equals(NumberPropertyDescriptor.TYPE_STRING))
 					{
 						item = new NumberPropertyDescriptor();
-						((NumberPropertyDescriptor) item).setCurrentMaxValue(super.getValueDouble(e, VALUE_NAME));
+						((NumberPropertyDescriptor) item).setCurrentMinValue(super.getValueDouble(e, VALUE_NAME));
 					}
 					else
 						if (propType.equals(EnumPropertyDescriptor.TYPE_STRING))

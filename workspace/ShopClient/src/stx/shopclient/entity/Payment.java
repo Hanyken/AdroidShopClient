@@ -6,9 +6,11 @@ public class Payment
 {
 	private long _id;
 	private long _number;
-	private Date _date;
+	private Date _createDate;
 	private double _sum;
 	private int _state;
+	private Date _payDate;
+	private int _orderCount;
 	
 	public long getId()
 	{
@@ -28,13 +30,13 @@ public class Payment
 		_number = number;
 	}
 	
-	public Date getDate()
+	public Date getCreateDate()
 	{
-		return _date;
+		return _createDate;
 	}
-	public void setDate(Date date)
+	public void setCreateDate(Date createDate)
 	{
-		_date = date;
+		_createDate = createDate;
 	}
 	
 	public double getSum()
@@ -53,5 +55,23 @@ public class Payment
 	public void setState(int state)
 	{
 		_state = state;
+	}
+	
+	public Date getPayDate()
+	{
+		return _payDate;
+	}
+	public void setPayDate(Date payDate)
+	{
+		_payDate =  payDate;
+	}
+	
+	public int getOrderCount()
+	{
+		return _orderCount;
+	}
+	public void setOrderCount(int orderCount)
+	{
+		_orderCount = orderCount;
 	}
 }
