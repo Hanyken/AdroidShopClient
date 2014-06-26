@@ -1,10 +1,12 @@
 package stx.shopclient.mainmenu;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
+import stx.shopclient.entity.Catalog;
 import stx.shopclient.entity.Message;
 import stx.shopclient.repository.Repository;
 import android.content.Context;
@@ -67,8 +69,9 @@ public class MainMenuListAdapter extends BaseAdapter
 		_cartMenuItem.setName("Корзина");
 		_cartMenuItem.setHasIcon(true);
 		_cartMenuItem.setIconId(R.drawable.img_shopping_cart);
-		_cartMenuItem.setCount((int) Repository.get(_context).getOrderManager()
-				.getOrderCount());
+		/*_cartMenuItem.setCount((int) Repository.get(_context).getOrderManager()
+				.getOrderCount());*/
+		_cartMenuItem.setNotClickable(true);
 		_menuItems.add(_cartMenuItem);
 
 		item = new MainMenuItem();
@@ -95,6 +98,39 @@ public class MainMenuListAdapter extends BaseAdapter
 		item.setName("История");
 		item.setHasIcon(true);
 		_menuItems.add(item);
+	}
+	
+	public void addOrderCatalogs(Collection<Catalog> catalogs)
+	{
+		List<MainMenuItem> additems = new ArrayList<MainMenuItem>();
+		List<MainMenuItem> delitems = new ArrayList<MainMenuItem>();
+		
+		for(MainMenuItem el : _menuItems)
+		{
+			if (el.getId() >= MainMenuItem.CART_MENU_ITEM_ID)
+			{
+				if (el.getId() > MainMenuItem.CART_MENU_ITEM_ID)
+				{
+					additems.add(el);
+				}
+				else if (el.getId() == MainMenuItem.CART_MENU_ITEM_ID && el.getRowId() == 0)
+				{
+					continue;
+				}
+				delitems.add(el);
+			}
+		}
+		_menuItems.removeAll(delitems);
+		for(Catalog el : catalogs)
+		{
+			MainMenuItem item = new MainMenuItem();
+			item.setId(MainMenuItem.CART_MENU_ITEM_ID);
+			item.setRowId(el.getId());
+			item.setName(el.getName());
+			item.setCount(el.getOrderCount());
+			_menuItems.add(item);
+		}
+		_menuItems.addAll(additems);
 	}
 
 	@Override
@@ -150,6 +186,8 @@ public class MainMenuListAdapter extends BaseAdapter
 		TextView counterTextView = (TextView) itemView
 				.findViewById(R.id.counterTextView);
 
+		itemView.setClickable(item.isNotClickable());
+		
 		if (item.getCount() == 0)
 			counterTextView.setVisibility(View.GONE);
 		else

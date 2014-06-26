@@ -6,6 +6,7 @@ import java.util.List;
 
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
+import stx.shopclient.entity.Catalog;
 import stx.shopclient.entity.Order;
 import stx.shopclient.entity.OrderProperty;
 import stx.shopclient.entity.Token;
@@ -41,10 +42,12 @@ import android.widget.Toast;
 
 public class CartActivity extends BaseActivity implements OnItemClickListener
 {
+	public static final String CARD_ID_NAME = "CardId";
 	public static final int EDIT_ORDER_REQUEST = 1;
 	private static final int MENU_PAYMENT = 1;
 	ListView _list;
 	CartListAdapter _adapter;
+	Long _CatalogId;
 
 	List<Order> _cartItems = new ArrayList<Order>();
 
@@ -56,6 +59,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 		View view = getLayoutInflater().inflate(R.layout.cart_activity, parent,
 				false);
 
+		_CatalogId = getIntent().getLongExtra(CARD_ID_NAME, 0);
 		_list = (ListView) view.findViewById(R.id.listView);
 		_list.setOnItemClickListener(this);
 
@@ -294,8 +298,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 			try
 			{
 				WebClient client = createWebClient();
-				Collection<Order> orders = client.getOrders(Token.getCurrent(),
-						Repository.CatalogId);
+				Collection<Order> orders = client.getOrders(Token.getCurrent(), _CatalogId);
 				_cartItems.clear();
 				_cartItems.addAll(orders);
 			}
@@ -406,8 +409,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 
 				try
 				{
-					long orderCount = client.getOrderCount(Token.getCurrent(),
-							Repository.CatalogId);
+					long orderCount = client.getOrderCount(Token.getCurrent(), _CatalogId);
 					Repository.get(null).getOrderManager()
 							.setOrderCount(orderCount);
 				}
@@ -435,6 +437,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 						.show();
 			else
 			{
+				Repository.get(null).getOrderManager().setOrderCatalogs(new ArrayList<Catalog>());
 				Toast.makeText(CartActivity.this, "Заказ оформлен", Toast.LENGTH_LONG).show();
 				_cartItems.clear();
 				_adapter.notifyDataSetChanged();

@@ -15,7 +15,7 @@ public class Catalog
 	private int _nodeCount;
 	private List<CatalogNode> _nodes = new ArrayList<CatalogNode>();
 
-	
+	private int _orderCount;
 	
 	public long getId()
 	{
@@ -87,5 +87,15 @@ public class Catalog
 	{
 		_nodes.clear();
 		_nodes.addAll(nodes);
+	}
+	
+	public void setOrderCount(int orderCount)
+	{
+		_orderCount = orderCount;
+	}
+
+	public int getOrderCount()
+	{
+		return _orderCount;
 	}
 }

@@ -19,6 +19,7 @@ public class CatalogParser extends BaseParser<Catalog>
 	public final String NODE_COUNT_NAME = "NodeCount";
 	private final String NODES_NAME= "Nodes";
 	private final String NODE_NAME= "Node";
+	private final String ORDER_COUNT_NAME= "OrderCount";
 	
 	
 	public CatalogParser()
@@ -36,6 +37,7 @@ public class CatalogParser extends BaseParser<Catalog>
 		item.setDescription(super.getValue(e, DESCRIPTION_NAME));
 		item.setLastModification(super.getValueDate(e, LAST_MODIFICATION_NAME));
 		item.setNodeCount(super.getValueInt(e, NODE_COUNT_NAME));
+		item.setOrderCount(super.getValueInt(e, ORDER_COUNT_NAME));
 		
 		NodeList nl = e.getElementsByTagName(NODES_NAME);
 		if (nl.getLength() > 0)

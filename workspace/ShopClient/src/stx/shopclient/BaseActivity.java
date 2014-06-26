@@ -1,5 +1,6 @@
 package stx.shopclient;
 
+import java.util.Collection;
 import java.util.GregorianCalendar;
 
 import stx.shopclient.cartactivity.CartActivity;
@@ -81,7 +82,9 @@ public class BaseActivity extends FragmentActivity
 	{
 		super.onStart();
 
-		new GetOrderCountTask().execute();
+		//new GetOrderCountTask().execute();
+		
+		new GetOrderCatalogsTask().execute();
 	}
 
 	void loadUI()
@@ -117,6 +120,7 @@ public class BaseActivity extends FragmentActivity
 			@Override
 			public void onDrawerOpened(View arg0)
 			{
+				_mainMenuListAdapter.addOrderCatalogs(Repository.get(null).getOrderManager().getOrderCatalogs());
 				_mainMenuListAdapter.notifyDataSetChanged();
 			}
 
@@ -150,7 +154,7 @@ public class BaseActivity extends FragmentActivity
 
 	public boolean initMainMenuItem(MainMenuItem item)
 	{
-		if (item.getId() == MainMenuItem.CART_MENU_ITEM_ID)
+		if (item.getId() == MainMenuItem.CART_MENU_ITEM_ID && item.getRowId() == 0)
 			item.setCount((int) Repository.get(null).getOrderManager()
 					.getOrderCount());
 
@@ -316,6 +320,7 @@ public class BaseActivity extends FragmentActivity
 		else if (item.getId() == MainMenuItem.CART_MENU_ITEM_ID)
 		{
 			Intent intent = new Intent(this, CartActivity.class);
+			intent.putExtra(CartActivity.CARD_ID_NAME, item.getRowId());
 			startActivity(intent);
 		}
 		else if (item.getId() == MainMenuItem.DISCOUNT_CARDS_MENU_ITEM_ID)
@@ -531,7 +536,7 @@ public class BaseActivity extends FragmentActivity
 		}
 	}
 
-	class GetOrderCountTask extends AsyncTask<Void, Void, Void>
+	/*class GetOrderCountTask extends AsyncTask<Void, Void, Void>
 	{
 
 		@Override
@@ -552,5 +557,26 @@ public class BaseActivity extends FragmentActivity
 			return null;
 		}
 
+	}*/
+	
+	class GetOrderCatalogsTask extends AsyncTask<Void, Void, Void>
+	{
+
+		@Override
+		protected Void doInBackground(Void... params)
+		{
+			try
+			{
+				WebClient client = createWebClient();
+				Collection<Catalog> catalogs = client.getOrderCatalogs(Token.getCurrent());
+				Repository.get(null).getOrderManager().setOrderCatalogs(catalogs);
+			}
+			catch (Throwable ex)
+			{
+				Log.e("GetOrderCountTask", ex.getLocalizedMessage(), ex);
+			}
+
+			return null;
+		}
 	}
 }

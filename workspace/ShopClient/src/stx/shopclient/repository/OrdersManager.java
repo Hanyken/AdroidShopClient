@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import stx.shopclient.entity.Catalog;
 import stx.shopclient.entity.Order;
 import stx.shopclient.entity.OrderProperty;
 import stx.shopclient.entity.properties.BooleanPropertyDescriptor;
@@ -21,12 +22,14 @@ public class OrdersManager
 {
 	private ArrayList<Order> _Orders;
 	private ArrayList<OrderProperty> _Properties;
+	private ArrayList<Catalog> _Catalogs;
 	private long _orderCount;
 
 	public OrdersManager()
 	{
 		_Orders = new ArrayList<Order>();
 		_Properties = new ArrayList<OrderProperty>();
+		_Catalogs = new ArrayList<Catalog>();
 	}
 
 	public void addOrderItem(long itemId, Collection<OrderProperty> properties)
@@ -67,7 +70,7 @@ public class OrdersManager
 		}
 	}
 
-	public Collection<Order> getOrderItems()
+	public Collection<Order> getOrderItems(long catalogId)
 	{
 		return _Orders;
 	}
@@ -75,6 +78,16 @@ public class OrdersManager
 	public int getOrderItemsCount()
 	{
 		return _Orders.size();
+	}
+	
+	public Collection<Catalog> getOrderCatalogs()
+	{
+		return _Catalogs;
+	}
+	public void setOrderCatalogs(Collection<Catalog> catalogs)
+	{
+		_Catalogs.clear();
+		_Catalogs.addAll(catalogs);
 	}
 
 	public boolean existsItem(long itemId)
