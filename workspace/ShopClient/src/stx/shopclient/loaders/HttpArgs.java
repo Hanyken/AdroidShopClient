@@ -10,6 +10,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
 
+import android.net.Uri;
+
 import stx.shopclient.entity.Token;
 import stx.shopclient.parsers.BaseParser;
 
@@ -90,19 +92,17 @@ public class HttpArgs
 	public HttpGet getGet(String url)
 	{
 		StringBuilder sb = new StringBuilder();
-		sb.append(url+"?");
 		for(BasicNameValuePair el : _params)
 		{
+			if (sb.length() != 0)
+				sb.append("&");
+			
 			String value = el.getValue();
 			if (value == null || value.equals(null))
 				value = "";
-			sb.append(el.getName()+"="+value+"&");
+			sb.append(el.getName()+"="+ Uri.encode(value));
 		}
 		
-		String value = sb.toString();
-		if (value.endsWith("&"))
-			value = value.substring(0, value.length()-1);
-		
-		return new HttpGet(sb.toString());
+		return new HttpGet(url+"?" + sb.toString());
 	}
 }

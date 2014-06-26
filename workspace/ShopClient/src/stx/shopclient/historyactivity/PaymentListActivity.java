@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +18,7 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
+import stx.shopclient.entity.Catalog;
 import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.entity.Payment;
 import stx.shopclient.entity.Token;
@@ -30,28 +31,29 @@ public class PaymentListActivity extends BaseActivity implements OnItemClickList
 	ListView lstMain;
 	List<Payment> _paymentItems = new ArrayList<Payment>();
 	PaymentListAdapter _adapter;
+	Long _CatalogId;
 	
 	@Override
 	protected View createMainView(ViewGroup parent)
 	{
 		View mainView = getLayoutInflater().inflate(R.layout.payment_list_activity, parent, false);
 		
-		CatalogSettings settings = Repository.get(this).getCatalogManager()
-				.getSettings();
+		//CatalogSettings settings = Repository.get(this).getCatalogManager()
+		//		.getSettings();
 
-		getActionBar().setBackgroundDrawable(new ColorDrawable(settings.getBackground()));
-
+		 _CatalogId = Repository.CatalogId;
 		_adapter = new PaymentListAdapter();
 		
 		lstMain = (ListView)mainView.findViewById(R.id.lstMain);
 		lstMain.setOnItemClickListener(this);
 		lstMain.setAdapter(_adapter);
-
+		
 		new LoadTask().execute();
 		
 		return mainView;
 	}
-
+	
+	
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
 	{
@@ -67,7 +69,6 @@ public class PaymentListActivity extends BaseActivity implements OnItemClickList
 		intent.putExtra(PaymentActivity.PAYMENT_ORDER_COUNT_NAME, item.getOrderCount());
 		startActivity(intent);
 	}
-	
 	
 	
 	
@@ -100,12 +101,12 @@ public class PaymentListActivity extends BaseActivity implements OnItemClickList
 
 			Payment item = _paymentItems.get(index);
 
-			final View view = getLayoutInflater().inflate(
+			final View view = PaymentListActivity.this.getLayoutInflater().inflate(
 					R.layout.payment_list_activity_item, container, false);
 
 			TextView lblNumber = (TextView)view.findViewById(R.id.lblNumber);
 			
-			lblNumber.setText("Номер заказа: "+Long.toString(item.getNumber()) + "\n Кол-во элементов:" + Integer.toString(item.getOrderCount())+ "\n Дата заказа: "+ BaseParser.dateParser.format(item.getCreateDate()));
+			lblNumber.setText("Номер заказа: "+Long.toString(item.getNumber()) + "\nКол-во элементов:" + Integer.toString(item.getOrderCount())+ "\nДата заказа: "+ BaseParser.dateParser.format(item.getCreateDate())+"\nСумма заказа: "+Double.toString(item.getSum())+"\nСтатус заказа: "+Integer.toString(item.getState()));
 			
 			view.setTag(item);
 
@@ -131,9 +132,9 @@ public class PaymentListActivity extends BaseActivity implements OnItemClickList
 		{
 			try
 			{
-				WebClient client = createWebClient();
+				WebClient client = PaymentListActivity.this.createWebClient();
 				Collection<Payment> payments = client.getPayments(Token.getCurrent(),
-						Repository.CatalogId);
+						_CatalogId);
 				_paymentItems.clear();
 				_paymentItems.addAll(payments);
 			}

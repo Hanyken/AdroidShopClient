@@ -11,7 +11,6 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -70,7 +69,7 @@ public class PaymentActivity extends BaseActivity
 		
 		_adapter = new OrderListAdapter();
 		
-		lblNumber.setText("Номер заказа: "+Long.toString(_Item.getNumber()) + "\n Кол-во элементов:" + Integer.toString(_Item.getOrderCount())+ "\n Дата заказа: "+ BaseParser.dateParser.format(_Item.getCreateDate()));
+		lblNumber.setText("Номер заказа: "+Long.toString(_Item.getNumber()) + "\nКол-во элементов:" + Integer.toString(_Item.getOrderCount())+ "\nДата заказа: "+ BaseParser.dateParser.format(_Item.getCreateDate())+"\nСумма заказа: "+Double.toString(_Item.getSum())+"\nСтатус заказа: "+Integer.toString(_Item.getState()));
 		lstOrders.setAdapter(_adapter);
 		
 		new LoadTask().execute();

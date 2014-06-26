@@ -589,6 +589,17 @@ public class WebClient
 
 		request("order/delete", args, true);
 	}
+	
+	public Collection<Catalog> getOrderCatalogs(Token token)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+
+		String response = request("order/catalogs", args, true);
+		Collection<Catalog> items = new CatalogParser().parseString(response);
+
+		return items;
+	}
 
 	public Collection<Payment> getPayments(Token token, long catalogId)
 	{
@@ -627,6 +638,17 @@ public class WebClient
 		args.addParam("catalogId", catalogId);
 
 		request("payment/add", args, true);
+	}
+	
+	public Collection<Catalog> getPaymentCatalogs(Token token)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+
+		String response = request("payment/catalogs", args, true);
+		Collection<Catalog> items = new CatalogParser().parseString(response);
+
+		return items;
 	}
 
 }

@@ -10,8 +10,6 @@ import stx.shopclient.entity.CatalogNode;
 
 public class CatalogParser extends BaseParser<Catalog>
 {
-	public static String TEST;
-	
 	private final String ITEM_NAME = "Catalog";
 	private final String ID_NAME = "Id";
 	private final String NAME_NAME = "Name";
@@ -25,7 +23,6 @@ public class CatalogParser extends BaseParser<Catalog>
 	
 	public CatalogParser()
 	{
-		TEST = "<Catalog><Id>1</Id><Name>Мобишоп</Name><Logo>image.png</Logo><Description>Какое то описание самого лучшего магазина на свете</Description><LastModification>2014-05-26T18:02:09.783</LastModification><NodeCount>3</NodeCount></Catalog>";
 	}
 	
 	
