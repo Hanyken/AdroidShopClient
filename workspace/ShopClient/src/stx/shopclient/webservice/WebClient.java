@@ -392,11 +392,21 @@ public class WebClient
 		return items;
 	}
 
+	// Пример xml описания <ItemList><Id>1</Id><Id>2</Id><Id>3</Id></ItemList>
 	public void addLast(Token token, String list)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
 		args.addParam("list", list);
+
+		request("item/lastAdd", args, true);
+	}
+	
+	public void addLast(Token token, long itemId)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("list", "<ItemList><Id>"+Long.toString(itemId)+"</Id></ItemList>");
 
 		request("item/lastAdd", args, true);
 	}
