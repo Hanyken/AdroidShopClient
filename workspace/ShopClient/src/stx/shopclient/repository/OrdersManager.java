@@ -23,7 +23,6 @@ public class OrdersManager
 	private ArrayList<Order> _Orders;
 	private ArrayList<OrderProperty> _Properties;
 	private ArrayList<Catalog> _Catalogs;
-	private long _orderCount;
 
 	public OrdersManager()
 	{
@@ -231,15 +230,4 @@ public class OrdersManager
 
 		return items;
 	}
-
-	public long getOrderCount()
-	{
-		return _orderCount;
-	}
-
-	public void setOrderCount(long orderCount)
-	{
-		_orderCount = orderCount;
-	}
-
 }

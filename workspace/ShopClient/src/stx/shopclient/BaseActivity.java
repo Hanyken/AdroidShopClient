@@ -154,10 +154,6 @@ public class BaseActivity extends FragmentActivity
 
 	public boolean initMainMenuItem(MainMenuItem item)
 	{
-		if (item.getId() == MainMenuItem.CART_MENU_ITEM_ID && item.getRowId() == 0)
-			item.setCount((int) Repository.get(null).getOrderManager()
-					.getOrderCount());
-
 		return true;
 	}
 

@@ -13,6 +13,7 @@ import stx.shopclient.entity.Token;
 import stx.shopclient.entity.properties.EnumPropertyDescriptor;
 import stx.shopclient.entity.properties.EnumPropertyDescriptor.EnumValue;
 import stx.shopclient.entity.properties.PropertyDescriptor;
+import stx.shopclient.historyactivity.PaymentDescriptionFragment;
 import stx.shopclient.itemactivity.ItemActivity;
 import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.order_properties_activity.OrderPropertiesActivity;
@@ -20,9 +21,9 @@ import stx.shopclient.repository.OrdersManager;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.utils.ImageDownloadTask;
 import stx.shopclient.webservice.WebClient;
+import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.nfc.cardemulation.CardEmulation;
 import android.os.AsyncTask;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -106,11 +107,9 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 	public boolean onPrepareOptionsMenu(Menu menu)
 	{
 		menu.clear();
-		if (Repository.get(null).getOrderManager().getOrderCount() > 0)
-		{
-			MenuItem paymentItem = menu.add(0, MENU_PAYMENT, 0, "Оплатить");
-			paymentItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		}
+		MenuItem paymentItem = menu.add(0, MENU_PAYMENT, 0, "Оплатить");
+		paymentItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		
 		return super.onPrepareOptionsMenu(menu);
 	}
 	
@@ -120,10 +119,18 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 		switch(item.getItemId())
 		{
 			case MENU_PAYMENT:
-				new PaymentTask().execute();
+				DialogFragment wd = PaymentDescriptionFragment.get();
+				wd.show(getFragmentManager(), "Comment");
 				break;
 		}
 		return super.onMenuItemSelected(featureId, item);
+	}
+	
+	public void SetComment(String comment)
+	{
+		PaymentTask task = new PaymentTask();
+		task.comment = comment;
+		task.execute();
 	}
 
 	class CartListAdapter extends BaseAdapter
@@ -344,18 +351,6 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 			{
 				WebClient client = createWebClient();
 				client.deleteOrder(Token.getCurrent(), order.getId());
-
-				try
-				{
-					long orderCount = client.getOrderCount(Token.getCurrent(),
-							Repository.CatalogId);
-					Repository.get(null).getOrderManager()
-							.setOrderCount(orderCount);
-				}
-				catch (Throwable ex)
-				{
-
-				}
 			}
 			catch (Throwable ex)
 			{
@@ -391,6 +386,8 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 	{
 		Throwable exception;
 		ProgressDialog dialog;
+		
+		public String comment;
 
 		@Override
 		protected void onPreExecute()
@@ -405,18 +402,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 			try
 			{
 				WebClient client = createWebClient();
-				client.addPayment(Token.getCurrent(), Repository.CatalogId);
-
-				try
-				{
-					long orderCount = client.getOrderCount(Token.getCurrent(), _CatalogId);
-					Repository.get(null).getOrderManager()
-							.setOrderCount(orderCount);
-				}
-				catch (Throwable ex)
-				{
-
-				}
+				client.addPayment(Token.getCurrent(), Repository.CatalogId, comment);
 			}
 			catch (Throwable ex)
 			{

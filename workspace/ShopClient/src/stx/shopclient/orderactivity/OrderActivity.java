@@ -130,18 +130,6 @@ public class OrderActivity extends BaseActivity implements OnClickListener
 
 				WebClient client = createWebClient();
 				client.addOrder(Token.getCurrent(), ItemId, orderProps);
-
-				try
-				{
-					long orderCount = client.getOrderCount(Token.getCurrent(),
-							Repository.CatalogId);
-					Repository.get(null).getOrderManager()
-							.setOrderCount(orderCount);
-				}
-				catch (Throwable ex)
-				{
-
-				}
 			}
 			catch (Throwable ex)
 			{

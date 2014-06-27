@@ -13,6 +13,8 @@
     <string name="rating">Оценка:</string>
     <string name="count">Количество:</string>
     <string name="order_button">В корзину</string>
+    <string name="ok_button">OK</string>
+    <string name="cancel_button">Cancel</string>
     
     <string name="overview_add_message">Ваше сообщение будет опубликовано после модерации.</string>
     

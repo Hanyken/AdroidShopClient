@@ -631,11 +631,12 @@ public class WebClient
 		return items;
 	}
 
-	public void addPayment(Token token, long catalogId)
+	public void addPayment(Token token, long catalogId, String description)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
 		args.addParam("catalogId", catalogId);
+		args.addParam("description", description);
 
 		request("payment/add", args, true);
 	}
