@@ -205,6 +205,8 @@ public class ItemActivity extends BaseActivity
 						Token.getCurrent(), _itemId);
 				_Item = items.iterator().next();
 
+				client.addLast(Token.getCurrent(), _itemId);
+				
 				_groupItems.clear();
 
 				if (_Item != null)
@@ -214,7 +216,6 @@ public class ItemActivity extends BaseActivity
 						Collection<CatalogItem> groupItems = client
 								.getGroupItems(Token.getCurrent(), _itemId,
 										group.getId());
-						client.addLast(Token.getCurrent(), _itemId);
 						if (groupItems != null && groupItems.size() > 0)
 						{
 							_groupItems.put(group, groupItems);
