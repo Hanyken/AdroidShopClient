@@ -102,6 +102,10 @@
             android:name="stx.shopclient.historyactivity.PaymentActivity"
             android:label="@string/default_title" >
         </activity>
+        <activity
+            android:name="stx.shopclient.favoriteactivity.FavoriteActivity"
+            android:label="@string/default_title" >
+        </activity>
     </application>
 
 </manifest>

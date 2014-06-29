@@ -34,6 +34,7 @@ import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.entity.CatalogNode;
 import stx.shopclient.entity.Token;
 import stx.shopclient.itemactivity.ItemActivity;
+import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.searchactivity.SearchActivity;
 import stx.shopclient.ui.common.LoadMoreListAdapter;
@@ -108,6 +109,15 @@ public class CatalogBrowserActivity extends BaseActivity implements
 
 		return view;
 	}
+	
+	public boolean initMainMenuItem(MainMenuItem item)
+	{
+		if (item.getId() == MainMenuItem.SEARCH_MENU_ITEM_ID)
+			return true;
+		else
+			return super.initMainMenuItem(item);
+	}
+
 
 	@Override
 	protected long getSearchActivityNodeId()

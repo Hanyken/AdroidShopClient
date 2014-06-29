@@ -9,6 +9,7 @@ import stx.shopclient.entity.Catalog;
 import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.entity.Token;
 import stx.shopclient.entity.UpdateResultEntity;
+import stx.shopclient.favoriteactivity.FavoriteActivity;
 import stx.shopclient.historyactivity.PaymentListActivity;
 import stx.shopclient.loginactivity.LoginActivity;
 import stx.shopclient.mainactivity.MainActivity;
@@ -154,6 +155,8 @@ public class BaseActivity extends FragmentActivity
 
 	public boolean initMainMenuItem(MainMenuItem item)
 	{
+		if (item.getId() == MainMenuItem.SEARCH_MENU_ITEM_ID)
+			return false;
 		return true;
 	}
 
@@ -337,6 +340,11 @@ public class BaseActivity extends FragmentActivity
 		else if (item.getId() == MainMenuItem.HISTORY_MENU_ITEM)
 		{
 			Intent intent = new Intent(this, PaymentListActivity.class);
+			startActivity(intent);
+		}
+		else if (item.getId() == MainMenuItem.FAVORITE_MENU_ITEM)
+		{
+			Intent intent = new Intent(this, FavoriteActivity.class);
 			startActivity(intent);
 		}
 	}
