@@ -5,9 +5,12 @@ import java.util.Collection;
 import java.util.List;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -18,11 +21,12 @@ import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.entity.Token;
+import stx.shopclient.itemactivity.ItemActivity;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.utils.ImageDownloadTask;
 import stx.shopclient.webservice.WebClient;
 
-public class FavoriteActivity extends BaseActivity
+public class FavoriteActivity extends BaseActivity implements OnItemClickListener
 {
 	ListView _list;
 	List<CatalogItem> _items = new ArrayList<CatalogItem>();
@@ -38,6 +42,7 @@ public class FavoriteActivity extends BaseActivity
 		_list = (ListView) view.findViewById(R.id.list);
 		_adapter = new FavoriteAdapter();
 		_list.setAdapter(_adapter);
+		_list.setOnItemClickListener(this);
 		
 		new LoadTask().execute();
 
@@ -200,5 +205,14 @@ public class FavoriteActivity extends BaseActivity
 				new LoadTask().execute();
 			}
 		}
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int index, long arg3)
+	{
+		CatalogItem item = _items.get(index);
+		Intent intent = new Intent(this, ItemActivity.class);		
+		intent.putExtra(ItemActivity.ITEM_ID_EXTRA_KEY, item.getId());
+		startActivity(intent);
 	}
 }
