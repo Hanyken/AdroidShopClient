@@ -11,10 +11,15 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import stx.shopclient.entity.ActionType;
 import stx.shopclient.entity.Catalog;
+import stx.shopclient.entity.CatalogAddress;
 import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.entity.CatalogNode;
+import stx.shopclient.entity.City;
 import stx.shopclient.entity.CountResultEntity;
+import stx.shopclient.entity.Discount;
+import stx.shopclient.entity.Message;
 import stx.shopclient.entity.Order;
 import stx.shopclient.entity.OrderProperty;
 import stx.shopclient.entity.Overview;
@@ -23,9 +28,14 @@ import stx.shopclient.entity.ResultEntity;
 import stx.shopclient.entity.Token;
 import stx.shopclient.entity.UpdateResultEntity;
 import stx.shopclient.loaders.HttpArgs;
+import stx.shopclient.parsers.ActionTypeParser;
+import stx.shopclient.parsers.CatalogAddressParser;
 import stx.shopclient.parsers.CatalogParser;
+import stx.shopclient.parsers.CityParser;
 import stx.shopclient.parsers.CountResultParser;
+import stx.shopclient.parsers.DiscountParser;
 import stx.shopclient.parsers.ItemParser;
+import stx.shopclient.parsers.MessageParser;
 import stx.shopclient.parsers.NodeParser;
 import stx.shopclient.parsers.OrderParser;
 import stx.shopclient.parsers.OverviewParser;
@@ -238,6 +248,47 @@ public class WebClient
 			return catalogs.iterator().next();
 	}
 
+	public Catalog getCatalogs(Token token, String catalogName, String actionTypeName, Long cityId, String address, int start, int offset)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("catalogName", catalogName);
+		args.addParam("actionTypeName", actionTypeName);
+		args.addParam("cityId", cityId);
+		args.addParam("address", address);
+		args.addParam("start", start);
+		args.addParam("offset", offset);
+
+		String response = request("catalog/search", args, true);
+		Collection<Catalog> catalogs = new CatalogParser()
+				.parseString(response);
+
+		if (catalogs.size() == 0)
+			throw new RuntimeException("No catalog returned");
+		else
+			return catalogs.iterator().next();
+	}
+	
+	public Collection<CatalogAddress> getCatalogAddresses(Token token, long catalogId)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("catalogId", catalogId);
+
+		String response = request("catalog/address", args, true);
+		return new CatalogAddressParser().parseString(response);
+	}
+	
+	public Collection<ActionType> getCatalogActionType(Token token, long catalogId)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("catalogId", catalogId);
+
+		String response = request("catalog/action_type", args, true);
+		return new ActionTypeParser().parseString(response);
+	}
+	
 	public Collection<CatalogNode> getNodes(Token token, long catalogId,
 			int start, int offset)
 	{
@@ -661,5 +712,63 @@ public class WebClient
 
 		return items;
 	}
+	
+	public Collection<City> getCities(Token token)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
 
+		String response = request("directory/city", args, true);
+		Collection<City> items = new CityParser().parseString(response);
+
+		return items;
+	}
+
+	public Collection<ActionType> getActionTypes(Token token)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+
+		String response = request("directory/action_type", args, true);
+		return new ActionTypeParser().parseString(response);
+	}
+	
+	public Collection<Message> getNewMessages(Token token)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+
+		String response = request("message/get", args, true);
+		return new MessageParser().parseString(response);
+	}
+	
+	public Collection<Message> getAllMessages(Token token, int start, int offset)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("start", start);
+		args.addParam("offset", offset);
+
+		String response = request("message/all", args, true);
+		return new MessageParser().parseString(response);
+	}
+	
+	public Collection<Message> getReciveMessages(Token token, long messageId)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("messageId", messageId);
+
+		String response = request("message/recive", args, true);
+		return new MessageParser().parseString(response);
+	}
+	
+	public Collection<Discount> getDiscounts(Token token)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+
+		String response = request("discount/get", args, true);
+		return new DiscountParser().parseString(response);
+	}
 }

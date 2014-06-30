@@ -4,6 +4,7 @@ import java.util.GregorianCalendar;
 
 public class Message
 {
+	private int _rowNum;
 	private long _id;
 	private int _type;
 	private String _title;
@@ -11,6 +12,14 @@ public class Message
 	private GregorianCalendar _createDate;
 	private boolean _isRead;
 	
+	public int getRowNum()
+	{
+		return _rowNum;
+	}
+	public void setRowNum(int rowNum)
+	{
+		_rowNum = rowNum;
+	}
 	public long getId()
 	{
 		return _id;
