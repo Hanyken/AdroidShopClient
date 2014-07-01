@@ -18,8 +18,6 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
-import stx.shopclient.entity.Catalog;
-import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.entity.Payment;
 import stx.shopclient.entity.Token;
 import stx.shopclient.parsers.BaseParser;

@@ -10,6 +10,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -22,6 +24,7 @@ import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.entity.Order;
 import stx.shopclient.entity.Payment;
 import stx.shopclient.entity.Token;
+import stx.shopclient.itemactivity.ItemActivity;
 import stx.shopclient.parsers.BaseParser;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.utils.ImageDownloadTask;
@@ -59,6 +62,7 @@ public class PaymentActivity extends BaseActivity
 			_Item = new Payment();
 			_Item.setId(intent.getLongExtra(PAYMENT_ID_NAME, 0));
 			_Item.setNumber(intent.getLongExtra(PAYMENT_NUMBER_NAME, 0));
+			_Item.setSum(intent.getDoubleExtra(PAYMENT_SUM_NAME, 0));
 			_Item.setCreateDate(BaseParser.dateParser.parse(intent.getStringExtra(PAYMENT_CREATE_DATE_NAME)));
 			_Item.setState(intent.getIntExtra(PAYMENT_STATE_NAME, 0));
 			if (intent.hasExtra(PAYMENT_PAY_DATE_NAME))
@@ -73,6 +77,20 @@ public class PaymentActivity extends BaseActivity
 		
 		lblNumber.setText("Номер заказа: "+Long.toString(_Item.getNumber()) + "\nКол-во элементов:" + Integer.toString(_Item.getOrderCount())+ "\nДата заказа: "+ BaseParser.dateParser.format(_Item.getCreateDate())+"\nСумма заказа: "+Double.toString(_Item.getSum())+"\nСтатус заказа: "+Integer.toString(_Item.getState()));
 		lstOrders.setAdapter(_adapter);
+		lstOrders.setOnItemClickListener(new OnItemClickListener()
+		{
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3)
+			{
+				Order item = _orderItems.get(arg2);
+				Intent intent = new Intent(PaymentActivity.this, ItemActivity.class);
+				intent.putExtra("ItemID", item.getItemId());
+
+				startActivity(intent);
+			}
+			
+		});
 		
 		new LoadTask().execute();
 		

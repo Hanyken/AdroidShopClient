@@ -85,13 +85,13 @@ public class Discount {
 	}
 	public void setUnitType(int unitType) {
 		_unitType = unitType;
+		_unit = _unitType ==  Discount.UNIT_TYPE_PERCENT ? "%" : "руб.";
 	}
-	public String getUnit()
-	{
+	public String getUnit() {
 		return _unit;
 	}
-	public void setUnit(String unit)
-	{
+	public void setUnit(String unit) {
 		_unit = unit;
+		_unitType = (unit.equals("%") ? Discount.UNIT_TYPE_PERCENT : Discount.UNIT_TYPE_RUB);
 	}
 }
