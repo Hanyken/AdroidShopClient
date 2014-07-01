@@ -17,8 +17,6 @@ import stx.shopclient.entity.properties.EnumPropertyDescriptor.EnumValue;
 
 public class PropertyParser extends BaseParser<PropertyDescriptor>
 {
-	public String TEST;
-
 	private final String ITEM_NAME = "Property";
 	private final String NAME_NAME = "Name";
 	private final String TYPE_NAME = "Type";
@@ -42,15 +40,9 @@ public class PropertyParser extends BaseParser<PropertyDescriptor>
 	private boolean _rangeNeeded = true;
 	
 	public PropertyParser()
-	{
-		TEST = "<OrderProperties><Property><Name>OrderDate</Name><Type>Date</Type><Title>Дата для заказа</Title><Order>1</Order><Required>1</Required><Value><Max>2014-01-01T00:00:00</Max><Min>2014-12-31T00:00:00</Min></Value></Property>";
-		TEST += "<Property><Name>Count</Name><Type>Numeric</Type><Title>Количество</Title><Order>2</Order><Required>1</Required><Value><Max>1.00000</Max><Min>8.00000</Min></Value></Property>";
-		TEST += "<Property><Name>Comment</Name><Type>String</Type><Title>Коментарий</Title><Order>3</Order><Required>0</Required></Property>";
-		TEST += "<Property><Name>Color</Name><Type>Enum</Type><Title>Цвет</Title><Order>4</Order><Required>0</Required><Range><Enum><Value>1</Value><Name>Синий</Name></Enum><Enum><Value>2</Value><Name>Красный</Name></Enum><Enum><Value>3</Value><Name>Зеленый</Name></Enum></Range></Property></OrderProperties>";
-	}
+	{}
 	public PropertyParser(boolean rangeNeeded)
 	{
-		this();
 		_rangeNeeded = rangeNeeded;
 	}
 
@@ -108,6 +100,7 @@ public class PropertyParser extends BaseParser<PropertyDescriptor>
 						
 							((NumberPropertyDescriptor) item).setRange(_rangeNeeded);
 							((NumberPropertyDescriptor) item).setFloat(false);
+							((NumberPropertyDescriptor) item).setUnitName(super.getValue(e, ItemPropertyParser.UNIT_NAME_NAME));
 					}
 				}
 				else
@@ -126,6 +119,7 @@ public class PropertyParser extends BaseParser<PropertyDescriptor>
 											el, MIN_NAME));
 							
 								((NumberPropertyDescriptor) item).setRange(_rangeNeeded);
+								((NumberPropertyDescriptor) item).setUnitName(super.getValue(e, ItemPropertyParser.UNIT_NAME_NAME));
 						}
 					}
 					else

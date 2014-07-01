@@ -17,29 +17,16 @@ import stx.shopclient.entity.properties.EnumPropertyDescriptor.EnumValue;
 
 public class ItemPropertyParser extends BaseParser<PropertyDescriptor>
 {
-	public String TEST;
 	
-	private final String ITEM_NAME = "Property";
-	private final String NAME_NAME = "Name";
-	private final String TYPE_NAME = "Type";
-	private final String TITLE_NAME = "Title";
-	//private final String SEARCHABLE_NAME = "Searchable";
-	//private final String QUICK_SEARCHABLE_NAME = "QuickSearch";
-	//private final String SHORT_LIST_NAME = "ShortList";
-	private final String ORDER_NAME = "Order";
-	private final String VALUE_NAME = "Value";
-	private final String RANGE_NAME = "Range";
+	private static final String ITEM_NAME = "Property";
+	private static final String NAME_NAME = "Name";
+	private static final String TYPE_NAME = "Type";
+	private static final String TITLE_NAME = "Title";
+	private static final String ORDER_NAME = "Order";
+	private static final String VALUE_NAME = "Value";
+	private static final String RANGE_NAME = "Range";
+	public static final String UNIT_NAME_NAME = "UnitName";
 	
-	
-	public ItemPropertyParser()
-	{
-		TEST = "<Properties><Property><Name>Price</Name><Type>Numeric</Type><Title>Цена</Title><Searchable>1</Searchable><QuickSearch>1</QuickSearch><ShortList>0</ShortList><Order>1</Order><Value>30000.00000</Value></Property>";
-		TEST += "<Property><Name>String_Key</Name><Type>String</Type><Title>Строка</Title><Searchable>1</Searchable><QuickSearch>0</QuickSearch><ShortList>0</ShortList><Order>2</Order><Value>Какой то текст</Value></Property>";
-		TEST += "<Property><Name>Date_Key</Name><Type>Date</Type><Title>Дата</Title><Searchable>1</Searchable><QuickSearch>0</QuickSearch><ShortList>0</ShortList><Order>3</Order><Value>2014-05-26 18:02:09.7870000</Value></Property>";
-		TEST += "<Property><Name>Time_Key</Name><Type>Time</Type><Title>Время</Title><Searchable>1</Searchable><QuickSearch>0</QuickSearch><ShortList>0</ShortList><Order>3</Order><Value>18:02:09.7870000</Value></Property>";
-		TEST += "<Property><Name>Number_Key</Name><Type>Integer</Type><Title>Число</Title><Searchable>1</Searchable><QuickSearch>0</QuickSearch><ShortList>0</ShortList><Order>4</Order><Value>100.00000</Value></Property>";
-		TEST += "<Property><Name>Bool_Key</Name><Type>Boolean</Type><Title>Логическое значение</Title><Searchable>1</Searchable><QuickSearch>0</QuickSearch><ShortList>0</ShortList><Order>5</Order><Value>1</Value></Property></Properties>";
-	}
 	
 	public PropertyDescriptor getElement(Element e)
 	{
@@ -67,18 +54,35 @@ public class ItemPropertyParser extends BaseParser<PropertyDescriptor>
 				{
 					item = new NumberPropertyDescriptor();
 					((NumberPropertyDescriptor) item).setCurrentMinValue(super.getValueInt(e, VALUE_NAME));
+					((NumberPropertyDescriptor) item).setUnitName(super.getValue(e, UNIT_NAME_NAME));
 				}
 				else
 					if (propType.equals(NumberPropertyDescriptor.TYPE_STRING))
 					{
 						item = new NumberPropertyDescriptor();
 						((NumberPropertyDescriptor) item).setCurrentMinValue(super.getValueDouble(e, VALUE_NAME));
+						((NumberPropertyDescriptor) item).setUnitName(super.getValue(e, UNIT_NAME_NAME));
 					}
 					else
 						if (propType.equals(EnumPropertyDescriptor.TYPE_STRING))
 						{
 							item = new EnumPropertyDescriptor();
-							((EnumPropertyDescriptor) item).setValues(getEnumList(e));
+							List<EnumValue> enums = getEnumList(e);
+							((EnumPropertyDescriptor) item).setValues(enums);
+							List<EnumValue> current = new ArrayList<EnumValue>();
+							String enumId = super.getValue(e, VALUE_NAME);
+							if (enumId != null)
+							{
+								for(EnumValue el : enums)
+								{
+									if (enumId.equals(el.getValue()))
+									{
+										current.add(el);
+										break;
+									}
+								}
+							}
+							((EnumPropertyDescriptor) item).setCurrentValues(current);
 						}
 						else
 							if (propType.equals(PropertyParser.ARRAY_TYPE))

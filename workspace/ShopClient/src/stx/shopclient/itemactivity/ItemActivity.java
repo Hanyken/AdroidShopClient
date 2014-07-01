@@ -1,14 +1,11 @@
 package stx.shopclient.itemactivity;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
-import stx.shopclient.entity.AnalogGroup;
-import stx.shopclient.entity.Catalog;
 import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.entity.CatalogItemGroup;
 import stx.shopclient.entity.CatalogSettings;

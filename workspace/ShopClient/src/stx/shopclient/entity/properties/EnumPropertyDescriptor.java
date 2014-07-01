@@ -87,7 +87,7 @@ public class EnumPropertyDescriptor extends PropertyDescriptor
 			{
 				if (!value.equals(""))
 					value += SEPARATE_STRING;
-				value += el.getValue();
+				value += el.getName();
 			}
 		}
 		return value;

@@ -1,7 +1,5 @@
 package stx.shopclient.parsers;
 
-import java.util.GregorianCalendar;
-
 import org.w3c.dom.Element;
 
 import stx.shopclient.entity.Discount;

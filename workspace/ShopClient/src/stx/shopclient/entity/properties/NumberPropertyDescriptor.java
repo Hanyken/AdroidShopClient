@@ -21,6 +21,8 @@ public class NumberPropertyDescriptor extends PropertyDescriptor
 	private boolean _isCurrentMaxValueDefined = false;
 	private boolean _isRange = true;
 	private boolean _isFloat = true;
+	
+	private String _unitName;
 
 	public double getMinValue()
 	{
@@ -108,7 +110,7 @@ public class NumberPropertyDescriptor extends PropertyDescriptor
 	@Override
 	public String getStringValue()
 	{
-		return Double.toString(getCurrentValue());
+		return getStringValue(getCurrentValue());
 	}
 
 	@Override
@@ -171,13 +173,24 @@ public class NumberPropertyDescriptor extends PropertyDescriptor
 	{
 		_isCurrentMaxValueDefined = isCurrentMaxValueDefined;
 	}
+	
+	public String getUnitName()
+	{
+		return _unitName;
+	}
+
+	public void setUnitName(String unitName)
+	{
+		_unitName = unitName;
+	}
+	
 
 	String getStringValue(double value)
 	{
 		if (_isFloat)
-			return String.format("%.2f", value);
+			return String.format("%.2f", value) + (_unitName != null ? _unitName : "");
 		else
-			return String.format("%d", (int) value);
+			return String.format("%d", (int) value) + (_unitName != null ? _unitName : "");
 	}
 
 	@Override
