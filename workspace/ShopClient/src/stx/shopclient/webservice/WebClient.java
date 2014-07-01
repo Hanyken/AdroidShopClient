@@ -763,6 +763,38 @@ public class WebClient
 		return new MessageParser().parseString(response);
 	}
 	
+	public long getNewMessagesCount(Token token)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+
+		String response = request("message/count", args, true);
+		Collection<CountResultEntity> items = new CountResultParser()
+		.parseString(response);
+		
+		if (items.size() == 0)
+			throw new RuntimeException("No count returned");
+		else
+			return items.iterator().next().getCount();
+	}
+	
+	public long getAllMessagesCount(Token token)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+
+		String response = request("message/allcount", args, true);
+		Collection<CountResultEntity> items = new CountResultParser()
+		.parseString(response);
+		
+		if (items.size() == 0)
+			throw new RuntimeException("No count returned");
+		else
+			return items.iterator().next().getCount();
+	}
+	
+	
+	
 	public Collection<Discount> getDiscounts(Token token)
 	{
 		HttpArgs args = new HttpArgs();
