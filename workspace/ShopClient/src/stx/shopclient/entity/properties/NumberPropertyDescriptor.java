@@ -110,7 +110,7 @@ public class NumberPropertyDescriptor extends PropertyDescriptor
 	@Override
 	public String getStringValue()
 	{
-		return getStringValue(getCurrentValue());
+		return getStringValue(getCurrentValue()) + getUnitName();
 	}
 
 	@Override
@@ -176,7 +176,7 @@ public class NumberPropertyDescriptor extends PropertyDescriptor
 	
 	public String getUnitName()
 	{
-		return _unitName;
+		return _unitName != null ? " "+_unitName : "";
 	}
 
 	public void setUnitName(String unitName)
@@ -188,9 +188,9 @@ public class NumberPropertyDescriptor extends PropertyDescriptor
 	String getStringValue(double value)
 	{
 		if (_isFloat)
-			return String.format("%.2f", value) + (_unitName != null ? _unitName : "");
+			return String.format("%.2f", value);
 		else
-			return String.format("%d", (int) value) + (_unitName != null ? _unitName : "");
+			return String.format("%d", (int) value);
 	}
 
 	@Override
@@ -208,7 +208,7 @@ public class NumberPropertyDescriptor extends PropertyDescriptor
 				descr += "до " + getStringValue(_currentMaxValue);
 			}
 
-			return descr;
+			return descr + getUnitName();
 		}
 		else
 		{

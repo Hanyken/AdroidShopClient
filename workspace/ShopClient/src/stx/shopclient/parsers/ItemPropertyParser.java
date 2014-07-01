@@ -55,6 +55,7 @@ public class ItemPropertyParser extends BaseParser<PropertyDescriptor>
 					item = new NumberPropertyDescriptor();
 					((NumberPropertyDescriptor) item).setCurrentMinValue(super.getValueInt(e, VALUE_NAME));
 					((NumberPropertyDescriptor) item).setUnitName(super.getValue(e, UNIT_NAME_NAME));
+					((NumberPropertyDescriptor) item).setFloat(false);
 				}
 				else
 					if (propType.equals(NumberPropertyDescriptor.TYPE_STRING))
