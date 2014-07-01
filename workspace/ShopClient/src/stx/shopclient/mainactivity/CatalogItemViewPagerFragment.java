@@ -37,7 +37,7 @@ import android.widget.Toast;
 public class CatalogItemViewPagerFragment extends Fragment
 {
 	List<CatalogItem> _items = new ArrayList<CatalogItem>();
-	TestGridAdapter _adapter;
+	ItemsGridAdapter _adapter;
 	CirclePageIndicator _pageIndicator;
 
 	@Override
@@ -53,7 +53,7 @@ public class CatalogItemViewPagerFragment extends Fragment
 		_pageIndicator = (CirclePageIndicator) view
 				.findViewById(R.id.page_indicator);
 
-		_adapter = new TestGridAdapter(this.getActivity(), _items);
+		_adapter = new ItemsGridAdapter(this.getActivity(), _items);
 
 		viewPager.setAdapter(_adapter);
 		_pageIndicator.setViewPager(viewPager);
@@ -64,6 +64,7 @@ public class CatalogItemViewPagerFragment extends Fragment
 	public void setItems(Collection<CatalogItem> items)
 	{
 		_items.clear();
+		_adapter.notifyDataSetChanged();
 		_items.addAll(items);
 		_adapter.notifyDataSetChanged();
 		if (_adapter.getCount() > 1)
@@ -72,11 +73,11 @@ public class CatalogItemViewPagerFragment extends Fragment
 			_pageIndicator.setVisibility(View.INVISIBLE);
 	}
 
-	private class TestGridAdapter extends GridPagerAdapter<CatalogItem>
+	private class ItemsGridAdapter extends GridPagerAdapter<CatalogItem>
 	{
 		Context _context;
 
-		public TestGridAdapter(Context context, List<CatalogItem> list)
+		public ItemsGridAdapter(Context context, List<CatalogItem> list)
 		{
 			super(list, context);
 

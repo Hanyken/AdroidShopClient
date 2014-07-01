@@ -2,12 +2,13 @@ package stx.shopclient.loginactivity;
 
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
+
 import stx.shopclient.R;
 import stx.shopclient.entity.Token;
 import stx.shopclient.mainactivity.MainActivity;
 import stx.shopclient.settings.UserAccount;
 import stx.shopclient.ui.common.StxDatePicker;
-import stx.shopclient.utils.StringUtils;
 import stx.shopclient.webservice.ServiceResponseCode;
 import stx.shopclient.webservice.WebClient;
 import android.app.Activity;
@@ -171,7 +172,7 @@ public class RegisterActivity extends Activity
 				
 				TelephonyManager mTelephonyMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 				String simNumber = mTelephonyMgr.getSimSerialNumber();
-				if (StringUtils.isNullOrEmpty(simNumber))
+				if (StringUtils.isBlank(simNumber))
 					simNumber = "nosim";
 
 				WebClient client = new WebClient(RegisterActivity.this);

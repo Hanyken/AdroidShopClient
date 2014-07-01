@@ -1,5 +1,7 @@
 package stx.shopclient.discountactivity;
 
+import org.apache.commons.lang3.StringUtils;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -41,9 +43,13 @@ public class DiscountActivity extends BaseActivity
 
 		sizeTextView.setText(String.format("%.2f", _discount.getSize()) + " "
 				+ _discount.getUnit());
-		
-		ImageView image = (ImageView)view.findViewById(R.id.imageView);
-		setImage(image, _discount.getCatalogLogo());
+
+		ImageView image = (ImageView) view.findViewById(R.id.imageView);
+
+		if (!StringUtils.isBlank(_discount.getImage()))
+			setImage(image, _discount.getImage());
+		else if (!StringUtils.isBlank(_discount.getCatalogLogo()))
+			setImage(image, _discount.getCatalogLogo());
 
 		return view;
 	}

@@ -1,12 +1,13 @@
 package stx.shopclient.mainactivity;
 
+import org.apache.commons.lang3.StringUtils;
+
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.R.layout;
 import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.searchresultsactivity.SearchResultsActivity;
-import stx.shopclient.utils.StringUtils;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -96,7 +97,7 @@ public class MainActivity extends BaseActivity implements
 	@Override
 	public boolean onQueryTextSubmit(String text)
 	{
-		if (StringUtils.isNullOrEmpty(text))
+		if (StringUtils.isBlank(text))
 			return false;
 
 		Intent intent = new Intent(this, SearchResultsActivity.class);
