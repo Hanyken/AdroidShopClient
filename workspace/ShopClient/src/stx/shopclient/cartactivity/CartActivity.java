@@ -83,7 +83,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 		if (_adapter != null)
 			_adapter.notifyDataSetChanged();
 	}
-	
+
 	@Override
 	public boolean initMainMenuItem(MainMenuItem item)
 	{
@@ -102,30 +102,33 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 
 		getMenuInflater().inflate(R.menu.cart_activity_item_menu, menu);
 	}
-	
+
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu)
 	{
 		menu.clear();
 		MenuItem paymentItem = menu.add(0, MENU_PAYMENT, 0, "Оплатить");
 		paymentItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		
+
 		return super.onPrepareOptionsMenu(menu);
 	}
-	
+
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item)
 	{
-		switch(item.getItemId())
+		switch (item.getItemId())
 		{
-			case MENU_PAYMENT:
+		case MENU_PAYMENT:
+			if (_cartItems.size() > 0)
+			{
 				DialogFragment wd = PaymentDescriptionFragment.get();
 				wd.show(getFragmentManager(), "Comment");
-				break;
+			}
+			break;
 		}
 		return super.onMenuItemSelected(featureId, item);
 	}
-	
+
 	public void SetComment(String comment)
 	{
 		PaymentTask task = new PaymentTask();
@@ -200,7 +203,8 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 
 	}
 
-	 public static String getOrderDescription(Collection<OrderProperty> orderProperties,
+	public static String getOrderDescription(
+			Collection<OrderProperty> orderProperties,
 			Collection<PropertyDescriptor> itemOrderProperties)
 	{
 		Collection<PropertyDescriptor> properties = OrdersManager
@@ -305,7 +309,8 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 			try
 			{
 				WebClient client = createWebClient();
-				Collection<Order> orders = client.getOrders(Token.getCurrent(), _CatalogId);
+				Collection<Order> orders = client.getOrders(Token.getCurrent(),
+						_CatalogId);
 				_cartItems.clear();
 				_cartItems.addAll(orders);
 			}
@@ -377,16 +382,17 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 						Toast.LENGTH_LONG).show();
 				_cartItems.remove(order);
 				_adapter.notifyDataSetChanged();
-				CartActivity.this.invalidateOptionsMenu(); // Обновляю кнопку "Офрмить"
+				CartActivity.this.invalidateOptionsMenu(); // Обновляю кнопку
+															// "Офрмить"
 			}
 		}
 	}
-	
+
 	class PaymentTask extends AsyncTask<Void, Void, Void>
 	{
 		Throwable exception;
 		ProgressDialog dialog;
-		
+
 		public String comment;
 
 		@Override
@@ -402,7 +408,8 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 			try
 			{
 				WebClient client = createWebClient();
-				client.addPayment(Token.getCurrent(), Repository.CatalogId, comment);
+				client.addPayment(Token.getCurrent(), Repository.CatalogId,
+						comment);
 			}
 			catch (Throwable ex)
 			{
@@ -423,8 +430,10 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 						.show();
 			else
 			{
-				Repository.get(null).getOrderManager().setOrderCatalogs(new ArrayList<Catalog>());
-				Toast.makeText(CartActivity.this, "Заказ оформлен", Toast.LENGTH_LONG).show();
+				Repository.get(null).getOrderManager()
+						.setOrderCatalogs(new ArrayList<Catalog>());
+				Toast.makeText(CartActivity.this, "Заказ оформлен",
+						Toast.LENGTH_LONG).show();
 				_cartItems.clear();
 				_adapter.notifyDataSetChanged();
 			}

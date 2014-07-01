@@ -2,19 +2,22 @@ package stx.shopclient.discountactivity;
 
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.entity.Discount;
 import stx.shopclient.mainmenu.MainMenuItem;
 
-public class DiscountActivity extends BaseActivity {
+public class DiscountActivity extends BaseActivity
+{
 	Discount _discount;
 
 	@Override
-	protected View createMainView(ViewGroup parent) {
+	protected View createMainView(ViewGroup parent)
+	{
 		_discount = DiscountListActivity.SelectedDiscount;
-		
+
 		getActionBar().setTitle(_discount.getCatalogName());
 
 		View view = getLayoutInflater().inflate(R.layout.discount_activity,
@@ -36,16 +39,15 @@ public class DiscountActivity extends BaseActivity {
 
 		numberTextView.setText(_discount.getCode());
 
-		if (_discount.getUnitType() == Discount.UNIT_TYPE_PERCENT)
-			sizeTextView.setText(String.format("%d", (int) _discount.getSize())
-					+ "%");
-		else if (_discount.getUnitType() == Discount.UNIT_TYPE_RUB)
-			sizeTextView.setText(String.format("%.2f", _discount.getSize())
-					+ " рублей");
+		sizeTextView.setText(String.format("%.2f", _discount.getSize()) + " "
+				+ _discount.getUnit());
+		
+		ImageView image = (ImageView)view.findViewById(R.id.imageView);
+		setImage(image, _discount.getCatalogLogo());
 
 		return view;
 	}
-	
+
 	@Override
 	public boolean initMainMenuItem(MainMenuItem item)
 	{

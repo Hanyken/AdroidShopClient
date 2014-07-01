@@ -1,5 +1,6 @@
 package stx.shopclient.entity;
 
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class Discount {
@@ -15,8 +16,9 @@ public class Discount {
 	private String _catalogName;
 	private String _catalogLogo;
 	private String _image;
-	private GregorianCalendar _createDate;
+	private Date _createDate;
 	private int _unitType;
+	private String _unit;
 	
 	public long getDiscountId() {
 		return _discountId;
@@ -72,10 +74,10 @@ public class Discount {
 	public void setImage(String image) {
 		_image = image;
 	}
-	public GregorianCalendar getCreateDate() {
+	public Date getCreateDate() {
 		return _createDate;
 	}
-	public void setCreateDate(GregorianCalendar createDate) {
+	public void setCreateDate(Date createDate) {
 		_createDate = createDate;
 	}
 	public int getUnitType() {
@@ -83,5 +85,13 @@ public class Discount {
 	}
 	public void setUnitType(int unitType) {
 		_unitType = unitType;
+	}
+	public String getUnit()
+	{
+		return _unit;
+	}
+	public void setUnit(String unit)
+	{
+		_unit = unit;
 	}
 }

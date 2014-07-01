@@ -44,6 +44,8 @@ public class PaymentActivity extends BaseActivity
 	@Override
 	protected View createMainView(ViewGroup parent)
 	{
+		getActionBar().setTitle("Информация о заказе");
+		
 		View mainView = getLayoutInflater().inflate(R.layout.payment_activity, parent, false);
 		
 		CatalogSettings settings = Repository.get(this).getCatalogManager()
