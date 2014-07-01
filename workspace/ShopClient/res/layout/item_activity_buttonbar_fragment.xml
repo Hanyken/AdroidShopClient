@@ -38,6 +38,13 @@
 	            />
 	        
 	        <Button
+	            android:id="@+id/btnFavorits"
+	            android:layout_width="35dp"
+	            android:layout_height="35dp"
+	            android:layout_marginLeft="@dimen/buttonbar_margion_small"
+	            android:layout_marginRight="@dimen/buttonbar_margion_big"/>
+	        
+	        <Button
 	            android:id="@+id/btnOverview"
 	            android:layout_width="35dp"
 	            android:layout_height="35dp"

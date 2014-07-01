@@ -1,11 +1,14 @@
 package stx.shopclient.itemactivity;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
+import stx.shopclient.cartactivity.CartActivity;
+import stx.shopclient.entity.Catalog;
 import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.entity.CatalogItemGroup;
 import stx.shopclient.entity.CatalogSettings;
@@ -176,6 +179,9 @@ public class ItemActivity extends BaseActivity
 			orderIntent.putExtra("ItemTitle", _Item.getName());
 			startActivity(orderIntent);
 			break;
+		case R.id.btnFavorits:
+			new FavoritsTask().execute();
+			break;
 		}
 	}
 
@@ -246,4 +252,54 @@ public class ItemActivity extends BaseActivity
 
 	}
 
+	
+	class FavoritsTask extends AsyncTask<Void, Void, Void>
+	{
+		Throwable exception;
+		ProgressDialog dialog;
+
+		public String comment;
+
+		@Override
+		protected void onPreExecute()
+		{
+			dialog = ProgressDialog.show(ItemActivity.this, "Обработка",
+					"Добавить в избранное");
+		}
+
+		@Override
+		protected Void doInBackground(Void... params)
+		{
+			try
+			{
+				WebClient client = createWebClient();
+				client.addFavorite(Token.getCurrent(), _itemId);
+			}
+			catch (Throwable ex)
+			{
+				exception = ex;
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result)
+		{
+			dialog.dismiss();
+
+			if (exception != null)
+				Toast.makeText(ItemActivity.this,
+						exception.getLocalizedMessage(), Toast.LENGTH_LONG)
+						.show();
+			else
+			{
+				Repository.get(null).getOrderManager()
+						.setOrderCatalogs(new ArrayList<Catalog>());
+				Toast.makeText(ItemActivity.this, "Элемент добавлен в список",
+						Toast.LENGTH_LONG).show();
+			}
+		}
+	}
+	
 }

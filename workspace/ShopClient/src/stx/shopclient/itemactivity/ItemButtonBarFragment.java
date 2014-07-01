@@ -36,6 +36,7 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 	private TextView lblOverview;
 	private TextView lblRepost;
 
+	private Button btnFavorits;
 	private Button btnOverview;
 	private Button btnShare;
 	private Button btnOrder;
@@ -56,6 +57,7 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 		lblOverview = (TextView) view.findViewById(R.id.lblOverview);
 		lblRepost = (TextView) view.findViewById(R.id.lblShare);
 
+		btnFavorits = (Button) view.findViewById(R.id.btnFavorits);
 		btnOverview = (Button) view.findViewById(R.id.btnOverview);
 		btnShare = (Button) view.findViewById(R.id.btnShare);
 		btnOrder = (Button) view.findViewById(R.id.btnOrder);
@@ -65,6 +67,7 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 		btnShare.setOnClickListener(this);
 		btnOverview.setOnClickListener(this);
 		btnOrder.setOnClickListener(this);
+		btnFavorits.setOnClickListener(this);
 
 		return view;
 	}
