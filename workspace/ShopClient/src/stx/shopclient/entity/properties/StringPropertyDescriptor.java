@@ -2,10 +2,9 @@ package stx.shopclient.entity.properties;
 
 import java.text.SimpleDateFormat;
 
+import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import stx.shopclient.utils.StringUtils;
 
 public class StringPropertyDescriptor extends PropertyDescriptor
 {
@@ -38,7 +37,7 @@ public class StringPropertyDescriptor extends PropertyDescriptor
 	@Override
 	public boolean isValueDefined()
 	{
-		return !StringUtils.isNullOrEmpty(_value);
+		return !StringUtils.isBlank(_value);
 	}
 
 	@Override

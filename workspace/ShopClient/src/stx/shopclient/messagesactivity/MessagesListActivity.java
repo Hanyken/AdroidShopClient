@@ -1,11 +1,14 @@
 package stx.shopclient.messagesactivity;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -15,13 +18,16 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.entity.Message;
+import stx.shopclient.entity.Token;
 import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.ui.common.LoadMoreListAdapter;
+import stx.shopclient.webservice.WebClient;
 
 public class MessagesListActivity extends BaseActivity implements
 		OnItemClickListener
@@ -30,13 +36,12 @@ public class MessagesListActivity extends BaseActivity implements
 
 	List<Message> _messages = new ArrayList<Message>();
 	MessageListAdapter _adapter = new MessageListAdapter();
+	
+	public static Message SelectedMessage;
 
 	@Override
 	protected View createMainView(ViewGroup parent)
-	{
-		_messages.addAll(Repository.get(this).getMessagesManager()
-				.getMessages());
-
+	{		
 		getActionBar().setTitle("Сообщения");
 
 		View view = getLayoutInflater().inflate(R.layout.message_list_activity,
@@ -44,6 +49,7 @@ public class MessagesListActivity extends BaseActivity implements
 
 		_listView = (PullToRefreshListView) view.findViewById(R.id.listView);
 		_listView.setOnItemClickListener(this);
+		_listView.setMode(Mode.PULL_FROM_END);
 		_listView
 				.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>()
 				{
@@ -52,14 +58,20 @@ public class MessagesListActivity extends BaseActivity implements
 					public void onRefresh(
 							PullToRefreshBase<ListView> refreshView)
 					{
-						new RefreshTask().execute();
+						RefreshTask task = new RefreshTask();
+						task.isFirstLoad = false;
+						task.execute();
 					}
 				});
 		_listView.setAdapter(_adapter);
+		
+		RefreshTask task = new RefreshTask();
+		task.isFirstLoad = true;
+		task.execute();
 
 		return view;
 	}
-	
+
 	@Override
 	public boolean initMainMenuItem(MainMenuItem item)
 	{
@@ -68,28 +80,55 @@ public class MessagesListActivity extends BaseActivity implements
 		else
 			return super.initMainMenuItem(item);
 	}
-	
+
 	class RefreshTask extends AsyncTask<Void, Void, Void>
 	{
+		ProgressDialog dialog;
+		Throwable exception;
+		public boolean isFirstLoad;
+		Collection<Message> messages;
+
+		@Override
+		protected void onPreExecute()
+		{
+			if (isFirstLoad)
+				dialog = ProgressDialog.show(MessagesListActivity.this,
+						"Загрузка", "Получение списка сообщений");
+		}
 
 		@Override
 		protected Void doInBackground(Void... params)
 		{
 			try
 			{
-				Thread.sleep(2000);
-			} catch (InterruptedException e)
+				WebClient client = createWebClient();
+				messages = client.getAllMessages(Token.getCurrent(),
+						_messages.size() + 1, 30);
+			}
+			catch (Throwable ex)
 			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				exception = ex;
 			}
 			return null;
 		}
-		
+
 		@Override
 		protected void onPostExecute(Void result)
 		{
-			_listView.onRefreshComplete();
+			if (isFirstLoad)
+				dialog.dismiss();
+			else
+				_listView.onRefreshComplete();
+
+			if (exception != null)
+				Toast.makeText(MessagesListActivity.this,
+						exception.getLocalizedMessage(), Toast.LENGTH_LONG)
+						.show();
+			else if (messages != null && messages.size() > 0)
+			{
+				_messages.addAll(messages);
+				_adapter.notifyDataSetChanged();
+			}
 		}
 	}
 
@@ -142,6 +181,7 @@ public class MessagesListActivity extends BaseActivity implements
 		message.setRead(true);
 		_adapter.notifyDataSetChanged();
 
+		SelectedMessage = message;
 		Intent intent = new Intent(this, MessageActivity.class);
 		intent.putExtra(MessageActivity.MESSAGE_ID_EXTRA_KEY, message.getId());
 		startActivity(intent);

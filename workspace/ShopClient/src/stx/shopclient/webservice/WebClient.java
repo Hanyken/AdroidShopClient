@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.util.Collection;
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -46,7 +47,6 @@ import stx.shopclient.repository.OrdersManager;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.settings.ServerSettings;
 import stx.shopclient.settings.UserAccount;
-import stx.shopclient.utils.StringUtils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -188,31 +188,31 @@ public class WebClient
 		HttpArgs args = new HttpArgs();
 		args.addParam("login", login);
 		args.addParam("password", password);
-		if (!StringUtils.isNullOrEmpty(firstName))
+		if (!StringUtils.isBlank(firstName))
 			args.addParam("firstName", firstName);
-		if (!StringUtils.isNullOrEmpty(middleName))
+		if (!StringUtils.isBlank(middleName))
 			args.addParam("middleName", middleName);
-		if (!StringUtils.isNullOrEmpty(lastName))
+		if (!StringUtils.isBlank(lastName))
 			args.addParam("lastName", lastName);
-		if (!StringUtils.isNullOrEmpty(phone))
+		if (!StringUtils.isBlank(phone))
 			args.addParam("phone", phone);
-		if (!StringUtils.isNullOrEmpty(simId))
+		if (!StringUtils.isBlank(simId))
 			args.addParam("simId", simId);
 		if (birthday != null)
 			args.addParam("birthday", birthday);
-		if (!StringUtils.isNullOrEmpty(userAgent))
+		if (!StringUtils.isBlank(userAgent))
 			args.addParam("userAgent", userAgent);
 		args.addParam("screen_Width", screenWidth);
 		args.addParam("screen_Height", screenHeight);
-		if (!StringUtils.isNullOrEmpty(operationSystem))
+		if (!StringUtils.isBlank(operationSystem))
 			args.addParam("OS", operationSystem);
-		if (!StringUtils.isNullOrEmpty(device))
+		if (!StringUtils.isBlank(device))
 			args.addParam("device", device);
-		if (!StringUtils.isNullOrEmpty(latitude))
+		if (!StringUtils.isBlank(latitude))
 			args.addParam("Latitude", latitude);
-		if (!StringUtils.isNullOrEmpty(longitude))
+		if (!StringUtils.isBlank(longitude))
 			args.addParam("Longitude", longitude);
-		if (!StringUtils.isNullOrEmpty(accuracy))
+		if (!StringUtils.isBlank(accuracy))
 			args.addParam("Accuracy", accuracy);
 
 		String response = request("account/signin", args, false);
