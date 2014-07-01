@@ -18,6 +18,8 @@ public class CatalogSettings
 	private Bitmap _shareImgPress;
 	private Bitmap _commentImg;
 	private Bitmap _commentImgPress;
+	//private Bitmap _commentImg;
+	//private Bitmap _commentImgPress;
 
 	public int getBackground()
 	{

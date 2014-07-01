@@ -67,7 +67,7 @@ public abstract class BaseParser<T>
 			}
 			catch (Exception ex)
 			{
-				Log.w("MyException", ex.getMessage());
+				//Log.w("MyException", ex.getMessage());
 			}
 		}
 
