@@ -69,8 +69,6 @@ public class MainMenuListAdapter extends BaseAdapter
 		_cartMenuItem.setName("Корзина");
 		_cartMenuItem.setHasIcon(true);
 		_cartMenuItem.setIconId(R.drawable.img_shopping_cart);
-		/*_cartMenuItem.setCount((int) Repository.get(_context).getOrderManager()
-				.getOrderCount());*/
 		_cartMenuItem.setNotClickable(true);
 		_menuItems.add(_cartMenuItem);
 

@@ -60,7 +60,6 @@ public class BaseActivity extends FragmentActivity
 	LinearLayout _mainViewContainer;
 	MainMenuListAdapter _mainMenuListAdapter;
 	ProgressDialog _progressDialog;
-	static GregorianCalendar _lastCheckCatalogModif = new GregorianCalendar();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -83,8 +82,8 @@ public class BaseActivity extends FragmentActivity
 	{
 		super.onStart();
 
-		//new GetOrderCountTask().execute();
-		
+		// new GetOrderCountTask().execute();
+
 		new GetOrderCatalogsTask().execute();
 	}
 
@@ -94,7 +93,7 @@ public class BaseActivity extends FragmentActivity
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setBackgroundDrawable(new ColorDrawable(Repository.get(this)
 				.getCatalogManager().getSettings().getBackground()));
-		
+
 		ImageDownloadTask.startNew(actionBar, this, Repository.get(this)
 				.getCatalogManager().getCatalog().getLogo());
 
@@ -121,7 +120,8 @@ public class BaseActivity extends FragmentActivity
 			@Override
 			public void onDrawerOpened(View arg0)
 			{
-				_mainMenuListAdapter.addOrderCatalogs(Repository.get(null).getOrderManager().getOrderCatalogs());
+				_mainMenuListAdapter.addOrderCatalogs(Repository.get(null)
+						.getOrderManager().getOrderCatalogs());
 				_mainMenuListAdapter.notifyDataSetChanged();
 			}
 
@@ -157,6 +157,11 @@ public class BaseActivity extends FragmentActivity
 	{
 		if (item.getId() == MainMenuItem.SEARCH_MENU_ITEM_ID)
 			return false;
+		else if (item.getId() == MainMenuItem.MESSAGES_MENU_ITEM)
+		{
+			item.setCount((int) Repository.get(null).getMessagesManager()
+					.getUnreadMessageCount());
+		}
 		return true;
 	}
 
@@ -278,23 +283,6 @@ public class BaseActivity extends FragmentActivity
 				else
 				{
 					loadUI();
-
-					GregorianCalendar cal = new GregorianCalendar();
-					cal.add(GregorianCalendar.SECOND, -60);
-					if (_lastCheckCatalogModif.before(cal))
-					{
-						_lastCheckCatalogModif = new GregorianCalendar();
-
-						Thread thread = new Thread(new Runnable()
-						{
-							@Override
-							public void run()
-							{
-								refreshCatalogThreadFunc();
-							}
-						});
-						thread.start();
-					}
 				}
 			}
 		}
@@ -413,31 +401,6 @@ public class BaseActivity extends FragmentActivity
 				android.graphics.PorterDuff.Mode.SRC_ATOP);
 	}
 
-	void refreshCatalogThreadFunc()
-	{
-		try
-		{
-			if (!checkCatalogLastModif())
-			{
-				Repository.get(this).loadCatalogFromWeb(this);
-			}
-		}
-		catch (Throwable ex)
-		{
-			Log.e("Refresh catalog", "error", ex);
-		}
-	}
-
-	boolean checkCatalogLastModif()
-	{
-		Catalog catalog = Repository.get(this).getCatalogManager().getCatalog();
-		WebClient client = createWebClient();
-		UpdateResultEntity res = client.updateCatalogNeeded(Token.getCurrent(),
-				catalog.getId(), catalog.getLastModification());
-
-		return !res.updateNeeded();
-	}
-
 	public WebClient createWebClient()
 	{
 		return new WebClient(this);
@@ -540,29 +503,21 @@ public class BaseActivity extends FragmentActivity
 		}
 	}
 
-	/*class GetOrderCountTask extends AsyncTask<Void, Void, Void>
-	{
+	/*
+	 * class GetOrderCountTask extends AsyncTask<Void, Void, Void> {
+	 * 
+	 * @Override protected Void doInBackground(Void... params) { try { WebClient
+	 * client = createWebClient(); long count =
+	 * client.getOrderCount(Token.getCurrent(), Repository.CatalogId);
+	 * Repository.get(null).getOrderManager().setOrderCount(count); } catch
+	 * (Throwable ex) { Log.e("GetOrderCountTask", ex.getLocalizedMessage(),
+	 * ex); }
+	 * 
+	 * return null; }
+	 * 
+	 * }
+	 */
 
-		@Override
-		protected Void doInBackground(Void... params)
-		{
-			try
-			{
-				WebClient client = createWebClient();
-				long count = client.getOrderCount(Token.getCurrent(),
-						Repository.CatalogId);
-				Repository.get(null).getOrderManager().setOrderCount(count);
-			}
-			catch (Throwable ex)
-			{
-				Log.e("GetOrderCountTask", ex.getLocalizedMessage(), ex);
-			}
-
-			return null;
-		}
-
-	}*/
-	
 	class GetOrderCatalogsTask extends AsyncTask<Void, Void, Void>
 	{
 
@@ -572,8 +527,10 @@ public class BaseActivity extends FragmentActivity
 			try
 			{
 				WebClient client = createWebClient();
-				Collection<Catalog> catalogs = client.getOrderCatalogs(Token.getCurrent());
-				Repository.get(null).getOrderManager().setOrderCatalogs(catalogs);
+				Collection<Catalog> catalogs = client.getOrderCatalogs(Token
+						.getCurrent());
+				Repository.get(null).getOrderManager()
+						.setOrderCatalogs(catalogs);
 			}
 			catch (Throwable ex)
 			{

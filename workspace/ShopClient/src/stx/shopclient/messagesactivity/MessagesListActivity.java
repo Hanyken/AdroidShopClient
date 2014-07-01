@@ -164,7 +164,7 @@ public class MessagesListActivity extends BaseActivity implements
 			text.setText(message.getTitle());
 
 			text.setTextSize(18);
-			text.setPadding(10, 10, 10, 10);
+			text.setPadding(20, 20, 20, 20);
 
 			if (!message.isRead())
 				text.setTypeface(text.getTypeface(), Typeface.BOLD);
