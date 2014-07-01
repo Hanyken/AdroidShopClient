@@ -59,15 +59,26 @@ public class MainItemsTabFragment extends Fragment
 				.findFragmentById(R.id.favoritesViewPager);
 		_recent = (CatalogItemViewPagerFragment) getFragmentManager()
 				.findFragmentById(R.id.recentViewPager);
-		
+
 		LoadItemsTask task = new LoadItemsTask();
 		task.execute();
 
 		return view;
 	}
 
+	@Override
+	public void onStart()
+	{		
+		super.onStart();
+		
+		LoadItemsTask task = new LoadItemsTask();
+		task.refreshRecentOnly = true;
+		task.execute();
+	}
+
 	class LoadItemsTask extends AsyncTask<Void, Void, Void>
 	{
+		public boolean refreshRecentOnly = false;
 		Collection<CatalogItem> popularItems;
 		Collection<CatalogItem> favoriteItems;
 		Collection<CatalogItem> recentItems;
@@ -79,10 +90,13 @@ public class MainItemsTabFragment extends Fragment
 			try
 			{
 				WebClient client = new WebClient(getActivity());
-				popularItems = client.getPopular(Token.getCurrent(),
-						Repository.CatalogId);
-				favoriteItems = client.getFavorite(Token.getCurrent(),
-						Repository.CatalogId);
+				if (!refreshRecentOnly)
+				{
+					popularItems = client.getPopular(Token.getCurrent(),
+							Repository.CatalogId);
+					favoriteItems = client.getFavorite(Token.getCurrent(),
+							Repository.CatalogId);
+				}
 				recentItems = client.getLast(Token.getCurrent(),
 						Repository.CatalogId);
 			}

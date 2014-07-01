@@ -1,5 +1,7 @@
 package stx.shopclient.parsers;
 
+import java.util.GregorianCalendar;
+
 import org.w3c.dom.Element;
 
 import stx.shopclient.entity.Discount;
@@ -27,7 +29,7 @@ public class DiscountParser extends BaseParser<Discount>
 		item.setDescription(super.getValue(e, DESCRIPTION_NAME));
 		item.setCode(super.getValue(e, CODE_NAME));
 		item.setSize(super.getValueDouble(e, SIZE_NAME));
-		item.setUnitType(super.getValue(e, UNIT_NAME));
+		item.setUnit(super.getValue(e, UNIT_NAME));
 		item.setCreateDate(super.getValueDate(e, CREATE_DATE_NAME));
 		item.setCatalogId(super.getValueLong(e, CATALOG_ID_NAME));
 		item.setCatalogName(super.getValue(e, CATALOG_NAME_NAME));

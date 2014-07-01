@@ -16,8 +16,9 @@ public class Discount {
 	private String _catalogName;
 	private String _catalogLogo;
 	private String _image;
-	private GregorianCalendar _createDate;
+	private Date _createDate;
 	private int _unitType;
+	private String _unit;
 	
 	public long getDiscountId() {
 		return _discountId;
@@ -73,21 +74,24 @@ public class Discount {
 	public void setImage(String image) {
 		_image = image;
 	}
-	public GregorianCalendar getCreateDate() {
+	public Date getCreateDate() {
 		return _createDate;
 	}
 	public void setCreateDate(Date createDate) {
-		GregorianCalendar calendar = new GregorianCalendar();
-		calendar.setTime(createDate);
-		_createDate = calendar;
+		_createDate = createDate;
 	}
 	public int getUnitType() {
 		return _unitType;
 	}
 	public void setUnitType(int unitType) {
 		_unitType = unitType;
+		_unit = _unitType ==  Discount.UNIT_TYPE_PERCENT ? "%" : "руб.";
 	}
-	public void setUnitType(String unit) {
+	public String getUnit() {
+		return _unit;
+	}
+	public void setUnit(String unit) {
+		_unit = unit;
 		_unitType = (unit.equals("%") ? Discount.UNIT_TYPE_PERCENT : Discount.UNIT_TYPE_RUB);
 	}
 }

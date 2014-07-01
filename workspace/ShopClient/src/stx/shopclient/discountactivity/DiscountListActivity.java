@@ -1,6 +1,7 @@
 package stx.shopclient.discountactivity;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -21,10 +23,15 @@ import android.widget.AdapterView.OnItemClickListener;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.entity.Discount;
+import stx.shopclient.entity.Token;
 import stx.shopclient.mainmenu.MainMenuItem;
+import stx.shopclient.utils.ProgressDialogAsyncTask;
+import stx.shopclient.webservice.WebClient;
 
 public class DiscountListActivity extends BaseActivity implements
-		OnItemClickListener, SearchView.OnQueryTextListener, SearchView.OnCloseListener {
+		OnItemClickListener, SearchView.OnQueryTextListener,
+		SearchView.OnCloseListener
+{
 	PullToRefreshListView _listView;
 
 	List<Discount> _discountList = new ArrayList<Discount>();
@@ -33,46 +40,6 @@ public class DiscountListActivity extends BaseActivity implements
 
 	public static Discount SelectedDiscount;
 
-	void generateData() {
-		Discount disc = new Discount();
-		disc.setCatalogName("Ecco");
-		disc.setName("5% скидка на зимнюю обувь");
-		disc.setDescription("Описание скидки");
-		disc.setSize(5);
-		disc.setUnitType(Discount.UNIT_TYPE_PERCENT);
-		disc.setCode("123234235345345");
-		_discountFilteredList.add(disc);
-
-		disc = new Discount();
-		disc.setCatalogName("Nike");
-		disc.setName("Скидка 10% на футболки");
-		disc.setDescription("Описание скидки");
-		disc.setSize(10);
-		disc.setUnitType(Discount.UNIT_TYPE_PERCENT);
-		disc.setCode("00032050345");
-		_discountFilteredList.add(disc);
-
-		disc = new Discount();
-		disc.setCatalogName("Mobishop");
-		disc.setName("Скидка 30% на Nokia Lumia");
-		disc.setDescription("Описание скидки");
-		disc.setSize(30);
-		disc.setUnitType(Discount.UNIT_TYPE_PERCENT);
-		disc.setCode("123234235345345");
-		_discountFilteredList.add(disc);
-
-		disc = new Discount();
-		disc.setCatalogName("Re:Store");
-		disc.setName("Скидка 500 рублей на iPad");
-		disc.setDescription("Описание скидки");
-		disc.setSize(500);
-		disc.setUnitType(Discount.UNIT_TYPE_RUB);
-		disc.setCode("345345ljh7876593456l");
-		_discountFilteredList.add(disc);
-
-		_discountList.addAll(_discountFilteredList);
-	}
-	
 	@Override
 	public boolean initMainMenuItem(MainMenuItem item)
 	{
@@ -83,58 +50,53 @@ public class DiscountListActivity extends BaseActivity implements
 	}
 
 	@Override
-	protected View createMainView(ViewGroup parent) {
-		generateData();
-
+	protected View createMainView(ViewGroup parent)
+	{
 		getActionBar().setTitle("Скидочные карты");
 
 		View view = getLayoutInflater().inflate(
 				R.layout.discount_list_activity, parent, false);
 
 		_listView = (PullToRefreshListView) view.findViewById(R.id.listView);
-		//_listView.setMode(Mode.BOTH);
+		_listView.setMode(Mode.DISABLED);
 		_listView.setOnItemClickListener(this);
 		_listView.setAdapter(_adapter);
-		
-		_listView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>()
-		{
 
-			@Override
-			public void onRefresh(PullToRefreshBase<ListView> refreshView)
-			{
-				new RefreshTask().execute();
-			}
-		});
+		new RefreshTask().execute();
 
 		return view;
 	}
-	
-	class RefreshTask extends AsyncTask<Void, Void, Void>
+
+	class RefreshTask extends ProgressDialogAsyncTask<Collection<Discount>>
 	{
+		public RefreshTask()
+		{
+			super(DiscountListActivity.this, "Получение списка скидочных карт");
+		}
 
 		@Override
-		protected Void doInBackground(Void... params)
+		protected Collection<Discount> backgroundTask() throws Throwable
 		{
-			try
-			{
-				Thread.sleep(2000);
-			} catch (InterruptedException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
+			return createWebClient().getDiscounts(Token.getCurrent());
 		}
-		
+
 		@Override
-		protected void onPostExecute(Void result)
+		protected void onPostExecuteNoError(Collection<Discount> result)
 		{
-			_listView.onRefreshComplete();
+			if (result == null)
+				return;
+
+			_discountList.clear();
+			_discountFilteredList.clear();
+			_discountList.addAll(result);
+			_discountFilteredList.addAll(result);
+			_adapter.notifyDataSetChanged();
 		}
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
 		getMenuInflater().inflate(R.menu.discount_list_activity_menu, menu);
 
 		SearchView searchView = (SearchView) menu.findItem(R.id.search)
@@ -145,28 +107,32 @@ public class DiscountListActivity extends BaseActivity implements
 		return true;
 	}
 
-	class DiscountListAdapter extends BaseAdapter {
+	class DiscountListAdapter extends BaseAdapter
+	{
 
 		@Override
-		public int getCount() {
+		public int getCount()
+		{
 			return _discountFilteredList.size();
 		}
 
 		@Override
-		public Object getItem(int arg0) {
+		public Object getItem(int arg0)
+		{
 			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
-		public long getItemId(int arg0) {
+		public long getItemId(int arg0)
+		{
 			// TODO Auto-generated method stub
 			return 0;
 		}
 
 		@Override
-		public View getView(int index, View arg1, ViewGroup parent) {
-
+		public View getView(int index, View arg1, ViewGroup parent)
+		{
 			View view = getLayoutInflater().inflate(
 					R.layout.discount_list_activity_item, parent, false);
 
@@ -179,6 +145,9 @@ public class DiscountListActivity extends BaseActivity implements
 			TextView descriptionTextView = (TextView) view
 					.findViewById(R.id.descriptionTextView);
 			descriptionTextView.setText(discount.getName());
+			
+			ImageView image = (ImageView)view.findViewById(R.id.imageView);
+			setImage(image, discount.getCatalogLogo());
 
 			return view;
 		}
@@ -186,7 +155,8 @@ public class DiscountListActivity extends BaseActivity implements
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int index, long arg3) {
+	public void onItemClick(AdapterView<?> arg0, View arg1, int index, long arg3)
+	{
 		Discount disc = _discountFilteredList.get(index - 1);
 		SelectedDiscount = disc;
 		Intent intent = new Intent(this, DiscountActivity.class);
@@ -195,30 +165,35 @@ public class DiscountListActivity extends BaseActivity implements
 	}
 
 	@Override
-	public boolean onQueryTextChange(String newText) {
+	public boolean onQueryTextChange(String newText)
+	{
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean onQueryTextSubmit(String query) {
+	public boolean onQueryTextSubmit(String query)
+	{
 
 		_discountFilteredList.clear();
 
-		for (Discount disc : _discountList) {
+		for (Discount disc : _discountList)
+		{
 			if (query == null || query.equals(""))
 				_discountFilteredList.add(disc);
-			else if (disc.getCatalogName().toLowerCase().contains(query.toLowerCase()))
+			else if (disc.getCatalogName().toLowerCase()
+					.contains(query.toLowerCase()))
 				_discountFilteredList.add(disc);
 		}
-		
+
 		_adapter.notifyDataSetChanged();
 
 		return true;
 	}
 
 	@Override
-	public boolean onClose() {
+	public boolean onClose()
+	{
 		_discountFilteredList.clear();
 		_discountFilteredList.addAll(_discountList);
 		return false;

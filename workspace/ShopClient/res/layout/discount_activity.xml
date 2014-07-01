@@ -6,8 +6,11 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="260dp"
-        android:layout_height="162dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:maxHeight="300dp"
+        android:maxWidth="300dp"
         android:src="@drawable/ic_launcher" />
 
     <View
@@ -48,12 +51,11 @@
             android:id="@+id/cardNumberTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
             android:padding="10dp"
-            android:text="123456645" />
-
+            android:text="123456645"
+            android:textStyle="bold" />
     </LinearLayout>
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
@@ -69,10 +71,9 @@
             android:id="@+id/sizeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
             android:padding="10dp"
-            android:text="10%" />
-
+            android:text="10%"
+            android:textStyle="bold" />
     </LinearLayout>
 
 </LinearLayout>
