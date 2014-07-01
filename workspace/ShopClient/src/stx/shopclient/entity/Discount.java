@@ -1,5 +1,6 @@
 package stx.shopclient.entity;
 
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class Discount {
@@ -75,13 +76,18 @@ public class Discount {
 	public GregorianCalendar getCreateDate() {
 		return _createDate;
 	}
-	public void setCreateDate(GregorianCalendar createDate) {
-		_createDate = createDate;
+	public void setCreateDate(Date createDate) {
+		GregorianCalendar calendar = new GregorianCalendar();
+		calendar.setTime(createDate);
+		_createDate = calendar;
 	}
 	public int getUnitType() {
 		return _unitType;
 	}
 	public void setUnitType(int unitType) {
 		_unitType = unitType;
+	}
+	public void setUnitType(String unit) {
+		_unitType = (unit.equals("%") ? Discount.UNIT_TYPE_PERCENT : Discount.UNIT_TYPE_RUB);
 	}
 }
