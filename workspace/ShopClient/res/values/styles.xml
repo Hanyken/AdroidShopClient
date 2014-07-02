@@ -21,11 +21,6 @@
         <item name="android:textSize">14sp</item>
     </style>
     
-   
-    <style name="ButtonBack">
-        <item name="android:background">@drawable/stl_back_button</item>
-    </style>
-    
     <style name="ItemActivityStyle" parent="@android:style/Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/AppActionBar</item>
     </style>

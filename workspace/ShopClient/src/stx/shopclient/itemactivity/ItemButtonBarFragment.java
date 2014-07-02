@@ -11,7 +11,6 @@ import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.entity.CatalogItemGroup;
 import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.repository.Repository;
-import stx.shopclient.styles.ColorButtonDrawable;
 import stx.shopclient.styles.ImageButtonDrawable;
 import android.app.Fragment;
 import android.graphics.Bitmap;
@@ -84,8 +83,9 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 		btnOrder.setTextColor(settings.getForegroundColor());
 		btnOrder.setBackground(BaseActivity.getButtonDrawable(settings));
 
-		btnShare.setBackground(getShareButtonDrawable());
-		btnOverview.setBackground(getCommentButtonDrawable());
+		btnShare.setBackground(getButtonDrawable("Share"));
+		btnOverview.setBackground(getButtonDrawable("Comment"));
+		btnFavorits.setBackground(getButtonDrawable("Favorits"));
 
 		lblOverview.setTextColor(settings.getCountButtonLableColor());
 		lblRepost.setTextColor(settings.getCountButtonLableColor());
@@ -146,32 +146,13 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 		((ItemActivity) getActivity()).onBarButtonClick(view);
 	}
 
-	private Drawable getShareButtonDrawable()
+	
+	private Drawable getButtonDrawable(String name)
 	{
 		StateListDrawable drawable = new StateListDrawable();
-		Bitmap bmp = settings.getImageFromPath(getResources(), "Share"); // BitmapFactory.decodeResource(getResources(),
-																			// R.drawable.img_share);
+		Bitmap bmp = settings.getImageFromPath(getResources(), name);
 		Drawable normal = new ImageButtonDrawable(bmp);
-		Bitmap bmpPress = settings.getImageFromPath(getResources(),
-				"SharePress"); // BitmapFactory.decodeResource(getResources(),
-								// R.drawable.img_share_press);
-		Drawable press = new ImageButtonDrawable(bmpPress);
-
-		drawable.addState(new int[]
-		{ android.R.attr.state_pressed }, press);
-		drawable.addState(new int[0], normal);
-		return drawable;
-	}
-
-	private Drawable getCommentButtonDrawable()
-	{
-		StateListDrawable drawable = new StateListDrawable();
-		Bitmap bmp = settings.getImageFromPath(getResources(), "Comment"); // BitmapFactory.decodeResource(getResources(),
-																			// R.drawable.img_share);
-		Drawable normal = new ImageButtonDrawable(bmp);
-		Bitmap bmpPress = settings.getImageFromPath(getResources(),
-				"CommentPress"); // BitmapFactory.decodeResource(getResources(),
-									// R.drawable.img_share_press);
+		Bitmap bmpPress = settings.getImageFromPath(getResources(), name+"Press");
 		Drawable press = new ImageButtonDrawable(bmpPress);
 
 		drawable.addState(new int[]

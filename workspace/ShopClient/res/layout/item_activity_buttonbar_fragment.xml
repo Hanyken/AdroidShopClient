@@ -27,6 +27,13 @@
 	        android:layout_marginBottom="@dimen/margion_big">
 	
 	        
+	        <Button
+	            android:id="@+id/btnFavorits"
+	            android:layout_width="35dp"
+	            android:layout_height="35dp"
+	            />
+	        
+	        
 	        
 	        <TextView 
 	            android:id="@+id/lblOverview"
@@ -34,15 +41,7 @@
 	            android:layout_height="wrap_content"
 	            android:layout_marginLeft="@dimen/buttonbar_margion_big"
 	            android:layout_gravity="center_vertical"
-	            android:textSize="@dimen/buttonbar_text_size"
-	            />
-	        
-	        <Button
-	            android:id="@+id/btnFavorits"
-	            android:layout_width="35dp"
-	            android:layout_height="35dp"
-	            android:layout_marginLeft="@dimen/buttonbar_margion_small"
-	            android:layout_marginRight="@dimen/buttonbar_margion_big"/>
+	            android:textSize="@dimen/buttonbar_text_size"/>
 	        
 	        <Button
 	            android:id="@+id/btnOverview"

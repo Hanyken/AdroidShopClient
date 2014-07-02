@@ -18,8 +18,8 @@ public class CatalogSettings
 	private Bitmap _shareImgPress;
 	private Bitmap _commentImg;
 	private Bitmap _commentImgPress;
-	//private Bitmap _commentImg;
-	//private Bitmap _commentImgPress;
+	private Bitmap _favoriteImg;
+	private Bitmap _favoriteImgPress;
 
 	public int getBackground()
 	{
@@ -117,6 +117,24 @@ public class CatalogSettings
 		_commentImgPress = commentImgPress;
 	}
 	
+	public Bitmap getFavoriteImg()
+	{
+		return _favoriteImg;
+	}
+	public void setFavoriteImg(Bitmap favoriteImg)
+	{
+		_favoriteImg = favoriteImg;
+	}
+	
+	public Bitmap getFavoriteImgPress()
+	{
+		return _favoriteImgPress;
+	}
+	public void setFavoriteImgPress(Bitmap favoriteImgPress)
+	{
+		_favoriteImgPress = favoriteImgPress;
+	}
+	
 	public int getCountButtonLableColor()
 	{
 		return _countButtonLableColor;
@@ -149,6 +167,16 @@ public class CatalogSettings
 		{
 			return BitmapFactory.decodeResource(resources,
 					R.drawable.img_comment_press);
+		}
+		else if (imgName.equals("Favorits"))
+		{
+			return BitmapFactory.decodeResource(resources,
+					R.drawable.img_like); 
+		}
+		else if (imgName.equals("FavoritsPress"))
+		{
+			return BitmapFactory.decodeResource(resources,
+					R.drawable.img_like_press); 
 		}
 		else
 		{
