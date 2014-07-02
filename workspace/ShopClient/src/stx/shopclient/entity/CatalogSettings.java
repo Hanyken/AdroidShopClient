@@ -7,6 +7,10 @@ import android.graphics.BitmapFactory;
 
 public class CatalogSettings
 {
+	public static final String IMG_KEY_COMMENT = "Comment";
+	public static final String IMG_KEY_SHARE = "Share";
+	public static final String IMG_KEY_FAVOTITS = "Favorits";
+	
 	private int _background;
 	private int _itemPanelColor;
 	private int _ratingColor;

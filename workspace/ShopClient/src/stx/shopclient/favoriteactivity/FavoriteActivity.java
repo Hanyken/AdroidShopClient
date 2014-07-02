@@ -46,7 +46,7 @@ public class FavoriteActivity extends BaseActivity implements OnItemClickListene
 		
 		new LoadTask().execute();
 
-		return super.createMainView(parent);
+		return view;
 	}
 
 	class FavoriteAdapter extends BaseAdapter
