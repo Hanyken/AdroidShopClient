@@ -25,6 +25,11 @@ public class BooleanPropertyDescriptor extends PropertyDescriptor {
 	public String getStringValue() {
 		return Boolean.toString(_currentValue);
 	}
+	@Override
+	public String getValueWithoutUnit()
+	{
+		return getStringValue();
+	}
 	
 	@Override
 	public boolean isValueDefined()

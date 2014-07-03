@@ -20,6 +20,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import android.graphics.Color;
 import android.util.Log;
 
 public abstract class BaseParser<T>
@@ -206,6 +207,16 @@ public abstract class BaseParser<T>
 		}
 		return date;
 	}
+	
+	protected int getValueColor(Element e, String str)
+	{
+		String value = getValue(e, str);
+		if (value == null)
+			value = "#000000";
+		return Color.parseColor(value);
+	}
+	
+	
 
 	protected final String getElementValue(Node elem)
 	{

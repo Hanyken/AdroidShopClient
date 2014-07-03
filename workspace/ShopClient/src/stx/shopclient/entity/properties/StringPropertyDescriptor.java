@@ -33,6 +33,11 @@ public class StringPropertyDescriptor extends PropertyDescriptor
 	{
 		return _value;
 	}
+	@Override
+	public String getValueWithoutUnit()
+	{
+		return getStringValue();
+	}
 
 	@Override
 	public boolean isValueDefined()

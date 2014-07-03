@@ -92,6 +92,11 @@ public class EnumPropertyDescriptor extends PropertyDescriptor
 		}
 		return value;
 	}
+	@Override
+	public String getValueWithoutUnit()
+	{
+		return getStringValue();
+	}
 
 	@Override
 	public boolean isValueDefined()

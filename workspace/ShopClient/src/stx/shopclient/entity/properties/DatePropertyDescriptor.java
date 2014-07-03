@@ -113,6 +113,11 @@ public class DatePropertyDescriptor extends PropertyDescriptor
 	{
 		return BaseParser.dateParser.format(_currentMaxValue.getTime());
 	}
+	@Override
+	public String getValueWithoutUnit()
+	{
+		return getStringValue();
+	}
 
 	@Override
 	public boolean isValueDefined()
@@ -161,6 +166,7 @@ public class DatePropertyDescriptor extends PropertyDescriptor
 	{
 		return _dateFormat.format(value.getTime());
 	}
+	
 
 	@Override
 	public String getDescription()

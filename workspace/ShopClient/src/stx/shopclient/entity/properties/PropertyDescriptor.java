@@ -29,6 +29,7 @@ public abstract class PropertyDescriptor implements Serializable
 	public abstract void clear();
 
 	public abstract String getStringValue();
+	public abstract String getValueWithoutUnit();
 
 	public String getName()
 	{

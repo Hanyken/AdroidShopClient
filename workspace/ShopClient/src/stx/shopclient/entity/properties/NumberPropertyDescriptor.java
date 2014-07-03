@@ -112,6 +112,12 @@ public class NumberPropertyDescriptor extends PropertyDescriptor
 	{
 		return getStringValue(getCurrentValue()) + getUnitName();
 	}
+	@Override
+	public String getValueWithoutUnit()
+	{
+		return getStringValue(getCurrentValue());
+	}
+	
 
 	@Override
 	public boolean isValueDefined()

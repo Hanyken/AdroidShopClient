@@ -247,7 +247,7 @@ public class WebClient
 		else
 			return catalogs.iterator().next();
 	}
-
+	// actionTypeName - это перечень выбранных видов деятельности формат строки: <Search><Value>Телефоны</Value><Value>Торты</Value><Value>любой текст</Value></Search>
 	public Catalog getCatalogs(Token token, String catalogName, String actionTypeName, Long cityId, String address, int start, int offset)
 	{
 		HttpArgs args = new HttpArgs();

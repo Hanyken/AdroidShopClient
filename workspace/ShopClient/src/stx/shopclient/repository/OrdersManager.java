@@ -224,7 +224,7 @@ public class OrdersManager
 		{
 			OrderProperty item = new OrderProperty();
 			item.setName(el.getName());
-			item.setValue(el.getStringValue());
+			item.setValue(el.getValueWithoutUnit());
 			items.add(item);
 		}
 
