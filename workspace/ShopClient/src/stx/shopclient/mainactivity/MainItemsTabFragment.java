@@ -1,10 +1,6 @@
 package stx.shopclient.mainactivity;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-
-import com.astuetz.PagerSlidingTabStrip;
 
 import stx.shopclient.R;
 import stx.shopclient.entity.CatalogItem;
@@ -19,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
+import com.astuetz.PagerSlidingTabStrip;
 
 public class MainItemsTabFragment extends Fragment
 {
@@ -68,17 +66,15 @@ public class MainItemsTabFragment extends Fragment
 
 	@Override
 	public void onStart()
-	{		
+	{
 		super.onStart();
-		
+
 		LoadItemsTask task = new LoadItemsTask();
-		task.refreshRecentOnly = true;
 		task.execute();
 	}
 
 	class LoadItemsTask extends AsyncTask<Void, Void, Void>
 	{
-		public boolean refreshRecentOnly = false;
 		Collection<CatalogItem> popularItems;
 		Collection<CatalogItem> favoriteItems;
 		Collection<CatalogItem> recentItems;
@@ -90,13 +86,11 @@ public class MainItemsTabFragment extends Fragment
 			try
 			{
 				WebClient client = new WebClient(getActivity());
-				if (!refreshRecentOnly)
-				{
-					popularItems = client.getPopular(Token.getCurrent(),
-							Repository.CatalogId);
-					favoriteItems = client.getFavorite(Token.getCurrent(),
-							Repository.CatalogId);
-				}
+
+				popularItems = client.getPopular(Token.getCurrent(),
+						Repository.CatalogId);
+				favoriteItems = client.getFavorite(Token.getCurrent(),
+						Repository.CatalogId);
 				recentItems = client.getLast(Token.getCurrent(),
 						Repository.CatalogId);
 			}
