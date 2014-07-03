@@ -1,7 +1,6 @@
 package stx.shopclient.entity;
 
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 public class Discount {
 	public static final int UNIT_TYPE_PERCENT = 1;

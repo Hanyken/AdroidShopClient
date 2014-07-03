@@ -11,6 +11,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.DisplayMetrics;
 import stx.shopclient.entity.Catalog;
+import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.entity.Token;
 import stx.shopclient.loaders.CatalogFileLoader;
 import stx.shopclient.parsers.CatalogParser;
@@ -43,7 +44,7 @@ public class Repository
 		_OrderManager = new OrdersManager();
 		_OverviewsManager = new OverviewsManager();
 		_ItemsManager = new ItemsManager(_OverviewsManager);
-		_CatalogManager = new CatalogManager(_ItemsManager);
+		_CatalogManager = new CatalogManager();
 		_MessagesManager = new MessagesManager();
 
 		// CatalogFileLoader catalogLoader = new
@@ -123,6 +124,8 @@ public class Repository
 		StringBuilder xml = new StringBuilder();
 		Catalog catalog = client.getCatalog(Token.getCurrent(), CatalogId,
 				xml);
+		
+		CatalogSettings settings = client.getCatalogSettings(Token.getCurrent(), CatalogId, null);
 
 		FileOutputStream stream = null;
 		OutputStreamWriter writer = null;
@@ -135,6 +138,7 @@ public class Repository
 			stream.close();
 			
 			_CatalogManager.addCatalog(catalog);
+			_CatalogManager.setSettings(settings);
 		}
 		catch (Throwable ex)
 		{
@@ -169,6 +173,7 @@ public class Repository
 		{
 			loadCatalogFromWeb(context);
 		}
+		
 	}
 
 	class CatalogLoad extends AsyncTask<Void, Void, Void>

@@ -14,13 +14,11 @@ import stx.shopclient.loaders.ItemFileLoader;
 public class CatalogManager
 {
 	private ArrayList<Catalog> _Items;
-	private ItemsManager _ItemsManager;
 	private CatalogSettings _catalogSettings;
 
-	public CatalogManager(ItemsManager itemsManager)
+	public CatalogManager()
 	{
 		_Items = new ArrayList<Catalog>();
-		_ItemsManager = itemsManager;
 	}
 
 	public Catalog getCatalog()
@@ -32,20 +30,24 @@ public class CatalogManager
 
 	public CatalogSettings getSettings()
 	{
-		CatalogSettings item = new CatalogSettings();
-		item.setBackground(Color.rgb(117, 149, 179));
-		item.setItemPanelColor(Color.rgb(235, 235, 235));
-		item.setRatingColor(Color.rgb(255, 149, 0));
-		item.setForegroundColor(Color.WHITE);
-		item.setPressedColor(item.getRatingColor());
-		item.setDisableColor(item.getItemPanelColor());
-		// TODO: Загрузку картинок надо переделать т.к. они берутся пока что из
-		// ресурсов
-		// item.setShareImg("Share.png");
-		// item.setShareImgPress("SharePress.png");
-		item.setCountButtonLableColor(Color.rgb(125, 125, 125));
-		return item;
-		// return _catalogSettings;
+		if (_catalogSettings != null)
+			return _catalogSettings;
+		else
+		{
+			CatalogSettings item = new CatalogSettings();
+			item.setBackground(Color.rgb(117, 149, 179));
+			item.setItemPanelColor(Color.rgb(235, 235, 235));
+			item.setRatingColor(Color.rgb(255, 149, 0));
+			item.setForegroundColor(Color.WHITE);
+			item.setPressedColor(item.getRatingColor());
+			item.setDisableColor(item.getItemPanelColor());
+			// TODO: Загрузку картинок надо переделать т.к. они берутся пока что из
+			// ресурсов
+			// item.setShareImg("Share.png");
+			// item.setShareImgPress("SharePress.png");
+			item.setCountButtonLableColor(Color.rgb(125, 125, 125));
+			return item;
+		}
 	}
 
 	public void setSettings(CatalogSettings settings)

@@ -17,6 +17,7 @@ import stx.shopclient.entity.Catalog;
 import stx.shopclient.entity.CatalogAddress;
 import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.entity.CatalogNode;
+import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.entity.City;
 import stx.shopclient.entity.CountResultEntity;
 import stx.shopclient.entity.Discount;
@@ -32,6 +33,7 @@ import stx.shopclient.loaders.HttpArgs;
 import stx.shopclient.parsers.ActionTypeParser;
 import stx.shopclient.parsers.CatalogAddressParser;
 import stx.shopclient.parsers.CatalogParser;
+import stx.shopclient.parsers.CatalogSettingParser;
 import stx.shopclient.parsers.CityParser;
 import stx.shopclient.parsers.CountResultParser;
 import stx.shopclient.parsers.DiscountParser;
@@ -248,7 +250,7 @@ public class WebClient
 			return catalogs.iterator().next();
 	}
 	// actionTypeName - это перечень выбранных видов деятельности формат строки: <Search><Value>Телефоны</Value><Value>Торты</Value><Value>любой текст</Value></Search>
-	public Catalog getCatalogs(Token token, String catalogName, String actionTypeName, Long cityId, String address, int start, int offset)
+	public Collection<Catalog> getCatalogs(Token token, String catalogName, String actionTypeName, Long cityId, String address, int start, int offset)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
@@ -261,6 +263,22 @@ public class WebClient
 
 		String response = request("catalog/search", args, true);
 		Collection<Catalog> catalogs = new CatalogParser()
+				.parseString(response);
+
+		return catalogs;
+	}
+	
+	public CatalogSettings getCatalogSettings(Token token, long catalogId, StringBuilder xml)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("catalogId", catalogId);
+		
+
+		String response = request("setting/get", args, true);
+		if (xml != null)
+			xml.append(response);
+		Collection<CatalogSettings> catalogs = new CatalogSettingParser()
 				.parseString(response);
 
 		if (catalogs.size() == 0)
