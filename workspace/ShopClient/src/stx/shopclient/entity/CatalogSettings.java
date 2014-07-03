@@ -19,11 +19,17 @@ public class CatalogSettings
 	private int _disableColor;
 	private int _countButtonLableColor;
 	private Bitmap _shareImg;
+	private String _shareImgKey;
 	private Bitmap _shareImgPress;
+	private String _shareImgPressKey;
 	private Bitmap _commentImg;
+	private String _commentImgKey;
 	private Bitmap _commentImgPress;
+	private String _commentImgPressKey;
 	private Bitmap _favoriteImg;
+	private String _favoriteImgKey;
 	private Bitmap _favoriteImgPress;
+	private String _favoriteImgPressKey;
 
 	public int getBackground()
 	{
@@ -93,6 +99,14 @@ public class CatalogSettings
 	{
 		_shareImg = shareImg;
 	}
+	public String getShareImgKey()
+	{
+		return _shareImgKey;
+	}
+	public void setShareImgKey(String shareImgKey)
+	{
+		_shareImgKey = shareImgKey;
+	}
 	
 	public Bitmap getShareImgPress()
 	{
@@ -101,6 +115,14 @@ public class CatalogSettings
 	public void setShareImgPress(Bitmap shareImgPress)
 	{
 		_shareImgPress = shareImgPress;
+	}
+	public String getShareImgPressKey()
+	{
+		return _shareImgPressKey;
+	}
+	public void setShareImgPressKey(String shareImgPressKey)
+	{
+		_shareImgPressKey = shareImgPressKey;
 	}
 	
 	public Bitmap getCommentImg()
@@ -111,6 +133,14 @@ public class CatalogSettings
 	{
 		_commentImg = commentImg;
 	}
+	public String getCommentImgKey()
+	{
+		return _commentImgKey;
+	}
+	public void setCommentImgKey(String commentImgKey)
+	{
+		_commentImgKey = commentImgKey;
+	}
 	
 	public Bitmap getCommentImgPress()
 	{
@@ -120,6 +150,14 @@ public class CatalogSettings
 	{
 		_commentImgPress = commentImgPress;
 	}
+	public String getCommentImgPressKey()
+	{
+		return _commentImgPressKey;
+	}
+	public void setCommentImgPressKey(String commentImgPressKey)
+	{
+		_commentImgPressKey = commentImgPressKey;
+	}
 	
 	public Bitmap getFavoriteImg()
 	{
@@ -128,6 +166,14 @@ public class CatalogSettings
 	public void setFavoriteImg(Bitmap favoriteImg)
 	{
 		_favoriteImg = favoriteImg;
+	}
+	public String getFavoriteImgKey()
+	{
+		return _favoriteImgKey;
+	}
+	public void setFavoriteImgKey(String favoriteImgKey)
+	{
+		_favoriteImgKey = favoriteImgKey;
 	}
 	
 	public Bitmap getFavoriteImgPress()
@@ -139,6 +185,15 @@ public class CatalogSettings
 		_favoriteImgPress = favoriteImgPress;
 	}
 	
+	public String getFavoriteImgPressKey()
+	{
+		return _favoriteImgPressKey;
+	}
+	public void setFavoriteImgPressKey(String favoriteImgPressKey)
+	{
+		_favoriteImgPressKey = favoriteImgPressKey;
+	}
+	
 	public int getCountButtonLableColor()
 	{
 		return _countButtonLableColor;
@@ -147,6 +202,9 @@ public class CatalogSettings
 	{
 		_countButtonLableColor = countButtonLableColor;
 	}
+	
+	
+	
 	
 	
 
