@@ -255,8 +255,13 @@ public class WebClient
 		else
 			return catalogs.iterator().next();
 	}
-	// actionTypeName - это перечень выбранных видов деятельности формат строки: <Search><Value>Телефоны</Value><Value>Торты</Value><Value>любой текст</Value></Search>
-	public Collection<Catalog> getCatalogs(Token token, String catalogName, String actionTypeName, Long cityId, String address, int start, int offset)
+
+	// actionTypeName - это перечень выбранных видов деятельности формат строки:
+	// <Search><Value>Телефоны</Value><Value>Торты</Value><Value>любой
+	// текст</Value></Search>
+	public Collection<Catalog> getCatalogs(Token token, String catalogName,
+			String actionTypeName, Long cityId, String address, int start,
+			int offset)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
@@ -273,13 +278,13 @@ public class WebClient
 
 		return catalogs;
 	}
-	
-	public CatalogSettings getCatalogSettings(Token token, long catalogId, StringBuilder xml)
+
+	public CatalogSettings getCatalogSettings(Token token, long catalogId,
+			StringBuilder xml)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
 		args.addParam("catalogId", catalogId);
-		
 
 		String response = request("setting/get", args, true);
 		if (xml != null)
@@ -292,8 +297,9 @@ public class WebClient
 		else
 			return catalogs.iterator().next();
 	}
-	
-	public Collection<CatalogAddress> getCatalogAddresses(Token token, long catalogId)
+
+	public Collection<CatalogAddress> getCatalogAddresses(Token token,
+			long catalogId)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
@@ -302,8 +308,9 @@ public class WebClient
 		String response = request("catalog/address", args, true);
 		return new CatalogAddressParser().parseString(response);
 	}
-	
-	public Collection<ActionType> getCatalogActionType(Token token, long catalogId)
+
+	public Collection<ActionType> getCatalogActionType(Token token,
+			long catalogId)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
@@ -312,7 +319,7 @@ public class WebClient
 		String response = request("catalog/action_type", args, true);
 		return new ActionTypeParser().parseString(response);
 	}
-	
+
 	public Collection<CatalogNode> getNodes(Token token, long catalogId,
 			int start, int offset)
 	{
@@ -476,12 +483,13 @@ public class WebClient
 
 		request("item/lastAdd", args, true);
 	}
-	
+
 	public void addLast(Token token, long itemId)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
-		args.addParam("list", "<ItemList><Id>"+Long.toString(itemId)+"</Id></ItemList>");
+		args.addParam("list", "<ItemList><Id>" + Long.toString(itemId)
+				+ "</Id></ItemList>");
 
 		request("item/lastAdd", args, true);
 	}
@@ -652,18 +660,17 @@ public class WebClient
 	{
 		HttpArgs args = new HttpArgs();
 		String count = "0";
-		
+
 		for (OrderProperty prop : properties)
 		{
 			args.addParam(prop.getName(), prop.getValue());
-			
+
 			if (prop.getName().equals(OrderProperty.COUNT_PROPERTY_NAME))
 				count = prop.getValue();
 		}
 
 		request("order/edit?token=" + token.getToken() + "&orderId="
-				+ Long.toString(orderId) + "&count=" + count,
-				args, false);
+				+ Long.toString(orderId) + "&count=" + count, args, false);
 	}
 
 	public void deleteOrder(Token token, long orderId)
@@ -674,7 +681,7 @@ public class WebClient
 
 		request("order/delete", args, true);
 	}
-	
+
 	public Collection<Catalog> getOrderCatalogs(Token token)
 	{
 		HttpArgs args = new HttpArgs();
@@ -697,8 +704,7 @@ public class WebClient
 
 		return items;
 	}
-	
-	
+
 	public Collection<Order> getPaymentOrders(Token token, long paymentId)
 	{
 		HttpArgs args = new HttpArgs();
@@ -725,7 +731,7 @@ public class WebClient
 
 		request("payment/add", args, true);
 	}
-	
+
 	public Collection<Catalog> getPaymentCatalogs(Token token)
 	{
 		HttpArgs args = new HttpArgs();
@@ -736,7 +742,7 @@ public class WebClient
 
 		return items;
 	}
-	
+
 	public Collection<City> getCities(Token token)
 	{
 		HttpArgs args = new HttpArgs();
@@ -756,7 +762,7 @@ public class WebClient
 		String response = request("directory/action_type", args, true);
 		return new ActionTypeParser().parseString(response);
 	}
-	
+
 	public Collection<Message> getNewMessages(Token token)
 	{
 		HttpArgs args = new HttpArgs();
@@ -765,7 +771,7 @@ public class WebClient
 		String response = request("message/get", args, true);
 		return new MessageParser().parseString(response);
 	}
-	
+
 	public Collection<Message> getAllMessages(Token token, int start, int offset)
 	{
 		HttpArgs args = new HttpArgs();
@@ -776,7 +782,7 @@ public class WebClient
 		String response = request("message/all", args, true);
 		return new MessageParser().parseString(response);
 	}
-	
+
 	public Collection<Message> getReciveMessages(Token token, long messageId)
 	{
 		HttpArgs args = new HttpArgs();
@@ -786,7 +792,7 @@ public class WebClient
 		String response = request("message/recive", args, true);
 		return new MessageParser().parseString(response);
 	}
-	
+
 	public long getNewMessagesCount(Token token)
 	{
 		HttpArgs args = new HttpArgs();
@@ -794,14 +800,14 @@ public class WebClient
 
 		String response = request("message/count", args, true);
 		Collection<CountResultEntity> items = new CountResultParser()
-		.parseString(response);
-		
+				.parseString(response);
+
 		if (items.size() == 0)
 			throw new RuntimeException("No count returned");
 		else
 			return items.iterator().next().getCount();
 	}
-	
+
 	public long getAllMessagesCount(Token token)
 	{
 		HttpArgs args = new HttpArgs();
@@ -809,16 +815,14 @@ public class WebClient
 
 		String response = request("message/allcount", args, true);
 		Collection<CountResultEntity> items = new CountResultParser()
-		.parseString(response);
-		
+				.parseString(response);
+
 		if (items.size() == 0)
 			throw new RuntimeException("No count returned");
 		else
 			return items.iterator().next().getCount();
 	}
-	
-	
-	
+
 	public Collection<Discount> getDiscounts(Token token)
 	{
 		HttpArgs args = new HttpArgs();

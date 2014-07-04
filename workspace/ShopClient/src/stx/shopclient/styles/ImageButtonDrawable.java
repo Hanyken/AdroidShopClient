@@ -50,7 +50,7 @@ public class ImageButtonDrawable extends Drawable
 			Rect r1 = new Rect();
 			r1.set(0, 0, _Image.getWidth(), _Image.getHeight());
 			Rect r2 = new Rect();
-			r2.set(_Image.getWidth()*-1, _Image.getHeight()*-1, _width, _height);
+			r2.set(_width*-1, _height*-1, _width, _height);
 			canvas.drawBitmap(_Image, r1, r2, p);
 			//canvas.drawBitmap(_Image, 0, 0, p);
 		}

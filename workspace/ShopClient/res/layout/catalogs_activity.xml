@@ -3,10 +3,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
-	<com.handmark.pulltorefresh.library.PullToRefreshListView
+
+    <LinearLayout
+        android:id="@+id/llFilter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:iconifiedByDefault="false" >
+        </SearchView>
+
+        <stx.shopclient.ui.common.properties.PropertiesList
+            android:id="@+id/propList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </stx.shopclient.ui.common.properties.PropertiesList>
+    </LinearLayout>
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
     </com.handmark.pulltorefresh.library.PullToRefreshListView>
+
 </LinearLayout>
