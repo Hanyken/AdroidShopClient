@@ -1,72 +1,130 @@
 package stx.shopclient.catalogsactivity;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import org.apache.commons.lang3.StringUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.entity.ActionType;
 import stx.shopclient.entity.Catalog;
-import stx.shopclient.searchresultsactivity.SearchResultsActivity;
-import android.content.Intent;
+import stx.shopclient.entity.Token;
+import stx.shopclient.entity.properties.EnumPropertyDescriptor;
+import stx.shopclient.entity.properties.EnumPropertyDescriptor.EnumValue;
+import stx.shopclient.entity.properties.PropertyDescriptor;
+import stx.shopclient.ui.common.properties.PropertiesList;
+import stx.shopclient.utils.ProgressDialogAsyncTask;
+import android.animation.Animator;
+import android.animation.Animator.AnimatorListener;
+import android.animation.ObjectAnimator;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 public class CatalogsActivity extends BaseActivity implements
-	SearchView.OnQueryTextListener, SearchView.OnCloseListener
+		SearchView.OnQueryTextListener, SearchView.OnCloseListener,
+		PropertiesList.OnChangeListener
 {
-	static final int MENU_FILTER_CATEGORY = 1;
-	static final int MENU_FILTER_NAME = 2;
+	static final int MENU_FILTER = 1;
 
 	PullToRefreshListView _listView;
 	List<Catalog> _catalogs = new ArrayList<Catalog>();
 	CatalogListAdapter _adapter = new CatalogListAdapter();
-	Collection<ActionType> _actionTypes;
-	List<ActionType> _selectedActionTypes = new ArrayList<ActionType>();
+	Collection<ActionType> _actionTypes = new ArrayList<ActionType>();
 	SearchView _searchView;
+	LinearLayout _filterLayout;
+	EnumPropertyDescriptor _actionTypesProperty = new EnumPropertyDescriptor();
+	PropertiesList _propList;
 
 	@Override
 	protected View createMainView(ViewGroup parent)
 	{
-		getActionBar().setTitle("Каталоги");		
-		
-		_searchView = new SearchView(this);
-		
+		getActionBar().setTitle("Каталоги");
+
 		View view = getLayoutInflater().inflate(R.layout.catalogs_activity,
 				parent, false);
 
+		_filterLayout = (LinearLayout) view.findViewById(R.id.llFilter);
+
+		_searchView = (SearchView) view.findViewById(R.id.searchView);
+		_searchView.setOnQueryTextListener(this);
+		_searchView.setOnCloseListener(this);
+
+		_propList = (PropertiesList) view.findViewById(R.id.propList);
+		_propList.setOnChangeListener(this);
+
 		_listView = (PullToRefreshListView) view.findViewById(R.id.listView);
 		_listView.setMode(Mode.PULL_FROM_END);
+		_listView
+				.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>()
+				{
+
+					@Override
+					public void onRefresh(
+							PullToRefreshBase<ListView> refreshView)
+					{
+						new LoadCatalogsTask(false).execute();
+					}
+				});
 		_listView.setAdapter(_adapter);
 
+		new InitTask().execute();
+
 		return view;
+	}
+
+	void initPropList()
+	{
+		_actionTypesProperty.setName("actionTypes");
+		_actionTypesProperty.setTitle("Категории");
+
+		List<EnumValue> values = new ArrayList<EnumPropertyDescriptor.EnumValue>();
+
+		for (ActionType type : _actionTypes)
+		{
+			EnumValue value = new EnumValue();
+			value.setName(type.getName());
+			value.setValue(Long.toString(type.getId()));
+			values.add(value);
+		}
+
+		_actionTypesProperty.setValues(values);
+		List<PropertyDescriptor> props = new ArrayList<PropertyDescriptor>();
+		props.add(_actionTypesProperty);
+		_propList.setProperties(props);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		menu.clear();
-		
-		MenuItem nameFilterItem = menu.add(0, MENU_FILTER_CATEGORY, 0, "Фильтр по названию");
-		nameFilterItem.setIcon(android.R.drawable.ic_menu_search);
-		nameFilterItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		nameFilterItem.setActionView(_searchView);
-		
-		MenuItem categoryFilterItem = menu.add(0, MENU_FILTER_CATEGORY, 0, "Фильтр по категориям");
+
+		MenuItem categoryFilterItem = menu.add(0, MENU_FILTER, 0, "Фильтр");
 		categoryFilterItem.setIcon(R.drawable.img_filter);
-		categoryFilterItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);	
+		categoryFilterItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		return true;
 	}
@@ -76,17 +134,129 @@ public class CatalogsActivity extends BaseActivity implements
 	{
 		switch (item.getItemId())
 		{
-		case MENU_FILTER_CATEGORY:
-
+		case MENU_FILTER:
+			if (_filterLayout.getVisibility() == View.GONE)
+				ShowFilter();
+			else
+				HideFilter();
 			break;
 		}
 		return super.onMenuItemSelected(featureId, item);
 	}
-	
-	@Override
-	public boolean onQueryTextChange(String arg0)
+
+	String getActionsTypesXml()
 	{
-		// TODO Auto-generated method stub
+		if (_actionTypesProperty.isValueDefined())
+		{
+			try
+			{
+				Document doc = DocumentBuilderFactory.newInstance()
+						.newDocumentBuilder().newDocument();
+
+				Element searchEl = doc.createElement("Search");
+
+				for (EnumValue value : _actionTypesProperty.getCurrentValues())
+				{
+					Element elValue = doc.createElement("Value");
+					elValue.setTextContent(value.getName());
+					searchEl.appendChild(elValue);
+				}
+
+				doc.appendChild(searchEl);
+
+				Transformer transformer = TransformerFactory.newInstance()
+						.newTransformer();
+				transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION,
+						"yes");
+				StringWriter writer = new StringWriter();
+				transformer.transform(new DOMSource(doc), new StreamResult(
+						writer));
+				String output = writer.getBuffer().toString();
+				return output;
+			}
+			catch (Throwable ex)
+			{
+				throw new RuntimeException(ex);
+			}
+		}
+		else
+			return null;
+	}
+
+	private void ShowFilter()
+	{
+		ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(_filterLayout,
+				"y", -150, 0);
+		objectAnimator.addListener(new AnimatorListener()
+		{
+
+			@Override
+			public void onAnimationStart(Animator animation)
+			{
+				_filterLayout.setVisibility(View.VISIBLE);
+			}
+
+			@Override
+			public void onAnimationRepeat(Animator animation)
+			{
+			}
+
+			@Override
+			public void onAnimationEnd(Animator animation)
+			{
+			}
+
+			@Override
+			public void onAnimationCancel(Animator animation)
+			{
+			}
+		});
+		objectAnimator.setDuration(500);
+		objectAnimator.start();
+	}
+
+	private void HideFilter()
+	{
+		ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(_filterLayout,
+				"y", 0, -150);
+		objectAnimator.addListener(new AnimatorListener()
+		{
+
+			@Override
+			public void onAnimationStart(Animator animation)
+			{
+				_filterLayout.setVisibility(View.GONE);
+			}
+
+			@Override
+			public void onAnimationRepeat(Animator animation)
+			{
+			}
+
+			@Override
+			public void onAnimationEnd(Animator animation)
+			{
+			}
+
+			@Override
+			public void onAnimationCancel(Animator animation)
+			{
+			}
+		});
+		objectAnimator.setDuration(500);
+		objectAnimator.start();
+	}
+
+	@Override
+	public boolean onQueryTextChange(String text)
+	{
+		if (StringUtils.isBlank(text))
+			return false;
+		
+		LoadCatalogsTask task = new LoadCatalogsTask(true);
+		task.showProgressDialog = false;
+		task.execute();
+		
 		return false;
 	}
 
@@ -95,20 +265,17 @@ public class CatalogsActivity extends BaseActivity implements
 	{
 		if (StringUtils.isBlank(text))
 			return false;
-
-		Intent intent = new Intent(this, SearchResultsActivity.class);
-		intent.putExtra(SearchResultsActivity.EXTRA_KEY_QUICKSEARCH, true);
-		intent.putExtra(SearchResultsActivity.EXTRA_KEY_QUICKSEARCH_QUERY, text);
-		startActivity(intent);
+		
+		new LoadCatalogsTask(true).execute();
 
 		return true;
 	}
-	
+
 	@Override
 	public boolean onClose()
 	{
-		// TODO Auto-generated method stub
-		return false;
+		new LoadCatalogsTask(true).execute();
+		return true;
 	}
 
 	class CatalogListAdapter extends BaseAdapter
@@ -156,4 +323,74 @@ public class CatalogsActivity extends BaseActivity implements
 		}
 	}
 
+	class InitTask extends ProgressDialogAsyncTask<Collection<ActionType>>
+	{
+		public InitTask()
+		{
+			super(CatalogsActivity.this, "Получение категорий каталогов");
+		}
+
+		@Override
+		protected Collection<ActionType> backgroundTask() throws Throwable
+		{
+			return createWebClient().getActionTypes(Token.getCurrent());
+		}
+
+		@Override
+		protected void onPostExecuteNoError(Collection<ActionType> result)
+		{
+			_actionTypes = result;
+
+			initPropList();
+
+			new LoadCatalogsTask(true).execute();
+		}
+	}
+
+	class LoadCatalogsTask extends ProgressDialogAsyncTask<Collection<Catalog>>
+	{
+		boolean firstLoad;
+
+		public LoadCatalogsTask(boolean firstLoad)
+		{
+			super(CatalogsActivity.this, "Получение каталогов");
+
+			this.firstLoad = firstLoad;
+
+			if (!firstLoad)
+				this.showProgressDialog = false;
+		}
+
+		@Override
+		protected Collection<Catalog> backgroundTask() throws Throwable
+		{
+			return createWebClient().getCatalogs(Token.getCurrent(),
+					_searchView.getQuery().toString(), getActionsTypesXml(),
+					null, null, _catalogs.size() + 1, 30);
+		}
+
+		@Override
+		protected void onPostExecute(Void result)
+		{
+			_listView.onRefreshComplete();
+
+			super.onPostExecute(result);
+		}
+
+		@Override
+		protected void onPostExecuteNoError(Collection<Catalog> result)
+		{
+			if (firstLoad)
+				_catalogs.clear();
+
+			_catalogs.addAll(result);
+			_adapter.notifyDataSetChanged();
+		}
+	}
+
+	@Override
+	public void onPropertyChange(PropertyDescriptor property)
+	{
+		new LoadCatalogsTask(true).execute();
+	}
 }

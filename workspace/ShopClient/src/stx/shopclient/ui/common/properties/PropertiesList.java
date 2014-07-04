@@ -38,6 +38,10 @@ import android.widget.TextView;
 public class PropertiesList extends FrameLayout implements OnItemClickListener,
 		DialogResultProcessor
 {
+	public static interface OnChangeListener
+	{
+		public void onPropertyChange(PropertyDescriptor property);
+	}
 
 	public static final int LIST_ITEM_HEIGHT = 50;
 
@@ -45,6 +49,7 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 	PropertiesListAdapter adapter;
 	ListView _list;
 	private boolean _allowClear = true;
+	private OnChangeListener _onChangeListener;
 
 	SimpleDateFormat _dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 
@@ -158,6 +163,10 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 			updateNumberListItem(view, (NumberPropertyDescriptor) view.getTag());
 		else if (view.getTag() instanceof DatePropertyDescriptor)
 			updateDateListItem(view, (DatePropertyDescriptor) view.getTag());
+
+		if (_onChangeListener != null)
+			_onChangeListener.onPropertyChange((PropertyDescriptor) view
+					.getTag());
 	}
 
 	@Override
@@ -356,6 +365,9 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 			BooleanPropertyDescriptor prop = (BooleanPropertyDescriptor) buttonView
 					.getTag();
 			prop.setCurrentValue(isChecked);
+
+			if (_onChangeListener != null)
+				_onChangeListener.onPropertyChange(prop);
 		}
 	}
 
@@ -445,6 +457,16 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 	public void setAllowClear(boolean allowClear)
 	{
 		_allowClear = allowClear;
+	}
+
+	public OnChangeListener getOnChangeListener()
+	{
+		return _onChangeListener;
+	}
+
+	public void setOnChangeListener(OnChangeListener onChangeListener)
+	{
+		_onChangeListener = onChangeListener;
 	}
 
 }
