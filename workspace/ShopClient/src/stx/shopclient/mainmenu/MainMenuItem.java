@@ -9,6 +9,7 @@ public class MainMenuItem {
 	public static final int SETTINGS_MENU_ITEM_ID = 6;
 	public static final int HISTORY_MENU_ITEM = 7;
 	public static final int FAVORITE_MENU_ITEM = 8;
+	public static final int CATALOGS_MENU_ITEM = 9;
 	
 	private int _id;
 	private long _rowId;

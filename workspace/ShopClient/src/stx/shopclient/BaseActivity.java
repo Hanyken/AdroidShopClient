@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.GregorianCalendar;
 
 import stx.shopclient.cartactivity.CartActivity;
+import stx.shopclient.catalogsactivity.CatalogsActivity;
 import stx.shopclient.discountactivity.DiscountListActivity;
 import stx.shopclient.entity.Catalog;
 import stx.shopclient.entity.CatalogSettings;
@@ -208,13 +209,17 @@ public class BaseActivity extends FragmentActivity
 		{
 			super.onPreExecute();
 
-			_progressDialog = null;
+			_progressDialog = ProgressDialog.show(BaseActivity.this,
+					"Загрузка", "Выполняется вход");
 
 			if (isNeedRelogin())
 			{
 				needLogin = true;
-				_progressDialog = ProgressDialog.show(BaseActivity.this,
-						"Загрузка", "Выполняется вход");
+			}
+			else
+			{
+				this.cancel(true);
+				this.onPostExecute(null);
 			}
 		}
 
@@ -333,6 +338,11 @@ public class BaseActivity extends FragmentActivity
 		else if (item.getId() == MainMenuItem.FAVORITE_MENU_ITEM)
 		{
 			Intent intent = new Intent(this, FavoriteActivity.class);
+			startActivity(intent);
+		}
+		else if (item.getId() == MainMenuItem.CATALOGS_MENU_ITEM)
+		{
+			Intent intent = new Intent(this, CatalogsActivity.class);
 			startActivity(intent);
 		}
 	}

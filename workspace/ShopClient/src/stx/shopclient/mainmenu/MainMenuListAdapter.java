@@ -102,6 +102,12 @@ public class MainMenuListAdapter extends BaseAdapter
 		item.setName("Избранное");
 		item.setHasIcon(true);
 		_menuItems.add(item);
+		
+		item = new MainMenuItem();
+		item.setId(MainMenuItem.CATALOGS_MENU_ITEM);
+		item.setName("Каталоги");
+		item.setHasIcon(true);
+		_menuItems.add(item);
 	}
 	
 	public void addOrderCatalogs(Collection<Catalog> catalogs)

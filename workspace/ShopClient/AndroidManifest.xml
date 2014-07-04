@@ -107,6 +107,10 @@
             android:name="stx.shopclient.favoriteactivity.FavoriteActivity"
             android:label="@string/default_title" >
         </activity>
+        <activity
+            android:name="stx.shopclient.catalogsactivity.CatalogsActivity"
+            android:label="@string/default_title" >
+        </activity>
     </application>
 
 </manifest>
