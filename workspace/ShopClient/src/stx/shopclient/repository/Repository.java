@@ -15,6 +15,7 @@ import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.entity.Token;
 import stx.shopclient.loaders.CatalogFileLoader;
 import stx.shopclient.parsers.CatalogParser;
+import stx.shopclient.parsers.CatalogSettingParser;
 import stx.shopclient.settings.UserAccount;
 import stx.shopclient.webservice.WebClient;
 
@@ -103,7 +104,9 @@ public class Repository
 	public void loadCatalogFromFile(Context context)
 	{
 		String catalogFile = "catalog_" + Long.toString(CatalogId);
+		//String settingsFile = "settings_" + Long.toString(CatalogId);
 		File file = context.getFileStreamPath(catalogFile);
+		//File settingsfile = context.getFileStreamPath(settingsFile);
 		
 		CatalogParser parser = new CatalogParser();
 		Collection<Catalog> catalogs = parser.parseFile(file.getAbsolutePath());
@@ -114,6 +117,22 @@ public class Repository
 			Catalog catalog = catalogs.iterator().next();
 			_CatalogManager.addCatalog(catalog);
 		}
+		/*
+		if (settingsfile.exists())
+		{
+			CatalogSettingParser settingsParser = new CatalogSettingParser();
+			Collection<CatalogSettings> settings = settingsParser.parseFile(settingsfile.getAbsolutePath());
+			if (settings.size() == 0)
+				throw new RuntimeException("no catalogSettings load from file");
+			else
+			{
+				CatalogSettings setting = settings.iterator().next();
+				_CatalogManager.setSettings(setting);
+				setImagesFromSettings(setting, new WebClient(context));
+			}
+		}
+		*/
+		loadSettingsFromWeb(context, new WebClient(context));
 	}
 	
 	public void loadCatalogFromWeb(Context context)
@@ -124,8 +143,6 @@ public class Repository
 		StringBuilder xml = new StringBuilder();
 		Catalog catalog = client.getCatalog(Token.getCurrent(), CatalogId,
 				xml);
-		
-		CatalogSettings settings = client.getCatalogSettings(Token.getCurrent(), CatalogId, null);
 
 		FileOutputStream stream = null;
 		OutputStreamWriter writer = null;
@@ -137,8 +154,8 @@ public class Repository
 			writer.close();
 			stream.close();
 			
+			
 			_CatalogManager.addCatalog(catalog);
-			_CatalogManager.setSettings(settings);
 		}
 		catch (Throwable ex)
 		{
@@ -159,6 +176,60 @@ public class Repository
 				e.printStackTrace();
 			}
 		}
+		
+		loadSettingsFromWeb(context, client);
+	}
+	
+	private void loadSettingsFromWeb(Context context, WebClient client)
+	{
+		String settingsFile = "settings_" + Long.toString(CatalogId);
+		
+		StringBuilder settingsXml = new StringBuilder();
+		CatalogSettings settings = client.getCatalogSettings(Token.getCurrent(), CatalogId, settingsXml);
+		
+		FileOutputStream stream = null;
+		OutputStreamWriter writer = null;
+		try
+		{
+			stream = context.openFileOutput(settingsFile, 0);
+			writer = new OutputStreamWriter(stream);
+			writer.write(settingsXml.toString());
+			writer.close();
+			stream.close();
+			
+			_CatalogManager.setSettings(settings);
+			if (settings != null)
+				setImagesFromSettings(settings, client);
+		}
+		catch(Exception ex)
+		{
+			throw new RuntimeException(ex);
+		}
+		finally
+		{
+			try
+			{
+				if (writer != null)
+					writer.close();
+				if (stream != null)
+					stream.close();
+			}
+			catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void setImagesFromSettings(CatalogSettings settings, WebClient client)
+	{
+		settings.setCommentImg(client.getImage(Token.getCurrent(), settings.getCommentImgKey()));
+		settings.setCommentImgPress(client.getImage(Token.getCurrent(), settings.getCommentImgPressKey()));
+		settings.setFavoriteImg(client.getImage(Token.getCurrent(), settings.getFavoriteImgKey()));
+		settings.setFavoriteImgPress(client.getImage(Token.getCurrent(), settings.getFavoriteImgPressKey()));
+		settings.setShareImg(client.getImage(Token.getCurrent(), settings.getShareImgKey()));
+		settings.setShareImgPress(client.getImage(Token.getCurrent(), settings.getShareImgPressKey()));
 	}
 
 	public void loadCatalog(Context context)

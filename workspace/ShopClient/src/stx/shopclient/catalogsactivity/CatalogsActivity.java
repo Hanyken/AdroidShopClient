@@ -43,6 +43,7 @@ public class CatalogsActivity extends BaseActivity implements
 		getActionBar().setTitle("Каталоги");		
 		
 		_searchView = new SearchView(this);
+		_searchView.setOnQueryTextListener(this);
 		
 		View view = getLayoutInflater().inflate(R.layout.catalogs_activity,
 				parent, false);
@@ -63,6 +64,7 @@ public class CatalogsActivity extends BaseActivity implements
 		nameFilterItem.setIcon(android.R.drawable.ic_menu_search);
 		nameFilterItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		nameFilterItem.setActionView(_searchView);
+		
 		
 		MenuItem categoryFilterItem = menu.add(0, MENU_FILTER_CATEGORY, 0, "Фильтр по категориям");
 		categoryFilterItem.setIcon(R.drawable.img_filter);

@@ -2,10 +2,13 @@ package stx.shopclient.itemactivity;
 
 
 import stx.shopclient.R;
+import stx.shopclient.entity.CatalogSettings;
+import stx.shopclient.repository.Repository;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
@@ -27,7 +30,13 @@ public class ItemImageActivity extends Activity
 		
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setTitle("");		
+		actionBar.setTitle("");	
+		
+		CatalogSettings settings = Repository.get(this).getCatalogManager()
+				.getSettings();
+
+		actionBar.setBackgroundDrawable(
+				new ColorDrawable(settings.getBackground()));
 
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		

@@ -82,17 +82,23 @@ public class WebClient
 			{
 				ResultParser parser = new ResultParser();
 				Collection<ResultEntity> result = parser.parseString(str);
-				if (result.size() > 0
-						&& result.iterator().next().getCode() == ServiceResponseCode.ACCESS_DENIED)
+				if (result.size() > 0)
 				{
-
-					login(UserAccount.getLogin(), UserAccount.getPassword(),
-							UserAccount.getWidth(), UserAccount.getHeight());
-					args.setToken(Token.getCurrent());
-
-					stream = requestStream(relativeUrl, args, isGet);
-					str = convertStreamToString(stream);
-
+					ResultEntity entity = result.iterator().next();
+					
+					if (entity.getCode() == ServiceResponseCode.ACCESS_DENIED)
+					{
+						login(UserAccount.getLogin(), UserAccount.getPassword(),
+								UserAccount.getWidth(), UserAccount.getHeight());
+						args.setToken(Token.getCurrent());
+	
+						stream = requestStream(relativeUrl, args, isGet);
+						str = convertStreamToString(stream);
+					}
+					else if (entity.getCode() == ServiceResponseCode.WEB_SERVER_ERROR || entity.getCode() == ServiceResponseCode.SQL_SERVER_ERROR)
+					{
+						return null;
+					}
 				}
 			}
 
@@ -282,7 +288,7 @@ public class WebClient
 				.parseString(response);
 
 		if (catalogs.size() == 0)
-			throw new RuntimeException("No catalog returned");
+			return null;
 		else
 			return catalogs.iterator().next();
 	}

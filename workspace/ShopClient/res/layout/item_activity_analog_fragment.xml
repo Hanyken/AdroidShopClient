@@ -17,12 +17,14 @@
             style="@style/MainRootNodesBrowserGrid"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:columnCount="3" />
+            android:columnCount="3" 
+            android:background="@android:color/transparent"/>
     
     <LinearLayout 
         android:id="@+id/llSeparate"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/analog_separate_width"
-        android:orientation="vertical"/>
+        android:orientation="vertical"
+        android:background="@android:color/transparent"/>
 
 </LinearLayout>

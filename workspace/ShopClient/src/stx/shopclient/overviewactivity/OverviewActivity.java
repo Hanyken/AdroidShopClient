@@ -16,6 +16,7 @@ import stx.shopclient.itemactivity.ItemActivity;
 import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.styles.ColorButtonDrawable;
+import stx.shopclient.styles.ImageButtonDrawable;
 import stx.shopclient.webservice.WebClient;
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
@@ -23,7 +24,10 @@ import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.StateListDrawable;
@@ -124,14 +128,16 @@ public class OverviewActivity extends BaseActivity implements OnClickListener
 	{
 		menu.clear();
 		MenuItem commentItem = menu.add(0, MI_COMMENT, 0, "Коментарий");
-		/*
-		 * CatalogSettings settings =
-		 * Repository.getIntent().getCatalogManager().getSettings(); Bitmap bmp
-		 * = settings.getImageFromPath(getResources(), "Comment");
-		 * //BitmapFactory.decodeResource(getResources(), R.drawable.img_share);
-		 * Drawable normal = new ImageButtonDrawable(bmp);
-		 */
-		commentItem.setIcon(R.drawable.img_comment);
+		
+		CatalogSettings settings =
+				 Repository.get(this).getCatalogManager().getSettings(); 
+		Bitmap bmp = settings.getImageFromPath(getResources(), "Comment");		
+		 
+		//BitmapFactory.decodeResource(getResources(), R.drawable.img_share);
+		ImageButtonDrawable normal = new ImageButtonDrawable(bmp);
+		normal.setSize(30, 30);
+		 
+		commentItem.setIcon(normal);
 		commentItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		return super.onCreateOptionsMenu(menu);

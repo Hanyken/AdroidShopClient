@@ -57,6 +57,7 @@ public class ItemActivity extends BaseActivity
 
 		getActionBar().setBackgroundDrawable(
 				new ColorDrawable(settings.getBackground()));
+		//_mainView.setBackgroundColor(settings.getBackground());
 
 		_itemId = intent.getLongExtra(ITEM_ID_EXTRA_KEY, 0);
 

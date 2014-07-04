@@ -45,6 +45,8 @@ public abstract class BaseParser<T>
 
 	public Collection<T> parseString(String xmlString)
 	{
+		if (xmlString == null) return new ArrayList<T>();
+		
 		Document doc = getDomElement(xmlString);
 		NodeList nl = doc.getElementsByTagName(getElementName());
 		return getElements(nl);

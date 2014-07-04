@@ -212,31 +212,37 @@ public class CatalogSettings
 	{
 		if (imgName.equals("Share"))
 		{
+			if (_shareImg != null) return _shareImg;
 			return BitmapFactory.decodeResource(resources,
 					R.drawable.img_share);
 		}
 		else if (imgName.equals("SharePress"))
 		{
+			if (_shareImgPress != null) return _shareImgPress;
 			return BitmapFactory.decodeResource(resources,
 					R.drawable.img_share_press);
 		}
 		else if (imgName.equals("Comment"))
 		{
+			if (_commentImg != null) return _commentImg;
 			return BitmapFactory.decodeResource(resources,
 					R.drawable.img_comment);
 		}
 		else if (imgName.equals("CommentPress"))
 		{
+			if (_commentImgPress != null) return _commentImgPress;
 			return BitmapFactory.decodeResource(resources,
 					R.drawable.img_comment_press);
 		}
 		else if (imgName.equals("Favorits"))
 		{
+			if (_favoriteImg != null) return _favoriteImg;
 			return BitmapFactory.decodeResource(resources,
 					R.drawable.img_like); 
 		}
 		else if (imgName.equals("FavoritsPress"))
 		{
+			if (_favoriteImgPress != null) return _favoriteImgPress;
 			return BitmapFactory.decodeResource(resources,
 					R.drawable.img_like_press); 
 		}
