@@ -81,6 +81,8 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 		for (PropertyDescriptor prop : _props)
 		{
 			prop.clear();
+			if (_onChangeListener != null)
+				_onChangeListener.onPropertyChange(prop);
 		}
 
 		adapter.notifyDataSetChanged();
@@ -310,6 +312,9 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 				{
 					property.clear();
 					updateEnumListItem(itemView, property);
+					
+					if (_onChangeListener != null)
+						_onChangeListener.onPropertyChange(property);
 				}
 			});
 		}
@@ -332,6 +337,9 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 				{
 					property.clear();
 					updateNumberListItem(itemView, property);
+					
+					if (_onChangeListener != null)
+						_onChangeListener.onPropertyChange(property);
 				}
 			});
 		}
@@ -354,6 +362,9 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 				{
 					property.clear();
 					updateStringListItem(itemView, property);
+					
+					if (_onChangeListener != null)
+						_onChangeListener.onPropertyChange(property);
 				}
 			});
 		}
