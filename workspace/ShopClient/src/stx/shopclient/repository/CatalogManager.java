@@ -28,6 +28,11 @@ public class CatalogManager
 		return _Items.get(0);
 	}
 
+	public void clearCatalog()
+	{
+		_Items.clear();
+	}
+
 	public CatalogSettings getSettings()
 	{
 		if (_catalogSettings != null)
@@ -41,7 +46,8 @@ public class CatalogManager
 			item.setForegroundColor(Color.WHITE);
 			item.setPressedColor(item.getRatingColor());
 			item.setDisableColor(item.getItemPanelColor());
-			// TODO: Загрузку картинок надо переделать т.к. они берутся пока что из
+			// TODO: Загрузку картинок надо переделать т.к. они берутся пока что
+			// из
 			// ресурсов
 			// item.setShareImg("Share.png");
 			// item.setShareImgPress("SharePress.png");
@@ -89,7 +95,7 @@ public class CatalogManager
 			if (el.getCatalogId() == item.getId() && el.getId() == nodeId)
 				return el;
 		}
-		
+
 		return null;
 	}
 

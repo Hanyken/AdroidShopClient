@@ -58,9 +58,14 @@ public class SearchResultsActivity extends BaseActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
+		getActionBar().setTitle("Результаты поиска");
+		
+		super.onCreate(savedInstanceState);				
+	}
 
+	@Override
+	protected View createMainView(ViewGroup parent)
+	{
 		_isQuickSearch = getIntent().getBooleanExtra(EXTRA_KEY_QUICKSEARCH,
 				false);
 		_quickSearchQuery = getIntent().getStringExtra(
@@ -68,14 +73,6 @@ public class SearchResultsActivity extends BaseActivity implements
 		_nodeId = getIntent().getLongExtra(EXTRA_KEY_NODE_ID, 0);
 
 		_searchProperties = searchProperties;
-
-		getActionBar().setTitle("Результаты поиска");
-	}
-
-	@Override
-	protected View createMainView(ViewGroup parent)
-	{
-		// generateData();
 
 		View view = getLayoutInflater().inflate(
 				R.layout.search_results_activity, parent, false);

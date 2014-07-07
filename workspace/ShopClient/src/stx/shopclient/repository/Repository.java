@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Collection;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.DisplayMetrics;
 import stx.shopclient.entity.Catalog;
@@ -21,6 +23,8 @@ import stx.shopclient.webservice.WebClient;
 
 public class Repository
 {
+	static final String PREF_NAME = "Repository";
+	static final String CATALOG_ID_PREF_KEY = "CatalogId";
 	public static long CatalogId = 1;
 
 	private static Repository _intent;
@@ -47,14 +51,27 @@ public class Repository
 		_ItemsManager = new ItemsManager(_OverviewsManager);
 		_CatalogManager = new CatalogManager();
 		_MessagesManager = new MessagesManager();
+	}
 
-		// CatalogFileLoader catalogLoader = new
-		// CatalogFileLoader(_CatalogManager);
-		// catalogLoader.Load();
-		/*
-		 * CatalogLoad load = new CatalogLoad(); load._Context = context;
-		 * load._Manager = _CatalogManager; load.execute();
-		 */
+	public static void loadSelectedCatalogId(Context context)
+	{
+		SharedPreferences pref = context.getSharedPreferences(PREF_NAME,
+				Activity.MODE_PRIVATE);
+
+		if (pref != null)
+		{
+			CatalogId = pref.getLong(CATALOG_ID_PREF_KEY, CatalogId);
+		}
+	}
+
+	public static void saveSelectedCatalogId(Context context)
+	{
+		SharedPreferences pref = context.getSharedPreferences(PREF_NAME,
+				Activity.MODE_PRIVATE);
+
+		SharedPreferences.Editor editor = pref.edit();
+		editor.putLong(CATALOG_ID_PREF_KEY, CatalogId);
+		editor.commit();
 	}
 
 	// ----------Catalog---------
@@ -100,17 +117,17 @@ public class Repository
 		}
 		return Token.getCurrent();
 	}
-	
+
 	public void loadCatalogFromFile(Context context)
 	{
 		String catalogFile = "catalog_" + Long.toString(CatalogId);
-		//String settingsFile = "settings_" + Long.toString(CatalogId);
+		// String settingsFile = "settings_" + Long.toString(CatalogId);
 		File file = context.getFileStreamPath(catalogFile);
-		//File settingsfile = context.getFileStreamPath(settingsFile);
-		
+		// File settingsfile = context.getFileStreamPath(settingsFile);
+
 		CatalogParser parser = new CatalogParser();
 		Collection<Catalog> catalogs = parser.parseFile(file.getAbsolutePath());
-		if(catalogs.size()==0)
+		if (catalogs.size() == 0)
 			throw new RuntimeException("no catalogs load from file");
 		else
 		{
@@ -118,31 +135,25 @@ public class Repository
 			_CatalogManager.addCatalog(catalog);
 		}
 		/*
-		if (settingsfile.exists())
-		{
-			CatalogSettingParser settingsParser = new CatalogSettingParser();
-			Collection<CatalogSettings> settings = settingsParser.parseFile(settingsfile.getAbsolutePath());
-			if (settings.size() == 0)
-				throw new RuntimeException("no catalogSettings load from file");
-			else
-			{
-				CatalogSettings setting = settings.iterator().next();
-				_CatalogManager.setSettings(setting);
-				setImagesFromSettings(setting, new WebClient(context));
-			}
-		}
-		*/
+		 * if (settingsfile.exists()) { CatalogSettingParser settingsParser =
+		 * new CatalogSettingParser(); Collection<CatalogSettings> settings =
+		 * settingsParser.parseFile(settingsfile.getAbsolutePath()); if
+		 * (settings.size() == 0) throw new
+		 * RuntimeException("no catalogSettings load from file"); else {
+		 * CatalogSettings setting = settings.iterator().next();
+		 * _CatalogManager.setSettings(setting); setImagesFromSettings(setting,
+		 * new WebClient(context)); } }
+		 */
 		loadSettingsFromWeb(context, new WebClient(context));
 	}
-	
+
 	public void loadCatalogFromWeb(Context context)
 	{
 		String catalogFile = "catalog_" + Long.toString(CatalogId);
-		
+
 		WebClient client = new WebClient(context);
 		StringBuilder xml = new StringBuilder();
-		Catalog catalog = client.getCatalog(Token.getCurrent(), CatalogId,
-				xml);
+		Catalog catalog = client.getCatalog(Token.getCurrent(), CatalogId, xml);
 
 		FileOutputStream stream = null;
 		OutputStreamWriter writer = null;
@@ -153,8 +164,7 @@ public class Repository
 			writer.write(xml.toString());
 			writer.close();
 			stream.close();
-			
-			
+
 			_CatalogManager.addCatalog(catalog);
 		}
 		catch (Throwable ex)
@@ -176,17 +186,18 @@ public class Repository
 				e.printStackTrace();
 			}
 		}
-		
+
 		loadSettingsFromWeb(context, client);
 	}
-	
+
 	private void loadSettingsFromWeb(Context context, WebClient client)
 	{
 		String settingsFile = "settings_" + Long.toString(CatalogId);
-		
+
 		StringBuilder settingsXml = new StringBuilder();
-		CatalogSettings settings = client.getCatalogSettings(Token.getCurrent(), CatalogId, settingsXml);
-		
+		CatalogSettings settings = client.getCatalogSettings(
+				Token.getCurrent(), CatalogId, settingsXml);
+
 		FileOutputStream stream = null;
 		OutputStreamWriter writer = null;
 		try
@@ -196,12 +207,12 @@ public class Repository
 			writer.write(settingsXml.toString());
 			writer.close();
 			stream.close();
-			
+
 			_CatalogManager.setSettings(settings);
 			if (settings != null)
 				setImagesFromSettings(settings, client);
 		}
-		catch(Exception ex)
+		catch (Exception ex)
 		{
 			throw new RuntimeException(ex);
 		}
@@ -221,15 +232,22 @@ public class Repository
 			}
 		}
 	}
-	
-	private void setImagesFromSettings(CatalogSettings settings, WebClient client)
+
+	private void setImagesFromSettings(CatalogSettings settings,
+			WebClient client)
 	{
-		settings.setCommentImg(client.getImage(Token.getCurrent(), settings.getCommentImgKey()));
-		settings.setCommentImgPress(client.getImage(Token.getCurrent(), settings.getCommentImgPressKey()));
-		settings.setFavoriteImg(client.getImage(Token.getCurrent(), settings.getFavoriteImgKey()));
-		settings.setFavoriteImgPress(client.getImage(Token.getCurrent(), settings.getFavoriteImgPressKey()));
-		settings.setShareImg(client.getImage(Token.getCurrent(), settings.getShareImgKey()));
-		settings.setShareImgPress(client.getImage(Token.getCurrent(), settings.getShareImgPressKey()));
+		settings.setCommentImg(client.getImage(Token.getCurrent(),
+				settings.getCommentImgKey()));
+		settings.setCommentImgPress(client.getImage(Token.getCurrent(),
+				settings.getCommentImgPressKey()));
+		settings.setFavoriteImg(client.getImage(Token.getCurrent(),
+				settings.getFavoriteImgKey()));
+		settings.setFavoriteImgPress(client.getImage(Token.getCurrent(),
+				settings.getFavoriteImgPressKey()));
+		settings.setShareImg(client.getImage(Token.getCurrent(),
+				settings.getShareImgKey()));
+		settings.setShareImgPress(client.getImage(Token.getCurrent(),
+				settings.getShareImgPressKey()));
 	}
 
 	public void loadCatalog(Context context)
@@ -244,7 +262,7 @@ public class Repository
 		{
 			loadCatalogFromWeb(context);
 		}
-		
+
 	}
 
 	class CatalogLoad extends AsyncTask<Void, Void, Void>

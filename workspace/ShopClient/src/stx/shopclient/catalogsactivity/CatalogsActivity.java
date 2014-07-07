@@ -24,15 +24,20 @@ import stx.shopclient.entity.Token;
 import stx.shopclient.entity.properties.EnumPropertyDescriptor;
 import stx.shopclient.entity.properties.EnumPropertyDescriptor.EnumValue;
 import stx.shopclient.entity.properties.PropertyDescriptor;
+import stx.shopclient.mainactivity.MainActivity;
+import stx.shopclient.repository.Repository;
 import stx.shopclient.ui.common.properties.PropertiesList;
 import stx.shopclient.utils.ProgressDialogAsyncTask;
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -46,7 +51,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 public class CatalogsActivity extends BaseActivity implements
 		SearchView.OnQueryTextListener, SearchView.OnCloseListener,
-		PropertiesList.OnChangeListener
+		PropertiesList.OnChangeListener, OnItemClickListener
 {
 	static final int MENU_FILTER = 1;
 
@@ -89,6 +94,7 @@ public class CatalogsActivity extends BaseActivity implements
 						new LoadCatalogsTask(false).execute();
 					}
 				});
+		_listView.setOnItemClickListener(this);
 		_listView.setAdapter(_adapter);
 
 		new InitTask().execute();
@@ -252,11 +258,11 @@ public class CatalogsActivity extends BaseActivity implements
 	{
 		if (StringUtils.isBlank(text))
 			return false;
-		
+
 		LoadCatalogsTask task = new LoadCatalogsTask(true);
 		task.showProgressDialog = false;
 		task.execute();
-		
+
 		return false;
 	}
 
@@ -265,7 +271,7 @@ public class CatalogsActivity extends BaseActivity implements
 	{
 		if (StringUtils.isBlank(text))
 			return false;
-		
+
 		new LoadCatalogsTask(true).execute();
 
 		return true;
@@ -308,6 +314,8 @@ public class CatalogsActivity extends BaseActivity implements
 
 			View view = getLayoutInflater().inflate(
 					R.layout.catalogs_activity_item, arg2, false);
+
+			view.setTag(catalog);
 
 			ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
 			TextView textView = (TextView) view.findViewById(R.id.nameTextView);
@@ -392,5 +400,23 @@ public class CatalogsActivity extends BaseActivity implements
 	public void onPropertyChange(PropertyDescriptor property)
 	{
 		new LoadCatalogsTask(true).execute();
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View view, int position,
+			long arg3)
+	{
+		Catalog catalog = (Catalog) view.getTag();
+
+		Repository.CatalogId = catalog.getId();
+		Repository.get(null).getCatalogManager().clearCatalog();
+		Repository.saveSelectedCatalogId(this);
+
+		Intent intent = new Intent(this, MainActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		startActivity(intent);
+		finish();
 	}
 }

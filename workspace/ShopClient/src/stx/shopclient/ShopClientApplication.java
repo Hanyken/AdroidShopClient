@@ -20,6 +20,8 @@ public class ShopClientApplication extends Application
 	public void onCreate()
 	{
 		super.onCreate();
+		
+		Repository.loadSelectedCatalogId(this);
 
 		_pullingThread = new Thread(new Runnable()
 		{
@@ -48,7 +50,7 @@ public class ShopClientApplication extends Application
 			{
 				if (Token.getCurrent() != null)
 				{
-					WebClient client = new WebClient(getApplicationContext());
+					WebClient client = new WebClient(this);
 
 					updateMessageCount(client);
 					updateCatalog(client);
