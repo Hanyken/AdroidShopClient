@@ -11,6 +11,9 @@ public class Token extends ResultEntity
 	private String _token;
 	private Date _begDate;
 	private int _interval;
+	private boolean _authorize;
+	private String _uLogin;
+	private String _uPass;
 	
 	
 	
@@ -47,5 +50,30 @@ public class Token extends ResultEntity
 	public static void setCurrent(Token current)
 	{
 		Token.current = current;
+	}
+	
+	public boolean getAuthorize()
+	{
+		return _authorize;
+	}
+	public void setAuthorize(boolean authorize)
+	{
+		_authorize = authorize;
+	}
+	public String getLogin()
+	{
+		return _uLogin;
+	}
+	public void setLogin(String login)
+	{
+		_uLogin = login;
+	}
+	public String getPass()
+	{
+		return _uPass;
+	}
+	public void setPass(String pass)
+	{
+		_uPass = pass;
 	}
 }

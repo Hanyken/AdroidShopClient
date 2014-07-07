@@ -11,6 +11,9 @@ public class TokenParser extends BaseParser<Token>
 	private final String TOKEN_NAME = "token";
 	private final String BEG_DATE_NAME = "BegDate";
 	private final String INTERVAL_NAME = "Interval";
+	private final String AUTHORIZE_NAME = "Authorize";
+	private final String LOGIN_NAME = "ULogin";
+	private final String PASS_NAME = "UPass";
 	
 	@Override
 	public Token getElement(Element e)
@@ -20,6 +23,10 @@ public class TokenParser extends BaseParser<Token>
 		token.setToken(super.getValue(e, TOKEN_NAME));
 		token.setBegDate(super.getValueDate(e, BEG_DATE_NAME));
 		token.setInterval(super.getValueInt(e, INTERVAL_NAME));
+		token.setAuthorize(super.getValueBool(e, AUTHORIZE_NAME));
+		token.setLogin(super.getValue(e, LOGIN_NAME));
+		token.setPass(super.getValue(e, PASS_NAME));
+		
 		return token;
 	}
 
