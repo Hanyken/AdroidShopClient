@@ -27,6 +27,7 @@ import stx.shopclient.entity.OrderProperty;
 import stx.shopclient.entity.Overview;
 import stx.shopclient.entity.Payment;
 import stx.shopclient.entity.ResultEntity;
+import stx.shopclient.entity.ResultPayment;
 import stx.shopclient.entity.Token;
 import stx.shopclient.entity.UpdateResultEntity;
 import stx.shopclient.loaders.HttpArgs;
@@ -44,6 +45,7 @@ import stx.shopclient.parsers.OrderParser;
 import stx.shopclient.parsers.OverviewParser;
 import stx.shopclient.parsers.PaymentParser;
 import stx.shopclient.parsers.ResultParser;
+import stx.shopclient.parsers.ResultPaymentParser;
 import stx.shopclient.parsers.TokenParser;
 import stx.shopclient.repository.OrdersManager;
 import stx.shopclient.repository.Repository;
@@ -464,11 +466,11 @@ public class WebClient
 		return items;
 	}
 
-	public Collection<CatalogItem> getCrosssale(Token token, long itemId)
+	public Collection<CatalogItem> getCrosssale(Token token, long paymentNumber)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
-		args.addParam("itemId", itemId);
+		args.addParam("paymentNumber", paymentNumber);
 
 		String response = request("item/crosssale", args, true);
 		Collection<CatalogItem> items = new ItemParser().parseString(response);
@@ -738,14 +740,21 @@ public class WebClient
 		return items;
 	}
 
-	public void addPayment(Token token, long catalogId, String description)
+	public Long addPayment(Token token, long catalogId, String description)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
 		args.addParam("catalogId", catalogId);
 		args.addParam("description", description);
 
-		request("payment/add", args, true);
+		String str =  request("payment/add", args, true);
+		Collection<ResultPayment> items = new ResultPaymentParser().parseString(str);
+
+		if (items.size() == 0)
+			throw new RuntimeException("No number returned");
+		else
+			return items.iterator().next().getPaymentNumber();
+			
 	}
 
 	public Collection<Catalog> getPaymentCatalogs(Token token)

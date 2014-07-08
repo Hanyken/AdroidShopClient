@@ -408,7 +408,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 			try
 			{
 				WebClient client = createWebClient();
-				client.addPayment(Token.getCurrent(), _CatalogId,
+				long paymentNumber = client.addPayment(Token.getCurrent(), _CatalogId,
 						comment);
 			}
 			catch (Throwable ex)
