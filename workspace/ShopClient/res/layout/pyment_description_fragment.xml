@@ -4,14 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
     
-	<EditText 
-	    android:id="@+id/txtComment"
-	    android:layout_width="match_parent"
-	    android:layout_height="100dp"
-	    android:inputType="textMultiLine"
-	    android:textSize="16sp"/>
-	
-	<TextView 
+    <TextView 
 	    android:id="@+id/lblPhone"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
@@ -23,6 +16,14 @@
         android:layout_height="wrap_content"
         android:inputType="phone"
         android:maxLength="15"/>
+    
+	<EditText 
+	    android:id="@+id/txtComment"
+	    android:layout_width="match_parent"
+	    android:layout_height="100dp"
+	    android:inputType="textMultiLine"
+	    android:textSize="16sp"/>	
+	
 	
 	<LinearLayout 
 	    android:layout_width="match_parent"

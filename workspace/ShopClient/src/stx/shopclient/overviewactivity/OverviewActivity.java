@@ -135,7 +135,8 @@ public class OverviewActivity extends BaseActivity implements OnClickListener
 		 
 		//BitmapFactory.decodeResource(getResources(), R.drawable.img_share);
 		ImageButtonDrawable normal = new ImageButtonDrawable(bmp);
-		normal.setSize(50, 50);
+		normal.setSizeDp(this, 20, 20);
+		normal.setPositionDp(this, -15, -15);
 		 
 		commentItem.setIcon(normal);
 		commentItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);

@@ -151,10 +151,12 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 	{
 		StateListDrawable drawable = new StateListDrawable();
 		Bitmap bmp = settings.getImageFromPath(getResources(), name);
-		Drawable normal = new ImageButtonDrawable(bmp);
+		ImageButtonDrawable normal = new ImageButtonDrawable(bmp);
+		normal.setSizeDp(getActivity(), 35, 35);
 		Bitmap bmpPress = settings.getImageFromPath(getResources(), name+"Press");
-		Drawable press = new ImageButtonDrawable(bmpPress);
-
+		ImageButtonDrawable press = new ImageButtonDrawable(bmpPress);
+		press.setSizeDp(getActivity(), 35, 35);
+		
 		drawable.addState(new int[]
 		{ android.R.attr.state_pressed }, press);
 		drawable.addState(new int[0], normal);
