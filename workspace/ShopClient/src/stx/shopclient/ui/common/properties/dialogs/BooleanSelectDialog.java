@@ -2,9 +2,7 @@ package stx.shopclient.ui.common.properties.dialogs;
 
 import org.apache.commons.lang3.SerializationUtils;
 
-import stx.shopclient.entity.properties.EnumPropertyDescriptor;
-import stx.shopclient.entity.properties.EnumPropertyDescriptor.EnumValue;
-import android.app.Activity;
+import stx.shopclient.entity.properties.BooleanPropertyDescriptor;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -12,12 +10,11 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 
-public class EnumSelectDialog extends DialogFragment
+public class BooleanSelectDialog extends DialogFragment
 {
-
 	DialogResultProcessor _resultProcessor;
-	private EnumPropertyDescriptor _property;
-	private EnumPropertyDescriptor _propertyCopy;
+	private BooleanPropertyDescriptor _property;
+	private BooleanPropertyDescriptor _propertyCopy;
 	private View _itemView;
 
 	public void setResultProcessor(DialogResultProcessor processor)
@@ -41,7 +38,8 @@ public class EnumSelectDialog extends DialogFragment
 			@Override
 			public void onClick(DialogInterface dialog, int which)
 			{
-				_property.setCurrentValues(_propertyCopy.getCurrentValues());
+				_property.setValueDefined(_propertyCopy.isValueDefined());
+				_property.setCurrentValue(_propertyCopy.getCurrentValue());
 				_resultProcessor.onPositiveDialogResult(_itemView);
 			}
 		});
@@ -57,49 +55,48 @@ public class EnumSelectDialog extends DialogFragment
 					}
 				});
 
-		String[] items = new String[_property.getValues().size()];
-		boolean[] checkedItems = new boolean[_property.getValues().size()];
+		String[] items = new String[3];
+		items[0] = "Не задано";
+		items[1] = "Да";
+		items[2] = "Нет";
 
-		for (int i = 0; i < _property.getValues().size(); i++)
-		{
-			items[i] = _property.getValues().get(i).getName();
+		int checkedItem = _property.isValueDefined() ? (_property
+				.getCurrentValue() ? 1 : 2) : 0;
 
-			for (EnumValue enumVal : _property.getCurrentValues())
-			{
-				if (enumVal.getName().equals(items[i]))
+		builder.setSingleChoiceItems(items, checkedItem,
+				new DialogInterface.OnClickListener()
 				{
-					checkedItems[i] = true;
-					break;
-				}
-			}
-		}
-
-		builder.setMultiChoiceItems(items, checkedItems,
-				new DialogInterface.OnMultiChoiceClickListener()
-				{
-
 					@Override
-					public void onClick(DialogInterface dialog, int which,
-							boolean isChecked)
+					public void onClick(DialogInterface dialog, int which)
 					{
-						EnumValue value = _property.getValues().get(which);
+						switch (which)
+						{
+						case 0:
+							_propertyCopy.setValueDefined(false);
+							break;
+						case 1:
+							_propertyCopy.setValueDefined(true);
+							_propertyCopy.setCurrentValue(true);
+							break;
+						case 2:
+							_propertyCopy.setValueDefined(true);
+							_propertyCopy.setCurrentValue(false);
 
-						if (isChecked)
-							_propertyCopy.getCurrentValues().add(value);
-						else
-							_propertyCopy.getCurrentValues().remove(value);
+						default:
+							break;
+						}
 					}
 				});
 
 		return builder.create();
 	}
 
-	public EnumPropertyDescriptor getProperty()
+	public BooleanPropertyDescriptor getProperty()
 	{
 		return _property;
 	}
 
-	public void setProperty(EnumPropertyDescriptor property)
+	public void setProperty(BooleanPropertyDescriptor property)
 	{
 		_property = property;
 	}

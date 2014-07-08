@@ -11,6 +11,7 @@ import stx.shopclient.entity.properties.EnumPropertyDescriptor;
 import stx.shopclient.entity.properties.NumberPropertyDescriptor;
 import stx.shopclient.entity.properties.PropertyDescriptor;
 import stx.shopclient.entity.properties.StringPropertyDescriptor;
+import stx.shopclient.ui.common.properties.dialogs.BooleanSelectDialog;
 import stx.shopclient.ui.common.properties.dialogs.DateTimeRangeSelectDialog;
 import stx.shopclient.ui.common.properties.dialogs.DialogResultProcessor;
 import stx.shopclient.ui.common.properties.dialogs.EnumSelectDialog;
@@ -154,6 +155,15 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 			dialog.setResultProcessor(this);
 			dialog.show(getFragmentManager(), prop.getName());
 		}
+		else if (prop instanceof BooleanPropertyDescriptor)
+		{
+
+			BooleanSelectDialog dialog = new BooleanSelectDialog();
+			dialog.setItemView(view);
+			dialog.setProperty((BooleanPropertyDescriptor) prop);
+			dialog.setResultProcessor(this);
+			dialog.show(getFragmentManager(), prop.getName());
+		}
 	}
 
 	@Override
@@ -165,6 +175,8 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 			updateNumberListItem(view, (NumberPropertyDescriptor) view.getTag());
 		else if (view.getTag() instanceof DatePropertyDescriptor)
 			updateDateListItem(view, (DatePropertyDescriptor) view.getTag());
+		else if (view.getTag() instanceof BooleanPropertyDescriptor)
+			updateBooleanListItem(view, (BooleanPropertyDescriptor) view.getTag());
 
 		if (_onChangeListener != null)
 			_onChangeListener.onPropertyChange((PropertyDescriptor) view
@@ -225,20 +237,12 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 			}
 			else if (propDescriptor instanceof BooleanPropertyDescriptor)
 			{
-				BooleanPropertyDescriptor prop = (BooleanPropertyDescriptor) propDescriptor;
+				view = getLayoutInflater().inflate(
+						R.layout.search_activity_item, parent, false);
+				view.setTag(propDescriptor);
 
-				CheckBox checkBox = new CheckBox(_context);
-				checkBox.setChecked(prop.getCurrentValue());
-				checkBox.setTag(prop);
-				checkBox.setText(prop.getTitle());
-				checkBox.setLayoutParams(new AbsListView.LayoutParams(
-						AbsListView.LayoutParams.MATCH_PARENT, DisplayUtil
-								.dpToPx(LIST_ITEM_HEIGHT, getContext())));
-				checkBox.setTextSize(20);
-
-				checkBox.setOnCheckedChangeListener(this);
-
-				view = checkBox;
+				initBooleanListItem(view,
+						(BooleanPropertyDescriptor) propDescriptor);
 			}
 			else if (propDescriptor instanceof NumberPropertyDescriptor)
 			{
@@ -312,7 +316,7 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 				{
 					property.clear();
 					updateEnumListItem(itemView, property);
-					
+
 					if (_onChangeListener != null)
 						_onChangeListener.onPropertyChange(property);
 				}
@@ -337,7 +341,7 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 				{
 					property.clear();
 					updateNumberListItem(itemView, property);
-					
+
 					if (_onChangeListener != null)
 						_onChangeListener.onPropertyChange(property);
 				}
@@ -362,7 +366,32 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 				{
 					property.clear();
 					updateStringListItem(itemView, property);
-					
+
+					if (_onChangeListener != null)
+						_onChangeListener.onPropertyChange(property);
+				}
+			});
+		}
+
+		void initBooleanListItem(View view, BooleanPropertyDescriptor prop)
+		{
+			final View itemView = view;
+			final BooleanPropertyDescriptor property = prop;
+
+			final ImageView resetImage = (ImageView) view
+					.findViewById(R.id.imageView);
+
+			updateBooleanListItem(itemView, property);
+
+			resetImage.setOnClickListener(new View.OnClickListener()
+			{
+
+				@Override
+				public void onClick(View v)
+				{
+					property.clear();
+					updateBooleanListItem(itemView, property);
+
 					if (_onChangeListener != null)
 						_onChangeListener.onPropertyChange(property);
 				}
@@ -452,6 +481,27 @@ public class PropertiesList extends FrameLayout implements OnItemClickListener,
 			resetImage.setVisibility(View.VISIBLE);
 			captionTextView.setText(prop.getTitle()
 					+ String.format(" (%s)", prop.getValue()));
+		}
+		else
+			resetImage.setVisibility(View.GONE);
+
+		if (!_allowClear)
+			resetImage.setVisibility(View.GONE);
+	}
+
+	void updateBooleanListItem(View view, BooleanPropertyDescriptor prop)
+	{
+		ImageView resetImage = (ImageView) view.findViewById(R.id.imageView);
+		TextView captionTextView = (TextView) view.findViewById(R.id.textView);
+
+		captionTextView.setText(prop.getTitle());
+
+		if (prop.isValueDefined())
+		{
+			resetImage.setVisibility(View.VISIBLE);
+			captionTextView.setText(prop.getTitle()
+					+ String.format(" (%s)", prop.getCurrentValue() ? "Да"
+							: "Нет"));
 		}
 		else
 			resetImage.setVisibility(View.GONE);
