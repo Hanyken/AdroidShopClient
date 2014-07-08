@@ -7,6 +7,7 @@ import java.util.List;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.entity.Catalog;
+import stx.shopclient.entity.CatalogItem;
 import stx.shopclient.entity.Order;
 import stx.shopclient.entity.OrderProperty;
 import stx.shopclient.entity.Token;
@@ -14,6 +15,7 @@ import stx.shopclient.entity.properties.EnumPropertyDescriptor;
 import stx.shopclient.entity.properties.EnumPropertyDescriptor.EnumValue;
 import stx.shopclient.entity.properties.PropertyDescriptor;
 import stx.shopclient.historyactivity.PaymentDescriptionFragment;
+import stx.shopclient.historyactivity.PaymentListActivity;
 import stx.shopclient.itemactivity.ItemActivity;
 import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.order_properties_activity.OrderPropertiesActivity;
@@ -121,7 +123,8 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 		case MENU_PAYMENT:
 			if (_cartItems.size() > 0)
 			{
-				DialogFragment wd = PaymentDescriptionFragment.get(!Token.getCurrent().getAuthorize());
+				DialogFragment wd = PaymentDescriptionFragment.get(!Token
+						.getCurrent().getAuthorize());
 				wd.show(getFragmentManager(), "Comment");
 			}
 			break;
@@ -395,6 +398,8 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 
 		public String comment;
 
+		Collection<CatalogItem> crosssaleItems;
+
 		@Override
 		protected void onPreExecute()
 		{
@@ -408,8 +413,10 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 			try
 			{
 				WebClient client = createWebClient();
-				long paymentNumber = client.addPayment(Token.getCurrent(), _CatalogId,
-						comment);
+				long paymentNumber = client.addPayment(Token.getCurrent(),
+						_CatalogId, comment);
+				crosssaleItems = client.getCrosssale(Token.getCurrent(),
+						paymentNumber);
 			}
 			catch (Throwable ex)
 			{
@@ -434,8 +441,20 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 						.setOrderCatalogs(new ArrayList<Catalog>());
 				Toast.makeText(CartActivity.this, "Заказ оформлен",
 						Toast.LENGTH_LONG).show();
-				_cartItems.clear();
-				_adapter.notifyDataSetChanged();
+
+				finish();
+
+				if (crosssaleItems != null && crosssaleItems.size() > 0)
+				{
+					CrosssaleActivity.crosssaleItems = crosssaleItems;
+					Intent intent = new Intent(CartActivity.this, CrosssaleActivity.class);
+					startActivity(intent);
+				}
+				else
+				{
+					Intent intent = new Intent(CartActivity.this, PaymentListActivity.class);
+					startActivity(intent);
+				}
 			}
 		}
 	}

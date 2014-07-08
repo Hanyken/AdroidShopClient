@@ -111,6 +111,10 @@
             android:name="stx.shopclient.catalogsactivity.CatalogsActivity"
             android:label="@string/default_title" >
         </activity>
+        <activity
+            android:name="stx.shopclient.cartactivity.CrosssaleActivity"
+            android:label="@string/default_title" >
+        </activity>
     </application>
 
 </manifest>

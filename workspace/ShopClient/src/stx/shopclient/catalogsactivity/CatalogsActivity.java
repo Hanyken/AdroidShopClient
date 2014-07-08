@@ -256,8 +256,8 @@ public class CatalogsActivity extends BaseActivity implements
 	@Override
 	public boolean onQueryTextChange(String text)
 	{
-		if (StringUtils.isBlank(text))
-			return false;
+//		if (StringUtils.isBlank(text))
+//			return false;
 
 		LoadCatalogsTask task = new LoadCatalogsTask(true);
 		task.showProgressDialog = false;
@@ -269,8 +269,8 @@ public class CatalogsActivity extends BaseActivity implements
 	@Override
 	public boolean onQueryTextSubmit(String text)
 	{
-		if (StringUtils.isBlank(text))
-			return false;
+//		if (StringUtils.isBlank(text))
+//			return false;
 
 		new LoadCatalogsTask(true).execute();
 

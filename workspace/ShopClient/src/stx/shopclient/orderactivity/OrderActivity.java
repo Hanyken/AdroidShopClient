@@ -150,7 +150,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener
 						.show();
 			else
 			{
-				Toast.makeText(OrderActivity.this, "Товар добавлен в карзину",
+				Toast.makeText(OrderActivity.this, "Товар добавлен в корзину",
 						Toast.LENGTH_LONG).show();
 				finish();
 			}
