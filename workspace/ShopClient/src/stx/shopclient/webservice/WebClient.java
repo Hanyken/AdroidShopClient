@@ -186,7 +186,7 @@ public class WebClient
 			return token;
 		}
 	}
-
+	
 	public Token register(String login, String password, String firstName,
 			String middleName, String lastName, String phone, String simId,
 			Date birthday, String userAgent, int screenWidth, int screenHeight,
@@ -224,6 +224,22 @@ public class WebClient
 			args.addParam("Accuracy", accuracy);
 
 		String response = request("account/signin", args, false);
+		TokenParser parser = new TokenParser();
+		Collection<Token> tokens = parser.parseString(response);
+
+		if (tokens.size() == 0)
+			throw new RuntimeException("No tokens returned");
+		else
+			return tokens.iterator().next();
+	}
+	
+	public Token register(int screenWidth, int screenHeight)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("screen_Width", screenWidth);
+		args.addParam("screen_Height", screenHeight);
+		
+		String response = request("account/NoRegistr", args, false);
 		TokenParser parser = new TokenParser();
 		Collection<Token> tokens = parser.parseString(response);
 

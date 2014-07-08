@@ -121,7 +121,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 		case MENU_PAYMENT:
 			if (_cartItems.size() > 0)
 			{
-				DialogFragment wd = PaymentDescriptionFragment.get();
+				DialogFragment wd = PaymentDescriptionFragment.get(!Token.getCurrent().getAuthorize());
 				wd.show(getFragmentManager(), "Comment");
 			}
 			break;
@@ -408,7 +408,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 			try
 			{
 				WebClient client = createWebClient();
-				client.addPayment(Token.getCurrent(), Repository.CatalogId,
+				client.addPayment(Token.getCurrent(), _CatalogId,
 						comment);
 			}
 			catch (Throwable ex)

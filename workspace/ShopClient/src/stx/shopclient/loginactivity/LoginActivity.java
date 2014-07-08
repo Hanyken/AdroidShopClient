@@ -58,6 +58,17 @@ public class LoginActivity extends Activity
 				registerButtonClick();
 			}
 		});
+		
+		Button noRegisterButton = (Button) findViewById(R.id.noRegisterButton);
+		noRegisterButton.setOnClickListener(new View.OnClickListener()
+		{
+
+			@Override
+			public void onClick(View arg0)
+			{
+				noRegistrationButtonClick();
+			}
+		});
 
 		_loginEdit = (EditText) findViewById(R.id.loginEditText);
 		_passwordEdit = (EditText) findViewById(R.id.passwordEditText);
@@ -86,6 +97,16 @@ public class LoginActivity extends Activity
 	{
 		Intent intent = new Intent(this, RegisterActivity.class);
 		startActivity(intent);
+	}
+	
+	void noRegistrationButtonClick()
+	{
+		dialog = ProgressDialog.show(LoginActivity.this, "Загрузка", "Выполняется вход", true);
+
+		DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+
+		NoRegistrationTask task = new NoRegistrationTask(displayMetrics.widthPixels, displayMetrics.heightPixels);
+		task.execute();
 	}
 
 	class LoginTask extends AsyncTask<Void, Void, Token>
@@ -149,6 +170,77 @@ public class LoginActivity extends Activity
 			Token.setCurrent(result);
 			UserAccount.setLogin(login);
 			UserAccount.setPassword(password);
+			UserAccount.setWidth(width);
+			UserAccount.setHeight(height);
+			UserAccount.save(LoginActivity.this);
+
+			Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			startActivity(intent);
+			finish();
+		}
+
+	}
+	
+	class NoRegistrationTask extends AsyncTask<Void, Void, Token>
+	{
+		int width;
+		int height;
+		Throwable exception;
+
+		public NoRegistrationTask(int width, int height)
+		{
+			this.width = width;
+			this.height = height;
+		}
+
+		@Override
+		protected Token doInBackground(Void... params)
+		{
+			try
+			{
+				WebClient client = new WebClient(LoginActivity.this);
+
+				return client.register(width, height);
+			}
+			catch (Throwable ex)
+			{
+				exception = ex;
+				return null;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(Token result)
+		{
+			super.onPostExecute(result);
+
+			dialog.dismiss();
+
+			if (result == null)
+			{
+				String message = "Ошибка входа";
+				if (exception != null)
+					message += ": " + exception.getLocalizedMessage();
+
+				Toast.makeText(LoginActivity.this, message,
+						Toast.LENGTH_LONG).show();
+				return;
+			}
+			else if (result.getToken() == null || result.getToken().equals(""))
+			{
+				String error = ServiceResponseCode.getMessage(result.getCode());
+
+				Toast.makeText(LoginActivity.this, error, Toast.LENGTH_LONG)
+						.show();
+				return;
+			}
+
+			Token.setCurrent(result);
+			UserAccount.setLogin(result.getLogin());
+			UserAccount.setPassword(result.getPass());
 			UserAccount.setWidth(width);
 			UserAccount.setHeight(height);
 			UserAccount.save(LoginActivity.this);
