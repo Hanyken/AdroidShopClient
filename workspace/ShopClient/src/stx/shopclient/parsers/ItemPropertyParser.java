@@ -90,6 +90,7 @@ public class ItemPropertyParser extends BaseParser<PropertyDescriptor>
 							{
 								item = new EnumPropertyDescriptor();
 								((EnumPropertyDescriptor) item).setValues(getArrayList(e));
+								((EnumPropertyDescriptor) item).setCurrentValues(((EnumPropertyDescriptor) item).getValues());
 							}
 						else
 							if (propType.equals(BooleanPropertyDescriptor.TYPE_STRING))

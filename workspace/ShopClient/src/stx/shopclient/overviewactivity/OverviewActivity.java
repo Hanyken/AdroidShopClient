@@ -85,7 +85,9 @@ public class OverviewActivity extends BaseActivity implements OnClickListener
 		setRatingBarColor(rtgRaiting, settings.getRatingColor());
 
 		btnOk.setBackground(getBueButtonDrawable(settings));
+		btnOk.setTextColor(settings.getForegroundColor());
 		btnCancel.setBackground(getBueButtonDrawable(settings));
+		btnCancel.setTextColor(settings.getForegroundColor());
 
 		_adapter = new OverviewAdapter(this, lstMain, _ItemId);
 

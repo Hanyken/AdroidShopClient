@@ -10,7 +10,7 @@ import org.w3c.dom.Element;
 public class EnumPropertyDescriptor extends PropertyDescriptor
 {
 	public static final String TYPE_STRING = "Enum";
-	public static final String SEPARATE_STRING = "|";
+	public static final String SEPARATE_STRING = ";";
 
 	private List<EnumValue> _values = new ArrayList<EnumValue>();
 	private List<EnumValue> _currentValues = new ArrayList<EnumValue>();

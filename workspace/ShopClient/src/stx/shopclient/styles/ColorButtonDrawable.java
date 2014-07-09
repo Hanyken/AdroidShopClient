@@ -19,7 +19,7 @@ public class ColorButtonDrawable extends Drawable
 	public void draw(Canvas canvas)
 	{
 		canvas.drawColor(_Color);
-		Paint p = new Paint();
+		/*Paint p = new Paint();
 		p.setColor(Color.parseColor("#0B000000"));
 		Paint p2 = new Paint();
 		p2.setColor(Color.parseColor("#15000000"));
@@ -36,6 +36,7 @@ public class ColorButtonDrawable extends Drawable
 		
 		canvas.drawRect(0, canvas.getHeight() - bw1, canvas.getWidth() - bw1, canvas.getHeight(), p); // Bottom
 		canvas.drawRect(bw1, canvas.getHeight() - (bw1 + bw2), canvas.getWidth() - (bw1 + bw2), canvas.getHeight() - bw1, p2); // Bottom
+		*/
 	}
 
 	@Override

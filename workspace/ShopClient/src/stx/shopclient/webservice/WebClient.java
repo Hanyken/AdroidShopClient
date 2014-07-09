@@ -13,6 +13,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import stx.shopclient.entity.ActionType;
+import stx.shopclient.entity.AppSettings;
 import stx.shopclient.entity.Catalog;
 import stx.shopclient.entity.CatalogAddress;
 import stx.shopclient.entity.CatalogItem;
@@ -32,6 +33,7 @@ import stx.shopclient.entity.Token;
 import stx.shopclient.entity.UpdateResultEntity;
 import stx.shopclient.loaders.HttpArgs;
 import stx.shopclient.parsers.ActionTypeParser;
+import stx.shopclient.parsers.AppSettingParser;
 import stx.shopclient.parsers.CatalogAddressParser;
 import stx.shopclient.parsers.CatalogParser;
 import stx.shopclient.parsers.CatalogSettingParser;
@@ -855,5 +857,22 @@ public class WebClient
 
 		String response = request("discount/get", args, true);
 		return new DiscountParser().parseString(response);
+	}
+	
+	public AppSettings getAppSettings(Token token, StringBuilder xml)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+
+		String response = request("setting/get", args, true);
+		if (xml != null)
+			xml.append(response);
+		Collection<AppSettings> items = new AppSettingParser()
+				.parseString(response);
+
+		if (items.size() == 0)
+			return null;
+		else
+			return items.iterator().next();
 	}
 }

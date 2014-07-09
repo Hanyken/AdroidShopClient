@@ -28,7 +28,7 @@ public class BooleanPropertyDescriptor extends PropertyDescriptor
 	@Override
 	public String getStringValue()
 	{
-		return Boolean.toString(_currentValue);
+		return _currentValue ? "Да" : "Нет";
 	}
 
 	@Override
