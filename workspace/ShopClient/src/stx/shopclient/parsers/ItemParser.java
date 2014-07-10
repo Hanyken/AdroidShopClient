@@ -30,6 +30,7 @@ public class ItemParser extends BaseParser<CatalogItem>
 	private final String PROPERTY_NAME = "Property";
 	private final String ORDER_PROPERTYES_NAME = "OrderProperties";
 	private final String GROUPS_NAME = "Groups";
+	private final String UNSALEBLE_NAME = "Unsaleable";
 	
 	
 	
@@ -47,6 +48,7 @@ public class ItemParser extends BaseParser<CatalogItem>
 		item.setRating(super.getValueDouble(e, RATING_NAME));
 		item.setOverviewsCount(super.getValueInt(e, OVERVIEW_COUNT_NAME));
 		item.setDescription(super.getValue(e, DESCRIPTION_NAME));
+		item.setUnsaleable(super.getValueBool(e, UNSALEBLE_NAME));
 		
 		NodeList oNl = e.getElementsByTagName(OVERVIEWS_NAME);
 		if (oNl.getLength() > 0)

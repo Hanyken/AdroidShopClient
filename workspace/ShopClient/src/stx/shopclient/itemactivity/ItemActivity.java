@@ -27,6 +27,7 @@ import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.Toast;
 import stx.shopclient.entity.Token;
@@ -99,13 +100,14 @@ public class ItemActivity extends BaseActivity
 		buttonBar = (ItemButtonBarFragment) getFragmentManager()
 				.findFragmentById(R.id.frgButtonBar);
 		TextView txtProperty = (TextView) view.findViewById(R.id.txtProperty);
+		WebView webProperty = (WebView)view.findViewById(R.id.webProperty);
 
 		imageFragment.setImages(_Item.getId());
 
 		buttonBar.setPrice(_Item.getPrice());
 		buttonBar.setRating(_Item.getRating());
 		buttonBar.setOverviewCount(_Item.getOverviewsCount());
-		buttonBar.setCanBuy(true);
+		buttonBar.setCanBuy(!_Item.getUnsaleable());
 
 		buttonBar.clearAnalogs();
 
@@ -113,8 +115,17 @@ public class ItemActivity extends BaseActivity
 		{
 			buttonBar.addAnalogs(group, _groupItems.get(group));
 		}
-
-		setProperty(txtProperty);
+		
+		if (_Item.webVewShow())
+		{
+			txtProperty.setVisibility(View.GONE);
+			webProperty.loadData(_Item.webVewText(), "text/html; charset=utf-8", "UTF-8");
+		}
+		else
+		{
+			webProperty.setVisibility(View.GONE);
+			setProperty(txtProperty);
+		}
 		getActionBar().setTitle(_Item.getName());
 	}
 

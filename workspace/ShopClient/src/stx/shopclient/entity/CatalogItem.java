@@ -23,6 +23,7 @@ public class CatalogItem
 	private boolean _canBubble;
 	private double _rating;
 	private int _overviewsCount;
+	private boolean _unsaleable;
 	
 	private String _description;
 	private long _nodeId;
@@ -236,5 +237,23 @@ public class CatalogItem
 	public void setNodeId(long nodeId)
 	{
 		_nodeId = nodeId;
+	}
+	
+	public boolean getUnsaleable()
+	{
+		return _unsaleable;
+	}
+	public void setUnsaleable(boolean unsaleable)
+	{
+		_unsaleable = unsaleable;
+	}
+	
+	public boolean webVewShow()
+	{
+		return false;
+	}
+	public String webVewText()
+	{
+		return null;
 	}
 }
