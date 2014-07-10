@@ -2,10 +2,12 @@ package stx.shopclient;
 
 import java.util.GregorianCalendar;
 
+import stx.shopclient.entity.AppSettings;
 import stx.shopclient.entity.Catalog;
 import stx.shopclient.entity.Token;
 import stx.shopclient.entity.UpdateResultEntity;
 import stx.shopclient.repository.Repository;
+import stx.shopclient.settings.ServerSettings;
 import stx.shopclient.webservice.WebClient;
 import android.app.Application;
 import android.util.Log;
@@ -15,6 +17,7 @@ public class ShopClientApplication extends Application
 	Thread _pullingThread;
 	boolean _threadRunning = true;
 	GregorianCalendar _lastCheckCatalogModif = new GregorianCalendar();
+	boolean _settingsLoaded = false;
 
 	@Override
 	public void onCreate()
@@ -105,4 +108,5 @@ public class ShopClientApplication extends Application
 			}
 		}
 	}
+
 }

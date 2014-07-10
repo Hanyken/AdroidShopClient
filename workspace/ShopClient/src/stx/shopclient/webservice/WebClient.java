@@ -9,6 +9,7 @@ import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 
@@ -119,20 +120,34 @@ public class WebClient
 	{
 		try
 		{
-			String url = getUrl(relativeUrl);
-			HttpClient httpclient = new DefaultHttpClient();
-			HttpResponse response = null;
-			if (isGet)
-				response = httpclient.execute(args.getGet(url));
-			else
-				response = httpclient.execute(args.getPost(url));
-
-			return response.getEntity().getContent();
+			return executeQuery(relativeUrl, args, isGet);
 		}
-		catch (Throwable ex)
+		catch (Throwable e)
 		{
-			throw new RuntimeException(ex);
+			try
+			{
+				ServerSettings.switchToReserve();
+				InputStream is = executeQuery(relativeUrl, args, isGet);
+				ServerSettings.save(_context);
+				return is;
+			}
+			catch(Exception ex)
+			{
+				throw new RuntimeException(ex);
+			}
 		}
+	}
+	private InputStream executeQuery(String relativeUrl, HttpArgs args, boolean isGet) throws ClientProtocolException, IOException
+	{
+		String url = getUrl(relativeUrl);
+		HttpClient httpclient = new DefaultHttpClient();
+		HttpResponse response = null;
+		if (isGet)
+			response = httpclient.execute(args.getGet(url));
+		else
+			response = httpclient.execute(args.getPost(url));
+
+		return response.getEntity().getContent();
 	}
 
 	private static String convertStreamToString(InputStream is)

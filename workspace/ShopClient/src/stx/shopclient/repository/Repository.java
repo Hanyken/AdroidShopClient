@@ -12,12 +12,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.DisplayMetrics;
+import stx.shopclient.entity.AppSettings;
 import stx.shopclient.entity.Catalog;
 import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.entity.Token;
 import stx.shopclient.loaders.CatalogFileLoader;
 import stx.shopclient.parsers.CatalogParser;
 import stx.shopclient.parsers.CatalogSettingParser;
+import stx.shopclient.settings.ServerSettings;
 import stx.shopclient.settings.UserAccount;
 import stx.shopclient.webservice.WebClient;
 
@@ -252,6 +254,9 @@ public class Repository
 
 	public void loadCatalog(Context context)
 	{
+		updateAppSettings(new WebClient(context));
+		ServerSettings.save(context);
+		
 		String catalogFile = "catalog_" + Long.toString(CatalogId);
 		File file = context.getFileStreamPath(catalogFile);
 		if (file.exists())
@@ -263,6 +268,15 @@ public class Repository
 			loadCatalogFromWeb(context);
 		}
 
+	}
+	
+	private void updateAppSettings(WebClient client)
+	{
+		AppSettings settings = client.getAppSettings(Token.getCurrent(), null);
+		if (settings == null) return;
+		ServerSettings.setUrl(settings.getFirstServerUri());
+		ServerSettings.setUrlReserve(settings.getLastServerUri());
+		Repository.CatalogId = settings.getDefaultCatalog();
 	}
 
 	class CatalogLoad extends AsyncTask<Void, Void, Void>
