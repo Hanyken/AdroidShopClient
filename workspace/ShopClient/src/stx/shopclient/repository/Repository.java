@@ -28,6 +28,7 @@ public class Repository
 	static final String PREF_NAME = "Repository";
 	static final String CATALOG_ID_PREF_KEY = "CatalogId";
 	public static long CatalogId = 1;
+	public static boolean _loadSettings = false;
 
 	private static Repository _intent;
 
@@ -254,8 +255,11 @@ public class Repository
 
 	public void loadCatalog(Context context)
 	{
-		updateAppSettings(new WebClient(context));
-		ServerSettings.save(context);
+		if (!_loadSettings && updateAppSettings(new WebClient(context)))
+		{
+			_loadSettings =  true;
+			ServerSettings.save(context);
+		}
 		
 		String catalogFile = "catalog_" + Long.toString(CatalogId);
 		File file = context.getFileStreamPath(catalogFile);
@@ -270,13 +274,15 @@ public class Repository
 
 	}
 	
-	private void updateAppSettings(WebClient client)
+	private boolean updateAppSettings(WebClient client)
 	{
 		AppSettings settings = client.getAppSettings(Token.getCurrent(), null);
-		if (settings == null) return;
+		if (settings == null) return false;
 		ServerSettings.setUrl(settings.getFirstServerUri());
 		ServerSettings.setUrlReserve(settings.getLastServerUri());
 		Repository.CatalogId = settings.getDefaultCatalog();
+		
+		return true;
 	}
 
 	class CatalogLoad extends AsyncTask<Void, Void, Void>
