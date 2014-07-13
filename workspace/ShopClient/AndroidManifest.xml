@@ -19,6 +19,9 @@
         android:icon="@drawable/ic_launcher"
         android:label="ShopClient"
         android:theme="@style/AppTheme" >
+        <service android:name="stx.shopclient.ShopClientService" >
+        </service>
+
         <activity
             android:name="stx.shopclient.mainactivity.MainActivity"
             android:label="ShopClient" >
@@ -77,7 +80,8 @@
         </activity>
         <activity
             android:name="stx.shopclient.messagesactivity.MessagesListActivity"
-            android:label="@string/default_title" >
+            android:label="@string/default_title"
+            android:parentActivityName="stx.shopclient.mainactivity.MainActivity" >
         </activity>
         <activity
             android:name="stx.shopclient.messagesactivity.MessageActivity"

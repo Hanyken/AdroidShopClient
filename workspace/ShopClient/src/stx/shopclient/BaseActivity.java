@@ -67,6 +67,9 @@ public class BaseActivity extends FragmentActivity
 	{
 		super.onCreate(savedInstanceState);
 
+		Intent serviceIntent = new Intent(this, ShopClientService.class);
+		startService(serviceIntent);
+
 		UserAccount.load(this);
 		if (UserAccount.getLogin() == null || UserAccount.getLogin().equals(""))
 		{
@@ -298,7 +301,18 @@ public class BaseActivity extends FragmentActivity
 		if (item.getId() == MainMenuItem.HOME_MENU_ITEM_ID)
 		{
 			Intent intent = new Intent(this, MainActivity.class);
-			NavUtils.navigateUpTo(this, intent);
+			if (NavUtils.shouldUpRecreateTask(this, intent))
+			{
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+				startActivity(intent);
+			}
+			else
+			{
+				NavUtils.navigateUpTo(this, intent);
+			}
+
 		}
 		else if (item.getId() == MainMenuItem.SEARCH_MENU_ITEM_ID)
 		{
@@ -428,10 +442,8 @@ public class BaseActivity extends FragmentActivity
 		Drawable press = new ColorButtonDrawable(settings.getPressedColor());
 		Drawable disable = new ColorButtonDrawable(settings.getDisableColor());
 
-		drawable.addState(new int[]
-		{ android.R.attr.state_pressed }, press);
-		drawable.addState(new int[]
-		{ -android.R.attr.state_enabled }, disable);
+		drawable.addState(new int[] { android.R.attr.state_pressed }, press);
+		drawable.addState(new int[] { -android.R.attr.state_enabled }, disable);
 		drawable.addState(new int[0], normal);
 		return drawable;
 	}
