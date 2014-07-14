@@ -10,20 +10,28 @@ import stx.shopclient.repository.Repository;
 import stx.shopclient.settings.ServerSettings;
 import stx.shopclient.webservice.WebClient;
 import android.app.Application;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.util.Log;
 
 public class ShopClientApplication extends Application
 {
+	public static final String BROADCAST_ACTION_MESSAGE_COUNT = "stx.shopclient.messagecount";
+
 	Thread _pullingThread;
 	boolean _threadRunning = true;
 	GregorianCalendar _lastCheckCatalogModif = new GregorianCalendar();
 	boolean _settingsLoaded = false;
 
+	MessageCountBroadcastReceiver _msgCountReceiver = new MessageCountBroadcastReceiver();
+
 	@Override
 	public void onCreate()
 	{
 		super.onCreate();
-		
+
 		Repository.loadSelectedCatalogId(this);
 
 		_pullingThread = new Thread(new Runnable()
@@ -35,6 +43,10 @@ public class ShopClientApplication extends Application
 			}
 		});
 		_pullingThread.start();
+
+		IntentFilter messageCountFilter = new IntentFilter(
+				BROADCAST_ACTION_MESSAGE_COUNT);
+		registerReceiver(_msgCountReceiver, messageCountFilter);
 	}
 
 	@Override
@@ -55,7 +67,6 @@ public class ShopClientApplication extends Application
 				{
 					WebClient client = new WebClient(this);
 
-					updateMessageCount(client);
 					updateCatalog(client);
 				}
 
@@ -75,12 +86,6 @@ public class ShopClientApplication extends Application
 				}
 			}
 		}
-	}
-
-	void updateMessageCount(WebClient client)
-	{
-		long count = client.getNewMessagesCount(Token.getCurrent());
-		Repository.get(null).getMessagesManager().setUnreadMessageCount(count);
 	}
 
 	void updateCatalog(WebClient client)
@@ -109,4 +114,16 @@ public class ShopClientApplication extends Application
 		}
 	}
 
+	public class MessageCountBroadcastReceiver extends BroadcastReceiver
+	{
+		public static final String COUNT_EXTRA_KEY = "count";
+
+		@Override
+		public void onReceive(Context context, Intent intent)
+		{
+			long count = intent.getLongExtra(COUNT_EXTRA_KEY, 0);
+			Repository.get(null).getMessagesManager()
+					.setUnreadMessageCount(count);
+		}
+	}
 }

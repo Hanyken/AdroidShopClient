@@ -1,9 +1,12 @@
 package stx.shopclient;
 
+import java.util.Collection;
+
+import stx.shopclient.entity.Message;
 import stx.shopclient.entity.Token;
 import stx.shopclient.mainactivity.MainActivity;
+import stx.shopclient.messagesactivity.MessageActivity;
 import stx.shopclient.messagesactivity.MessagesListActivity;
-import stx.shopclient.repository.Repository;
 import stx.shopclient.webservice.WebClient;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -17,8 +20,8 @@ import android.util.Log;
 
 public class ShopClientService extends Service
 {
-	final int MESSAGE_NOTIF_ID = 1;
-	
+	public static final int MESSAGE_NOTIF_ID = 1;
+
 	Thread _pullingThread;
 	boolean _threadRunning = true;
 	long _lastMessageCount = 0;
@@ -59,7 +62,7 @@ public class ShopClientService extends Service
 					checkMessages(client);
 				}
 
-				Thread.sleep(30000);
+				Thread.sleep(10000);
 			}
 			catch (Throwable ex)
 			{
@@ -81,29 +84,69 @@ public class ShopClientService extends Service
 	{
 		long count = client.getNewMessagesCount(Token.getCurrent());
 
+		Intent countIntent = new Intent(
+				ShopClientApplication.BROADCAST_ACTION_MESSAGE_COUNT);
+		countIntent.putExtra(
+				ShopClientApplication.MessageCountBroadcastReceiver.COUNT_EXTRA_KEY,
+				count);
+		sendBroadcast(countIntent);
+
 		if (count > _lastMessageCount)
 		{
 			NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(
 					this);
-			notifBuilder.setContentTitle(
-					String.format("Непрочитанные сообщения (%d)", count)).setSmallIcon(
-					R.drawable.ic_launcher);
+			notifBuilder.setSmallIcon(R.drawable.ic_launcher);
 
-			Intent intent = new Intent(this, MessagesListActivity.class);
-			TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-			stackBuilder.addParentStack(MainActivity.class);
-			stackBuilder.addParentStack(MessagesListActivity.class);
-			
-			stackBuilder.addNextIntent(intent);
-			PendingIntent pendingIntent = stackBuilder.getPendingIntent(0,
-					PendingIntent.FLAG_UPDATE_CURRENT);
+			PendingIntent pendingIntent = null;
 
-			notifBuilder.setContentIntent(pendingIntent);
-						
-			NotificationManager notifManager =
-				    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-			
-			notifManager.notify(MESSAGE_NOTIF_ID, notifBuilder.build());
+			if (count == 1)
+			{
+				Collection<Message> messages = client.getNewMessages(Token
+						.getCurrent());
+				if (messages != null && messages.size() > 0)
+				{
+					Message message = messages.iterator().next();
+
+					notifBuilder.setContentTitle("Новое сообщение");
+					notifBuilder.setContentText(message.getTitle());
+
+					Intent intent = new Intent(this, MessageActivity.class);
+					intent.putExtra(MessageActivity.MESSAGE_ID_EXTRA_KEY,
+							message.getId());
+
+					Intent msgListIntent = new Intent(this,
+							MessagesListActivity.class);
+					Intent mainIntent = new Intent(this, MainActivity.class);
+
+					pendingIntent = PendingIntent.getActivities(this, 0,
+							new Intent[]
+							{ mainIntent, msgListIntent, intent },
+							PendingIntent.FLAG_UPDATE_CURRENT);
+				}
+			}
+			else
+			{
+				notifBuilder.setContentTitle(String.format("Новые сообщения",
+						count));
+				notifBuilder.setContentText(String.format("%d шт.", count));
+				Intent mainIntent = new Intent(this, MainActivity.class);
+
+				Intent intent = new Intent(this, MessagesListActivity.class);
+
+				pendingIntent = PendingIntent.getActivities(this, 0,
+						new Intent[]
+						{ mainIntent, intent },
+						PendingIntent.FLAG_UPDATE_CURRENT);
+			}
+
+			if (pendingIntent != null)
+			{
+				notifBuilder.setContentIntent(pendingIntent);
+
+				NotificationManager notifManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+				notifManager.notify(MESSAGE_NOTIF_ID, notifBuilder.build());
+			}
 		}
 
 		_lastMessageCount = count;

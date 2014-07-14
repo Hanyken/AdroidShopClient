@@ -61,6 +61,7 @@ public class BaseActivity extends FragmentActivity
 	LinearLayout _mainViewContainer;
 	MainMenuListAdapter _mainMenuListAdapter;
 	ProgressDialog _progressDialog;
+	boolean _destroyed = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -86,9 +87,17 @@ public class BaseActivity extends FragmentActivity
 	{
 		super.onStart();
 
-		// new GetOrderCountTask().execute();
+		_destroyed = false;
 
 		new GetOrderCatalogsTask().execute();
+	}
+
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
+
+		_destroyed = true;
 	}
 
 	void loadUI()
@@ -442,8 +451,10 @@ public class BaseActivity extends FragmentActivity
 		Drawable press = new ColorButtonDrawable(settings.getPressedColor());
 		Drawable disable = new ColorButtonDrawable(settings.getDisableColor());
 
-		drawable.addState(new int[] { android.R.attr.state_pressed }, press);
-		drawable.addState(new int[] { -android.R.attr.state_enabled }, disable);
+		drawable.addState(new int[]
+		{ android.R.attr.state_pressed }, press);
+		drawable.addState(new int[]
+		{ -android.R.attr.state_enabled }, disable);
 		drawable.addState(new int[0], normal);
 		return drawable;
 	}
@@ -481,6 +492,9 @@ public class BaseActivity extends FragmentActivity
 		protected void onPostExecute(Void result)
 		{
 			super.onPostExecute(result);
+
+			if (_destroyed)
+				return;
 
 			_progressDialog.dismiss();
 

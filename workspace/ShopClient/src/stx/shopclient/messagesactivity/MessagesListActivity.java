@@ -8,7 +8,9 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
+import stx.shopclient.ShopClientService;
 import stx.shopclient.entity.Message;
 import stx.shopclient.entity.Token;
 import stx.shopclient.mainmenu.MainMenuItem;
@@ -42,6 +45,10 @@ public class MessagesListActivity extends BaseActivity implements
 	@Override
 	protected View createMainView(ViewGroup parent)
 	{		
+		NotificationManager notifManager =
+			    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		notifManager.cancel(ShopClientService.MESSAGE_NOTIF_ID);
+		
 		getActionBar().setTitle("Сообщения");
 
 		View view = getLayoutInflater().inflate(R.layout.message_list_activity,
