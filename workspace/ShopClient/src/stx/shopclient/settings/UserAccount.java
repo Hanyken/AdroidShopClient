@@ -1,6 +1,7 @@
 package stx.shopclient.settings;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 
 public class UserAccount
@@ -16,10 +17,10 @@ public class UserAccount
 	private static Integer _width;
 	private static Integer _height;
 
-	public static void load(Activity activity)
+	public static void load(Context activity)
 	{
 		SharedPreferences pref = activity.getSharedPreferences(PREF_NAME,
-				Activity.MODE_PRIVATE);
+				Context.MODE_PRIVATE);
 
 		if (pref != null)
 		{
