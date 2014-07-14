@@ -876,7 +876,7 @@ public class WebClient
 		else
 			return items.iterator().next().getCount();
 	}
-	
+	// все сообщения которые необходимо показывать в ActionBar и которые ранее не были показаны
 	public Collection<Message> getShowMessages(Token token)
 	{
 		HttpArgs args = new HttpArgs();
@@ -885,7 +885,7 @@ public class WebClient
 		String response = request("message/show", args, true);
 		return new MessageParser().parseString(response);
 	}
-	
+	// возвращает сообщение по его Id
 	public Message getMessage(Token token, long messageId)
 	{
 		HttpArgs args = new HttpArgs();
@@ -899,7 +899,7 @@ public class WebClient
 		else
 			return items.iterator().next();
 	}
-	
+	// возвращает кол-во сообщений доступных для показа в ActionBar 
 	public long getShowMessagesCount(Token token)
 	{
 		HttpArgs args = new HttpArgs();

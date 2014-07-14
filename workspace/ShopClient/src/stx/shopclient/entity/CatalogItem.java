@@ -13,6 +13,7 @@ public class CatalogItem
 {
 	public static final String PRICE_PROPERTY_NAME = "Price";
 	public static final String IMAGES_PROPERTY_NAME = "Images";
+	public static final String HTML_PROPERTY_NAME = "HTML";
 	
 	private long _rowNumber;
 	private long _id;
@@ -250,10 +251,26 @@ public class CatalogItem
 	
 	public boolean webVewShow()
 	{
+		for(PropertyDescriptor prop : _properties)
+		{
+			if (prop.getName().equals(HTML_PROPERTY_NAME))
+			{
+				return true;
+			}
+		}
 		return false;
 	}
 	public String webVewText()
 	{
-		return null;
+		String value = null;
+		for(PropertyDescriptor prop : _properties)
+		{
+			if (prop.getName().equals(HTML_PROPERTY_NAME))
+			{
+				value = prop.getStringValue();
+				break;
+			}
+		}
+		return value;
 	}
 }
