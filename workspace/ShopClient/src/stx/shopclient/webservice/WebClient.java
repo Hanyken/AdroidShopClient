@@ -482,6 +482,18 @@ public class WebClient
 		Repository.get(null).getItemsManager().addAll(items);
 		return items;
 	}
+	
+
+	public Collection<CatalogItem> getFavorite(Token token)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+
+		String response = request("item/favorite", args, true);
+		Collection<CatalogItem> items = new ItemParser().parseString(response);
+		Repository.get(null).getItemsManager().addAll(items);
+		return items;
+	}
 
 	public Collection<CatalogItem> getCrosssale(Token token, long paymentNumber)
 	{
@@ -856,6 +868,44 @@ public class WebClient
 		args.addParam("token", token);
 
 		String response = request("message/allcount", args, true);
+		Collection<CountResultEntity> items = new CountResultParser()
+				.parseString(response);
+
+		if (items.size() == 0)
+			throw new RuntimeException("No count returned");
+		else
+			return items.iterator().next().getCount();
+	}
+	// все сообщения которые необходимо показывать в ActionBar и которые ранее не были показаны
+	public Collection<Message> getShowMessages(Token token)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+
+		String response = request("message/show", args, true);
+		return new MessageParser().parseString(response);
+	}
+	// возвращает сообщение по его Id
+	public Message getMessage(Token token, long messageId)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("messageId", messageId);
+
+		String response = request("message/get", args, true);
+		Collection<Message> items = new MessageParser().parseString(response);
+		if (items.size() < 1)
+			throw new RuntimeException("No message return");
+		else
+			return items.iterator().next();
+	}
+	// возвращает кол-во сообщений доступных для показа в ActionBar 
+	public long getShowMessagesCount(Token token)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+
+		String response = request("message/shownewcount", args, true);
 		Collection<CountResultEntity> items = new CountResultParser()
 				.parseString(response);
 
