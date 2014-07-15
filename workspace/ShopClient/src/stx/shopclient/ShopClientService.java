@@ -7,7 +7,9 @@ import stx.shopclient.entity.Token;
 import stx.shopclient.mainactivity.MainActivity;
 import stx.shopclient.messagesactivity.MessageActivity;
 import stx.shopclient.messagesactivity.MessagesListActivity;
+import stx.shopclient.settings.UserAccount;
 import stx.shopclient.webservice.WebClient;
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -26,10 +28,12 @@ public class ShopClientService extends Service
 	Thread _pullingThread;
 	boolean _threadRunning = true;
 	long _lastMessageCount = 0;
-	
+
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId)
 	{
+		super.onStartCommand(intent, flags, startId);
+
 		_pullingThread = new Thread(new Runnable()
 		{
 			@Override
@@ -40,7 +44,16 @@ public class ShopClientService extends Service
 		});
 		_pullingThread.start();
 
-		return super.onStartCommand(intent, flags, startId);
+		Log.d("StxService", "Service started");
+
+		return START_STICKY;
+	}
+
+	@Override
+	public void onDestroy()
+	{
+		Log.d("StxService", "Service destroyed");
+		super.onDestroy();
 	}
 
 	@Override
@@ -54,12 +67,21 @@ public class ShopClientService extends Service
 	{
 		while (_threadRunning)
 		{
+			Log.d("StxService", "pullingThreadFunc");
+
 			try
 			{
-				if (Token.getCurrent() != null)
+				WebClient client = new WebClient(this);
+				
+				if (Token.getCurrent() == null)
 				{
-					WebClient client = new WebClient(this);
+					UserAccount.load(this);
+					client.login(UserAccount.getLogin(), UserAccount.getPassword(),
+							UserAccount.getWidth(), UserAccount.getHeight());
+				}
 
+				if (Token.getCurrent() != null)
+				{					
 					checkMessages(client);
 				}
 
@@ -67,11 +89,11 @@ public class ShopClientService extends Service
 			}
 			catch (Throwable ex)
 			{
-				Log.e("pullingThreadFunc", ex.getLocalizedMessage(), ex);
+				Log.e("StxService", ex.getLocalizedMessage(), ex);
 
 				try
 				{
-					Thread.sleep(30000);
+					Thread.sleep(10000);
 				}
 				catch (InterruptedException e)
 				{
@@ -83,29 +105,28 @@ public class ShopClientService extends Service
 
 	void checkMessages(WebClient client)
 	{
-		Log.w("Service", "Запрос на сервер");
 		long count = client.getNewMessagesCount(Token.getCurrent());
-		//Toast.makeText(this, "Кол-во "+ Long.toString(count), Toast.LENGTH_SHORT).show();
-		
+		long showCount = client.getShowMessagesCount(Token.getCurrent());
+
 		Intent countIntent = new Intent(
 				ShopClientApplication.BROADCAST_ACTION_MESSAGE_COUNT);
-		countIntent.putExtra(
-				ShopClientApplication.MessageCountBroadcastReceiver.COUNT_EXTRA_KEY,
-				count);
+		countIntent
+				.putExtra(
+						ShopClientApplication.MessageCountBroadcastReceiver.COUNT_EXTRA_KEY,
+						count);
 		sendBroadcast(countIntent);
 
-		if (count > _lastMessageCount)
+		if (showCount != _lastMessageCount && showCount > 0)
 		{
-			Log.w("Service", "Кол-во "+Long.toString(count));
 			NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(
 					this);
 			notifBuilder.setSmallIcon(R.drawable.ic_launcher);
 
 			PendingIntent pendingIntent = null;
 
-			if (count == 1)
+			if (showCount == 1)
 			{
-				Collection<Message> messages = client.getNewMessages(Token
+				Collection<Message> messages = client.getShowMessages(Token
 						.getCurrent());
 				if (messages != null && messages.size() > 0)
 				{
@@ -132,7 +153,7 @@ public class ShopClientService extends Service
 			{
 				notifBuilder.setContentTitle(String.format("Новые сообщения",
 						count));
-				notifBuilder.setContentText(String.format("%d шт.", count));
+				notifBuilder.setContentText(String.format("%d шт.", showCount));
 				Intent mainIntent = new Intent(this, MainActivity.class);
 
 				Intent intent = new Intent(this, MessagesListActivity.class);
@@ -143,20 +164,20 @@ public class ShopClientService extends Service
 						PendingIntent.FLAG_UPDATE_CURRENT);
 			}
 
-			Log.w("Service", "До выврда сообщения");
 			if (pendingIntent != null)
 			{
-				Log.w("Service", "Сообщение пошло");
 				notifBuilder.setContentIntent(pendingIntent);
 
 				NotificationManager notifManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
 				notifManager.notify(MESSAGE_NOTIF_ID, notifBuilder.build());
-				Log.w("Service", "Сообщение послали");
+				Log.d("StxService", "notification was sent");
 			}
+			else
+				Log.d("StxService", "pendingIntent is null");
 		}
 
-		_lastMessageCount = count;
+		_lastMessageCount = showCount;
 	}
 
 }

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -32,30 +35,32 @@ import stx.shopclient.webservice.WebClient;
 
 public class PaymentActivity extends BaseActivity
 {
-	public static final String PAYMENT_ID_NAME= "PaymentId";
-	public static final String PAYMENT_NUMBER_NAME= "PaymentNumber";
-	public static final String PAYMENT_CREATE_DATE_NAME= "PaymentCreateDate";
-	public static final String PAYMENT_SUM_NAME= "PaymentSum";
-	public static final String PAYMENT_STATE_NAME= "PaymentState";
-	public static final String PAYMENT_PAY_DATE_NAME= "PaymentPayDate";
-	public static final String PAYMENT_ORDER_COUNT_NAME= "PaymentOrderCount";
-	
+	public static final String PAYMENT_ID_NAME = "PaymentId";
+	public static final String PAYMENT_NUMBER_NAME = "PaymentNumber";
+	public static final String PAYMENT_CREATE_DATE_NAME = "PaymentCreateDate";
+	public static final String PAYMENT_SUM_NAME = "PaymentSum";
+	public static final String PAYMENT_STATE_NAME = "PaymentState";
+	public static final String PAYMENT_PAY_DATE_NAME = "PaymentPayDate";
+	public static final String PAYMENT_ORDER_COUNT_NAME = "PaymentOrderCount";
+
 	private Payment _Item;
 	private List<Order> _orderItems = new ArrayList<Order>();
 	private OrderListAdapter _adapter;
-	
+
 	@Override
 	protected View createMainView(ViewGroup parent)
 	{
 		getActionBar().setTitle("Информация о заказе");
-		
-		View mainView = getLayoutInflater().inflate(R.layout.payment_activity, parent, false);
-		
+
+		View mainView = getLayoutInflater().inflate(R.layout.payment_activity,
+				parent, false);
+
 		CatalogSettings settings = Repository.get(this).getCatalogManager()
 				.getSettings();
 
-		getActionBar().setBackgroundDrawable(new ColorDrawable(settings.getBackground()));
-		
+		getActionBar().setBackgroundDrawable(
+				new ColorDrawable(settings.getBackground()));
+
 		Intent intent = getIntent();
 		try
 		{
@@ -63,19 +68,30 @@ public class PaymentActivity extends BaseActivity
 			_Item.setId(intent.getLongExtra(PAYMENT_ID_NAME, 0));
 			_Item.setNumber(intent.getLongExtra(PAYMENT_NUMBER_NAME, 0));
 			_Item.setSum(intent.getDoubleExtra(PAYMENT_SUM_NAME, 0));
-			_Item.setCreateDate(BaseParser.dateParser.parse(intent.getStringExtra(PAYMENT_CREATE_DATE_NAME)));
+			_Item.setCreateDate(BaseParser.dateParser.parse(intent
+					.getStringExtra(PAYMENT_CREATE_DATE_NAME)));
 			_Item.setState(intent.getIntExtra(PAYMENT_STATE_NAME, 0));
 			if (intent.hasExtra(PAYMENT_PAY_DATE_NAME))
-				_Item.setPayDate(BaseParser.dateParser.parse(intent.getStringExtra(PAYMENT_PAY_DATE_NAME)));
+				_Item.setPayDate(BaseParser.dateParser.parse(intent
+						.getStringExtra(PAYMENT_PAY_DATE_NAME)));
 			_Item.setOrderCount(intent.getIntExtra(PAYMENT_ORDER_COUNT_NAME, 0));
 		}
-		catch(Exception ex){}
-		TextView lblNumber = (TextView)mainView.findViewById(R.id.lblNumber);
-		ListView lstOrders = (ListView)mainView.findViewById(R.id.lstOrders);
-		
+		catch (Exception ex)
+		{
+		}
+		TextView lblNumber = (TextView) mainView.findViewById(R.id.lblNumber);
+		PullToRefreshListView lstOrders = (PullToRefreshListView) mainView
+				.findViewById(R.id.lstOrders);
+		lstOrders.setMode(Mode.DISABLED);
+
 		_adapter = new OrderListAdapter();
-		
-		lblNumber.setText("Номер заказа: "+Long.toString(_Item.getNumber()) + "\nКол-во элементов:" + Integer.toString(_Item.getOrderCount())+ "\nДата заказа: "+ BaseParser.dateParser.format(_Item.getCreateDate())+"\nСумма заказа: "+Double.toString(_Item.getSum())+"\nСтатус заказа: "+Integer.toString(_Item.getState()));
+
+		lblNumber.setText("Номер заказа: " + Long.toString(_Item.getNumber())
+				+ "\nКол-во элементов:"
+				+ Integer.toString(_Item.getOrderCount()) + "\nДата заказа: "
+				+ BaseParser.dateParser.format(_Item.getCreateDate())
+				+ "\nСумма заказа: " + Double.toString(_Item.getSum())
+				+ "\nСтатус заказа: " + Integer.toString(_Item.getState()));
 		lstOrders.setAdapter(_adapter);
 		lstOrders.setOnItemClickListener(new OnItemClickListener()
 		{
@@ -84,22 +100,20 @@ public class PaymentActivity extends BaseActivity
 					long arg3)
 			{
 				Order item = _orderItems.get(arg2);
-				Intent intent = new Intent(PaymentActivity.this, ItemActivity.class);
+				Intent intent = new Intent(PaymentActivity.this,
+						ItemActivity.class);
 				intent.putExtra("ItemID", item.getItemId());
 
 				startActivity(intent);
 			}
-			
+
 		});
-		
+
 		new LoadTask().execute();
-		
+
 		return mainView;
 	}
-	
-	
-	
-	
+
 	class OrderListAdapter extends BaseAdapter
 	{
 
@@ -138,8 +152,10 @@ public class PaymentActivity extends BaseActivity
 
 			TextView descrTextView = (TextView) view
 					.findViewById(R.id.descriptionTextView);
-			descrTextView.setText(CartActivity.getOrderDescription(order.getProperties(),
-					order.getItem().getOrderProperties()));
+			descrTextView
+					.setText(CartActivity.getOrderDescription(order
+							.getProperties(), order.getItem()
+							.getOrderProperties()));
 
 			ImageView imgView = (ImageView) view.findViewById(R.id.imageView);
 
@@ -151,7 +167,7 @@ public class PaymentActivity extends BaseActivity
 		}
 
 	}
-	
+
 	class LoadTask extends AsyncTask<Void, Void, Void>
 	{
 		Throwable exception;
@@ -170,7 +186,8 @@ public class PaymentActivity extends BaseActivity
 			try
 			{
 				WebClient client = createWebClient();
-				Collection<Order> payments = client.getPaymentOrders(Token.getCurrent(), _Item.getId());
+				Collection<Order> payments = client.getPaymentOrders(
+						Token.getCurrent(), _Item.getId());
 				_orderItems.clear();
 				_orderItems.addAll(payments);
 			}

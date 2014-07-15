@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -26,9 +29,10 @@ import stx.shopclient.repository.Repository;
 import stx.shopclient.utils.ImageDownloadTask;
 import stx.shopclient.webservice.WebClient;
 
-public class FavoriteActivity extends BaseActivity implements OnItemClickListener
+public class FavoriteActivity extends BaseActivity implements
+		OnItemClickListener
 {
-	ListView _list;
+	PullToRefreshListView _list;
 	List<CatalogItem> _items = new ArrayList<CatalogItem>();
 	FavoriteAdapter _adapter;
 
@@ -39,11 +43,12 @@ public class FavoriteActivity extends BaseActivity implements OnItemClickListene
 
 		View view = getLayoutInflater().inflate(R.layout.favorite_activity,
 				parent, false);
-		_list = (ListView) view.findViewById(R.id.list);
+		_list = (PullToRefreshListView) view.findViewById(R.id.list);
+		_list.setMode(Mode.DISABLED);
 		_adapter = new FavoriteAdapter();
 		_list.setAdapter(_adapter);
 		_list.setOnItemClickListener(this);
-		
+
 		new LoadTask().execute();
 
 		return view;
@@ -133,8 +138,7 @@ public class FavoriteActivity extends BaseActivity implements OnItemClickListene
 			try
 			{
 				WebClient client = createWebClient();
-				items = client.getFavorite(Token.getCurrent(),
-						Repository.CatalogId);
+				items = client.getFavorite(Token.getCurrent());
 			}
 			catch (Throwable ex)
 			{
@@ -208,10 +212,10 @@ public class FavoriteActivity extends BaseActivity implements OnItemClickListene
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int index, long arg3)
+	public void onItemClick(AdapterView<?> arg0, View view, int index, long arg3)
 	{
-		CatalogItem item = _items.get(index);
-		Intent intent = new Intent(this, ItemActivity.class);		
+		CatalogItem item = (CatalogItem) view.getTag();
+		Intent intent = new Intent(this, ItemActivity.class);
 		intent.putExtra(ItemActivity.ITEM_ID_EXTRA_KEY, item.getId());
 		startActivity(intent);
 	}

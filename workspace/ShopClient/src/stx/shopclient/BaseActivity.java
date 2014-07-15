@@ -69,7 +69,7 @@ public class BaseActivity extends FragmentActivity
 		super.onCreate(savedInstanceState);
 
 		Intent serviceIntent = new Intent(this, ShopClientService.class);
-		startService(serviceIntent);
+		startService(serviceIntent);		
 
 		UserAccount.load(this);
 		if (UserAccount.getLogin() == null || UserAccount.getLogin().equals(""))

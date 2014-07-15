@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
+
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.entity.Catalog;
@@ -252,7 +255,8 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 	{
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
 				.getMenuInfo();
-		Order order = _cartItems.get(info.position);
+		// Order order = _cartItems.get(info.position + 1);
+		Order order = (Order) info.targetView.getTag();
 
 		if (item.getItemId() == R.id.edit)
 		{
@@ -447,12 +451,14 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 				if (crosssaleItems != null && crosssaleItems.size() > 0)
 				{
 					CrosssaleActivity.crosssaleItems = crosssaleItems;
-					Intent intent = new Intent(CartActivity.this, CrosssaleActivity.class);
+					Intent intent = new Intent(CartActivity.this,
+							CrosssaleActivity.class);
 					startActivity(intent);
 				}
 				else
 				{
-					Intent intent = new Intent(CartActivity.this, PaymentListActivity.class);
+					Intent intent = new Intent(CartActivity.this,
+							PaymentListActivity.class);
 					startActivity(intent);
 				}
 			}
