@@ -16,6 +16,8 @@ import android.app.Service;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -167,6 +169,11 @@ public class ShopClientService extends Service
 			if (pendingIntent != null)
 			{
 				notifBuilder.setContentIntent(pendingIntent);
+				
+				Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+				notifBuilder.setSound(alarmSound);
+				long[] pattern = {500,500,500,500,500};
+				notifBuilder.setVibrate(pattern);
 
 				NotificationManager notifManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
