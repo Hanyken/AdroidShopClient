@@ -24,6 +24,7 @@ import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.entity.KeyValue;
 import stx.shopclient.entity.OrderProperty;
 import stx.shopclient.entity.Token;
+import stx.shopclient.entity.properties.NumberPropertyDescriptor;
 import stx.shopclient.entity.properties.PropertyDescriptor;
 import stx.shopclient.itemactivity.ItemActivity;
 import stx.shopclient.mainmenu.MainMenuItem;
@@ -78,11 +79,23 @@ public class OrderActivity extends BaseActivity implements OnClickListener
 			ImageDownloadTask.startNew(imgIco, this, _item.getIco());
 
 		properties.addAll(_item.getOrderProperties());
+
+		for (PropertyDescriptor prop : properties)
+		{
+			if ((prop instanceof NumberPropertyDescriptor)
+					&& prop.getName().toLowerCase().equals("count"))
+			{
+				NumberPropertyDescriptor numProp = (NumberPropertyDescriptor) prop;
+				numProp.setCurrentValueDefined(true);
+				numProp.setCurrentMinValue(1);
+			}
+		}
+
 		plProperies.setProperties(properties);
 
 		return view;
 	}
-	
+
 	@Override
 	public boolean initMainMenuItem(MainMenuItem item)
 	{

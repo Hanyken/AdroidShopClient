@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -24,54 +26,55 @@ import stx.shopclient.parsers.BaseParser;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.webservice.WebClient;
 
-public class PaymentListActivity extends BaseActivity implements OnItemClickListener
+public class PaymentListActivity extends BaseActivity implements
+		OnItemClickListener
 {
-	ListView lstMain;
+	PullToRefreshListView lstMain;
 	List<Payment> _paymentItems = new ArrayList<Payment>();
 	PaymentListAdapter _adapter;
 	Long _CatalogId;
-	
+
 	@Override
 	protected View createMainView(ViewGroup parent)
 	{
-		View mainView = getLayoutInflater().inflate(R.layout.payment_list_activity, parent, false);
-		
-		//CatalogSettings settings = Repository.get(this).getCatalogManager()
-		//		.getSettings();
+		View mainView = getLayoutInflater().inflate(
+				R.layout.payment_list_activity, parent, false);
 
-		 _CatalogId = Repository.CatalogId;
+		// CatalogSettings settings = Repository.get(this).getCatalogManager()
+		// .getSettings();
+
+		_CatalogId = Repository.CatalogId;
 		_adapter = new PaymentListAdapter();
-		
-		lstMain = (ListView)mainView.findViewById(R.id.lstMain);
+
+		lstMain = (PullToRefreshListView) mainView.findViewById(R.id.lstMain);
+		lstMain.setMode(Mode.DISABLED);
 		lstMain.setOnItemClickListener(this);
 		lstMain.setAdapter(_adapter);
-		
+
 		new LoadTask().execute();
-		
+
 		return mainView;
 	}
-	
-	
+
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
+	public void onItemClick(AdapterView<?> arg0, View view, int arg2, long arg3)
 	{
-		Payment item = _paymentItems.get(arg2);
+		Payment item = (Payment) view.getTag();
 		Intent intent = new Intent(this, PaymentActivity.class);
 		intent.putExtra(PaymentActivity.PAYMENT_ID_NAME, item.getId());
 		intent.putExtra(PaymentActivity.PAYMENT_NUMBER_NAME, item.getNumber());
-		intent.putExtra(PaymentActivity.PAYMENT_CREATE_DATE_NAME, BaseParser.dateParser.format(item.getCreateDate()));
+		intent.putExtra(PaymentActivity.PAYMENT_CREATE_DATE_NAME,
+				BaseParser.dateParser.format(item.getCreateDate()));
 		intent.putExtra(PaymentActivity.PAYMENT_SUM_NAME, item.getSum());
 		intent.putExtra(PaymentActivity.PAYMENT_STATE_NAME, item.getState());
 		if (item.getPayDate() != null)
-			intent.putExtra(PaymentActivity.PAYMENT_PAY_DATE_NAME, BaseParser.dateParser.format(item.getPayDate()));
-		intent.putExtra(PaymentActivity.PAYMENT_ORDER_COUNT_NAME, item.getOrderCount());
+			intent.putExtra(PaymentActivity.PAYMENT_PAY_DATE_NAME,
+					BaseParser.dateParser.format(item.getPayDate()));
+		intent.putExtra(PaymentActivity.PAYMENT_ORDER_COUNT_NAME,
+				item.getOrderCount());
 		startActivity(intent);
 	}
-	
-	
-	
-	
-	
+
 	class PaymentListAdapter extends BaseAdapter
 	{
 
@@ -99,20 +102,27 @@ public class PaymentListActivity extends BaseActivity implements OnItemClickList
 
 			Payment item = _paymentItems.get(index);
 
-			final View view = PaymentListActivity.this.getLayoutInflater().inflate(
-					R.layout.payment_list_activity_item, container, false);
+			final View view = PaymentListActivity.this.getLayoutInflater()
+					.inflate(R.layout.payment_list_activity_item, container,
+							false);
 
-			TextView lblNumber = (TextView)view.findViewById(R.id.lblNumber);
-			
-			lblNumber.setText("Номер заказа: "+Long.toString(item.getNumber()) + "\nКол-во элементов:" + Integer.toString(item.getOrderCount())+ "\nДата заказа: "+ BaseParser.dateParser.format(item.getCreateDate())+"\nСумма заказа: "+Double.toString(item.getSum())+"\nСтатус заказа: "+Integer.toString(item.getState()));
-			
+			TextView lblNumber = (TextView) view.findViewById(R.id.lblNumber);
+
+			lblNumber.setText("Номер заказа: "
+					+ Long.toString(item.getNumber()) + "\nКол-во элементов:"
+					+ Integer.toString(item.getOrderCount())
+					+ "\nДата заказа: "
+					+ BaseParser.dateParser.format(item.getCreateDate())
+					+ "\nСумма заказа: " + Double.toString(item.getSum())
+					+ "\nСтатус заказа: " + Integer.toString(item.getState()));
+
 			view.setTag(item);
 
 			return view;
 		}
 
 	}
-	
+
 	class LoadTask extends AsyncTask<Void, Void, Void>
 	{
 		Throwable exception;
@@ -131,8 +141,8 @@ public class PaymentListActivity extends BaseActivity implements OnItemClickList
 			try
 			{
 				WebClient client = PaymentListActivity.this.createWebClient();
-				Collection<Payment> payments = client.getPayments(Token.getCurrent(),
-						_CatalogId);
+				Collection<Payment> payments = client.getPayments(
+						Token.getCurrent(), _CatalogId);
 				_paymentItems.clear();
 				_paymentItems.addAll(payments);
 			}

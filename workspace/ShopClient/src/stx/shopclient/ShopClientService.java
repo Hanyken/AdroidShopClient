@@ -93,7 +93,7 @@ public class ShopClientService extends Service
 
 				try
 				{
-					Thread.sleep(30000);
+					Thread.sleep(10000);
 				}
 				catch (InterruptedException e)
 				{
@@ -106,6 +106,7 @@ public class ShopClientService extends Service
 	void checkMessages(WebClient client)
 	{
 		long count = client.getNewMessagesCount(Token.getCurrent());
+		long showCount = client.getShowMessagesCount(Token.getCurrent());
 
 		Intent countIntent = new Intent(
 				ShopClientApplication.BROADCAST_ACTION_MESSAGE_COUNT);
@@ -115,7 +116,7 @@ public class ShopClientService extends Service
 						count);
 		sendBroadcast(countIntent);
 
-		if (count != _lastMessageCount && count > 0)
+		if (showCount != _lastMessageCount && showCount > 0)
 		{
 			NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(
 					this);
@@ -123,9 +124,9 @@ public class ShopClientService extends Service
 
 			PendingIntent pendingIntent = null;
 
-			if (count == 1)
+			if (showCount == 1)
 			{
-				Collection<Message> messages = client.getNewMessages(Token
+				Collection<Message> messages = client.getShowMessages(Token
 						.getCurrent());
 				if (messages != null && messages.size() > 0)
 				{
@@ -152,7 +153,7 @@ public class ShopClientService extends Service
 			{
 				notifBuilder.setContentTitle(String.format("Новые сообщения",
 						count));
-				notifBuilder.setContentText(String.format("%d шт.", count));
+				notifBuilder.setContentText(String.format("%d шт.", showCount));
 				Intent mainIntent = new Intent(this, MainActivity.class);
 
 				Intent intent = new Intent(this, MessagesListActivity.class);
@@ -176,7 +177,7 @@ public class ShopClientService extends Service
 				Log.d("StxService", "pendingIntent is null");
 		}
 
-		_lastMessageCount = count;
+		_lastMessageCount = showCount;
 	}
 
 }
