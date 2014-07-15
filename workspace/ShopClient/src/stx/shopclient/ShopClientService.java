@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 public class ShopClientService extends Service
 {
@@ -25,7 +26,7 @@ public class ShopClientService extends Service
 	Thread _pullingThread;
 	boolean _threadRunning = true;
 	long _lastMessageCount = 0;
-
+	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId)
 	{
@@ -82,8 +83,10 @@ public class ShopClientService extends Service
 
 	void checkMessages(WebClient client)
 	{
+		Log.w("Service", "Запрос на сервер");
 		long count = client.getNewMessagesCount(Token.getCurrent());
-
+		//Toast.makeText(this, "Кол-во "+ Long.toString(count), Toast.LENGTH_SHORT).show();
+		
 		Intent countIntent = new Intent(
 				ShopClientApplication.BROADCAST_ACTION_MESSAGE_COUNT);
 		countIntent.putExtra(
@@ -93,6 +96,7 @@ public class ShopClientService extends Service
 
 		if (count > _lastMessageCount)
 		{
+			Log.w("Service", "Кол-во "+Long.toString(count));
 			NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(
 					this);
 			notifBuilder.setSmallIcon(R.drawable.ic_launcher);
@@ -139,13 +143,16 @@ public class ShopClientService extends Service
 						PendingIntent.FLAG_UPDATE_CURRENT);
 			}
 
+			Log.w("Service", "До выврда сообщения");
 			if (pendingIntent != null)
 			{
+				Log.w("Service", "Сообщение пошло");
 				notifBuilder.setContentIntent(pendingIntent);
 
 				NotificationManager notifManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
 				notifManager.notify(MESSAGE_NOTIF_ID, notifBuilder.build());
+				Log.w("Service", "Сообщение послали");
 			}
 		}
 

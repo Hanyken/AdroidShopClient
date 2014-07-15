@@ -267,6 +267,23 @@ public class WebClient
 		else
 			return tokens.iterator().next();
 	}
+	
+	// обновляет позицию клиента
+	public boolean updateGeoPosition(Token token, String latitude, String longitude, String accuracy)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("latitude", latitude);
+		args.addParam("longitude", longitude);
+		args.addParam("accuracy", accuracy);
+
+		String response = request("discount/get", args, true);
+		Collection<ResultEntity> items = new ResultParser().parseString(response);
+		if (items.size() > 0)
+			return items.iterator().next().getCode() == ServiceResponseCode.OK;
+		else
+			return false;
+	}
 
 	public Catalog getCatalog(Token token, long catalogId)
 	{
