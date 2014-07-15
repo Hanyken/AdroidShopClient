@@ -79,7 +79,7 @@ public class PullToRefreshListView extends
 	void addEmptyView(Context context)
 	{
 		TextView emptyView = new TextView(context);				
-		emptyView.setHint("Нет данных");
+		emptyView.setHint("Пусто");
 		emptyView.setPadding(40, 40, 40, 40);
 		setEmptyView(emptyView);
 	}
