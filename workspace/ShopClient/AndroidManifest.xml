@@ -20,7 +20,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="ShopClient"
         android:theme="@style/AppTheme" >
-        <service android:name="stx.shopclient.ShopClientService" >
+        <service android:name="stx.shopclient.ShopClientService">
         </service>
 
         <activity
