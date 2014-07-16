@@ -19,6 +19,7 @@ import android.util.Log;
 public class ShopClientApplication extends Application
 {
 	public static final String BROADCAST_ACTION_MESSAGE_COUNT = "stx.shopclient.messagecount";
+	public static final String BROADCAST_ACTION_NEW_MESSAGES = "stx.shopclient.newmessages";
 
 	Thread _pullingThread;
 	boolean _threadRunning = true;
@@ -46,7 +47,7 @@ public class ShopClientApplication extends Application
 
 		IntentFilter messageCountFilter = new IntentFilter(
 				BROADCAST_ACTION_MESSAGE_COUNT);
-		registerReceiver(_msgCountReceiver, messageCountFilter);
+		registerReceiver(_msgCountReceiver, messageCountFilter);	
 	}
 
 	@Override

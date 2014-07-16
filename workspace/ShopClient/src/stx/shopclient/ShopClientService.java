@@ -118,13 +118,17 @@ public class ShopClientService extends Service
 						count);
 		sendBroadcast(countIntent);
 
-		if (showCount != _lastMessageCount && showCount > 0)
+		if (showCount > _lastMessageCount /*showCount != _lastMessageCount && showCount > 0*/)
 		{
 			NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(
 					this);
 			notifBuilder.setSmallIcon(R.drawable.ic_launcher);
 
 			PendingIntent pendingIntent = null;
+			
+			Intent newMessagesIntent = new Intent(
+					ShopClientApplication.BROADCAST_ACTION_NEW_MESSAGES);
+			sendBroadcast(newMessagesIntent);
 
 			if (showCount == 1)
 			{

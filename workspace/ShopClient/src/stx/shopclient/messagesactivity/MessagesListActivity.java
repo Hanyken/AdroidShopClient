@@ -10,8 +10,10 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.view.View;
@@ -24,6 +26,7 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
+import stx.shopclient.ShopClientApplication;
 import stx.shopclient.ShopClientService;
 import stx.shopclient.entity.Message;
 import stx.shopclient.entity.Token;
@@ -39,16 +42,34 @@ public class MessagesListActivity extends BaseActivity implements
 
 	List<Message> _messages = new ArrayList<Message>();
 	MessageListAdapter _adapter = new MessageListAdapter();
-	
+	NewMessagesBroadcastReceiver _newMessagesReceiver = new NewMessagesBroadcastReceiver();
+
 	public static Message SelectedMessage;
 
 	@Override
+	protected void onResume()
+	{
+		super.onResume();
+
+		IntentFilter filter = new IntentFilter(
+				ShopClientApplication.BROADCAST_ACTION_NEW_MESSAGES);
+		registerReceiver(_newMessagesReceiver, filter);
+	}
+
+	@Override
+	protected void onPause()
+	{
+		super.onPause();
+
+		unregisterReceiver(_newMessagesReceiver);
+	}
+
+	@Override
 	protected View createMainView(ViewGroup parent)
-	{		
-		NotificationManager notifManager =
-			    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+	{
+		NotificationManager notifManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		notifManager.cancel(ShopClientService.MESSAGE_NOTIF_ID);
-		
+
 		getActionBar().setTitle("Сообщения");
 
 		View view = getLayoutInflater().inflate(R.layout.message_list_activity,
@@ -71,7 +92,7 @@ public class MessagesListActivity extends BaseActivity implements
 					}
 				});
 		_listView.setAdapter(_adapter);
-		
+
 		RefreshTask task = new RefreshTask();
 		task.isFirstLoad = true;
 		task.execute();
@@ -93,6 +114,7 @@ public class MessagesListActivity extends BaseActivity implements
 		ProgressDialog dialog;
 		Throwable exception;
 		public boolean isFirstLoad;
+		public boolean isRefreshCurrent;
 		Collection<Message> messages;
 
 		@Override
@@ -109,8 +131,14 @@ public class MessagesListActivity extends BaseActivity implements
 			try
 			{
 				WebClient client = createWebClient();
-				messages = client.getAllMessages(Token.getCurrent(),
-						_messages.size() + 1, 30);
+
+				if (isRefreshCurrent)
+					messages = client.getAllMessages(Token.getCurrent(), 1,
+							_messages.size() < 30 ? _messages.size() + 1
+									: _messages.size());
+				else
+					messages = client.getAllMessages(Token.getCurrent(),
+							_messages.size() + 1, 30);
 			}
 			catch (Throwable ex)
 			{
@@ -133,6 +161,9 @@ public class MessagesListActivity extends BaseActivity implements
 						.show();
 			else if (messages != null && messages.size() > 0)
 			{
+				if (isRefreshCurrent)
+					_messages.clear();
+
 				_messages.addAll(messages);
 				_adapter.notifyDataSetChanged();
 			}
@@ -192,5 +223,16 @@ public class MessagesListActivity extends BaseActivity implements
 		Intent intent = new Intent(this, MessageActivity.class);
 		intent.putExtra(MessageActivity.MESSAGE_ID_EXTRA_KEY, message.getId());
 		startActivity(intent);
+	}
+
+	class NewMessagesBroadcastReceiver extends BroadcastReceiver
+	{
+		@Override
+		public void onReceive(Context arg0, Intent arg1)
+		{
+			RefreshTask task = new RefreshTask();
+			task.isRefreshCurrent = true;
+			task.execute();
+		}
 	}
 }
