@@ -16,8 +16,12 @@ import android.app.Service;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -30,6 +34,7 @@ public class ShopClientService extends Service
 	Thread _pullingThread;
 	boolean _threadRunning = true;
 	long _lastMessageCount = 0;
+	ShopClientLocationListener _locationListener = new ShopClientLocationListener();
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId)
@@ -45,6 +50,13 @@ public class ShopClientService extends Service
 			}
 		});
 		_pullingThread.start();
+
+		LocationManager locMan = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		locMan.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000,
+				1000, _locationListener);
+		// locMan.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000,
+		// 1000,
+		// _locationListener);
 
 		Log.d("StxService", "Service started");
 
@@ -74,16 +86,17 @@ public class ShopClientService extends Service
 			try
 			{
 				WebClient client = new WebClient(this);
-				
+
 				if (Token.getCurrent() == null)
 				{
 					UserAccount.load(this);
-					client.login(UserAccount.getLogin(), UserAccount.getPassword(),
-							UserAccount.getWidth(), UserAccount.getHeight());
+					client.login(UserAccount.getLogin(),
+							UserAccount.getPassword(), UserAccount.getWidth(),
+							UserAccount.getHeight());
 				}
 
 				if (Token.getCurrent() != null)
-				{					
+				{
 					checkMessages(client);
 				}
 
@@ -118,14 +131,17 @@ public class ShopClientService extends Service
 						count);
 		sendBroadcast(countIntent);
 
-		if (showCount > _lastMessageCount /*showCount != _lastMessageCount && showCount > 0*/)
+		if (showCount > _lastMessageCount /*
+										 * showCount != _lastMessageCount &&
+										 * showCount > 0
+										 */)
 		{
 			NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(
 					this);
 			notifBuilder.setSmallIcon(R.drawable.ic_launcher);
 
 			PendingIntent pendingIntent = null;
-			
+
 			Intent newMessagesIntent = new Intent(
 					ShopClientApplication.BROADCAST_ACTION_NEW_MESSAGES);
 			sendBroadcast(newMessagesIntent);
@@ -173,10 +189,12 @@ public class ShopClientService extends Service
 			if (pendingIntent != null)
 			{
 				notifBuilder.setContentIntent(pendingIntent);
-				
-				Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+				Uri alarmSound = RingtoneManager
+						.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 				notifBuilder.setSound(alarmSound);
-				long[] pattern = {500,500,500,500,500};
+				long[] pattern =
+				{ 500, 500, 500, 500, 500 };
 				notifBuilder.setVibrate(pattern);
 
 				NotificationManager notifManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -191,4 +209,55 @@ public class ShopClientService extends Service
 		_lastMessageCount = showCount;
 	}
 
+	void updateLocation(Location location, WebClient client)
+	{
+		client.updateGeoPosition(Token.getCurrent(),
+				Double.toString(location.getLatitude()),
+				Double.toString(location.getLongitude()),
+				Float.toString(location.getAccuracy()));
+	}
+
+	class ShopClientLocationListener implements LocationListener
+	{
+		@Override
+		public void onLocationChanged(Location location)
+		{
+			final Location loc = location;
+
+			new Thread(new Runnable()
+			{
+				@Override
+				public void run()
+				{					
+					try
+					{
+						WebClient client = new WebClient(ShopClientService.this);
+						updateLocation(loc, client);
+					}
+					catch (Throwable ex)
+					{
+
+					}
+				}
+			}).start();
+		}
+
+		@Override
+		public void onProviderDisabled(String arg0)
+		{
+
+		}
+
+		@Override
+		public void onProviderEnabled(String arg0)
+		{
+
+		}
+
+		@Override
+		public void onStatusChanged(String arg0, int arg1, Bundle arg2)
+		{
+
+		}
+	}
 }
