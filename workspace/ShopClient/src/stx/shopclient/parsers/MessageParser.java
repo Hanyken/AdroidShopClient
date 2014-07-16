@@ -27,7 +27,7 @@ public class MessageParser extends BaseParser<Message>
 		item.setText(super.getValue(e, TEXT_NAME));
 		item.setType(super.getValueInt(e, MESSAGE_TYPE_NAME));
 		GregorianCalendar calendar = new GregorianCalendar();
-		calendar.setTime(super.getValueDate(e, CREATE_DATE_NAME));
+		calendar.setTime(super.getValueDateTime(e, CREATE_DATE_NAME));
 		item.setCreateDate(calendar);
 		item.setRead(super.getExistsValue(e, IS_RECIVE_NAME));
 		item.setRowNum(super.getValueInt(e, ROW_NUM_NAME));

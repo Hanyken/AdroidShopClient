@@ -28,6 +28,7 @@ public abstract class BaseParser<T>
 
 	public static final DateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd");
 	public static final DateFormat timeParser = new SimpleDateFormat("HH:mm:ss");
+	public static final DateFormat dateTimeParser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
 	public BaseParser()
 	{}
@@ -188,10 +189,7 @@ public abstract class BaseParser<T>
 			String value = getValue(e, str);
 			date = dateParser.parse(value);
 		}
-		catch (Exception ex)
-		{
-			Log.w("Date", ex.getMessage());
-		}
+		catch (Exception ex){}
 		return date;
 	}
 
@@ -203,10 +201,19 @@ public abstract class BaseParser<T>
 			String value = getValue(e, str);
 			date = timeParser.parse(value);
 		}
-		catch (Exception ex)
+		catch (Exception ex){}
+		return date;
+	}
+	
+	protected Date getValueDateTime(Element e, String str)
+	{
+		Date date = null;
+		try
 		{
-			Log.w("Time", ex.getMessage());
+			String value = getValue(e, str);
+			date = dateTimeParser.parse(value);
 		}
+		catch (Exception ex){}
 		return date;
 	}
 	
