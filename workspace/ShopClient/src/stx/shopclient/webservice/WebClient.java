@@ -277,7 +277,7 @@ public class WebClient
 		args.addParam("longitude", longitude);
 		args.addParam("accuracy", accuracy);
 
-		String response = request("discount/get", args, true);
+		String response = request("account/updategeo", args, true);
 		Collection<ResultEntity> items = new ResultParser().parseString(response);
 		if (items.size() > 0)
 			return items.iterator().next().getCode() == ServiceResponseCode.OK;
