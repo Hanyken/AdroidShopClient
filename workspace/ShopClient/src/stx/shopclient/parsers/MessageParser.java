@@ -16,6 +16,7 @@ public class MessageParser extends BaseParser<Message>
 	private static final String TEXT_NAME = "Text";
 	private static final String CREATE_DATE_NAME = "CreateDate";
 	private static final String IS_RECIVE_NAME = "IsRecive";
+	private static final String IMAGE_NAME = "Image";
 	
 	@Override
 	public Message getElement(Element e)
@@ -31,6 +32,7 @@ public class MessageParser extends BaseParser<Message>
 		item.setCreateDate(calendar);
 		item.setRead(super.getExistsValue(e, IS_RECIVE_NAME));
 		item.setRowNum(super.getValueInt(e, ROW_NUM_NAME));
+		item.setImage(super.getValue(e, IMAGE_NAME));
 		
 		return item;
 	}

@@ -9,6 +9,7 @@ public class Message
 	private int _type;
 	private String _title;
 	private String _text;
+	private String _image;
 	private GregorianCalendar _createDate;
 	private boolean _isRead;
 	
@@ -67,5 +68,13 @@ public class Message
 	public void setRead(boolean isRead)
 	{
 		_isRead = isRead;
+	}
+	public String getImage()
+	{
+		return _image;
+	}
+	public void setImage(String image)
+	{
+		_image = image;
 	}
 }

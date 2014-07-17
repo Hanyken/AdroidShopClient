@@ -878,7 +878,7 @@ public class WebClient
 		else
 			return items.iterator().next().getCount();
 	}
-
+/*
 	public long getAllMessagesCount(Token token)
 	{
 		HttpArgs args = new HttpArgs();
@@ -892,7 +892,7 @@ public class WebClient
 			throw new RuntimeException("No count returned");
 		else
 			return items.iterator().next().getCount();
-	}
+	}*/
 	// все сообщения которые необходимо показывать в ActionBar и которые ранее не были показаны
 	public Collection<Message> getShowMessages(Token token)
 	{
