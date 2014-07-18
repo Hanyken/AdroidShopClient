@@ -1,13 +1,20 @@
 package stx.shopclient.messagesactivity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import org.apache.commons.lang3.StringUtils;
 
+import stx.shopclient.BaseActivity;
+import stx.shopclient.R;
+import stx.shopclient.ShopClientApplication;
+import stx.shopclient.ShopClientService;
+import stx.shopclient.entity.Message;
+import stx.shopclient.entity.Token;
+import stx.shopclient.mainmenu.MainMenuItem;
+import stx.shopclient.webservice.WebClient;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -19,21 +26,16 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
-import stx.shopclient.BaseActivity;
-import stx.shopclient.R;
-import stx.shopclient.ShopClientApplication;
-import stx.shopclient.ShopClientService;
-import stx.shopclient.entity.Message;
-import stx.shopclient.entity.Token;
-import stx.shopclient.mainmenu.MainMenuItem;
-import stx.shopclient.repository.Repository;
-import stx.shopclient.ui.common.LoadMoreListAdapter;
-import stx.shopclient.webservice.WebClient;
+
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 public class MessagesListActivity extends BaseActivity implements
 		OnItemClickListener
@@ -43,6 +45,8 @@ public class MessagesListActivity extends BaseActivity implements
 	List<Message> _messages = new ArrayList<Message>();
 	MessageListAdapter _adapter = new MessageListAdapter();
 	NewMessagesBroadcastReceiver _newMessagesReceiver = new NewMessagesBroadcastReceiver();
+	static SimpleDateFormat dateFormat = new SimpleDateFormat(
+			"dd.MM.yyyy HH:mm");
 
 	public static Message SelectedMessage;
 
@@ -193,21 +197,29 @@ public class MessagesListActivity extends BaseActivity implements
 		}
 
 		@Override
-		public View getView(int index, View arg1, ViewGroup arg2)
+		public View getView(int index, View arg1, ViewGroup parent)
 		{
+			View view = getLayoutInflater().inflate(
+					R.layout.message_list_activity_item, parent, false);
 			Message message = _messages.get(index);
 
-			TextView text = new TextView(MessagesListActivity.this);
+			TextView title = (TextView) view.findViewById(R.id.titleTextView);
+			TextView time = (TextView) view.findViewById(R.id.timeTextView);
+			ImageView image = (ImageView) view.findViewById(R.id.imageView);
 
-			text.setText(message.getTitle());
-
-			text.setTextSize(18);
-			text.setPadding(20, 20, 20, 20);
+			title.setText(message.getTitle());
 
 			if (!message.isRead())
-				text.setTypeface(text.getTypeface(), Typeface.BOLD);
+				title.setTypeface(title.getTypeface(), Typeface.BOLD);
 
-			return text;
+			time.setText(dateFormat.format(message.getCreateDate().getTime()));
+
+			if (StringUtils.isNoneBlank(message.getImage()))
+				setImage(image, message.getImage());
+			else
+				image.setVisibility(View.GONE);
+
+			return view;
 		}
 	}
 

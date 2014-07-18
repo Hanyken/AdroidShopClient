@@ -96,10 +96,10 @@ public class PaymentActivity extends BaseActivity
 		lstOrders.setOnItemClickListener(new OnItemClickListener()
 		{
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+			public void onItemClick(AdapterView<?> arg0, View view, int arg2,
 					long arg3)
 			{
-				Order item = _orderItems.get(arg2);
+				Order item = (Order) view.getTag();
 				Intent intent = new Intent(PaymentActivity.this,
 						ItemActivity.class);
 				intent.putExtra("ItemID", item.getItemId());
