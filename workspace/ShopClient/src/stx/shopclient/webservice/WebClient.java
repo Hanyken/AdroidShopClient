@@ -24,6 +24,7 @@ import stx.shopclient.entity.City;
 import stx.shopclient.entity.CountResultEntity;
 import stx.shopclient.entity.Discount;
 import stx.shopclient.entity.Message;
+import stx.shopclient.entity.MessageCountResult;
 import stx.shopclient.entity.Order;
 import stx.shopclient.entity.OrderProperty;
 import stx.shopclient.entity.Overview;
@@ -42,6 +43,7 @@ import stx.shopclient.parsers.CityParser;
 import stx.shopclient.parsers.CountResultParser;
 import stx.shopclient.parsers.DiscountParser;
 import stx.shopclient.parsers.ItemParser;
+import stx.shopclient.parsers.MessageCountParser;
 import stx.shopclient.parsers.MessageParser;
 import stx.shopclient.parsers.NodeParser;
 import stx.shopclient.parsers.OrderParser;
@@ -864,19 +866,19 @@ public class WebClient
 		return new MessageParser().parseString(response);
 	}
 
-	public long getNewMessagesCount(Token token)
+	public MessageCountResult getNewMessagesCount(Token token)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
 
 		String response = request("message/count", args, true);
-		Collection<CountResultEntity> items = new CountResultParser()
+		Collection<MessageCountResult> items = new MessageCountParser()
 				.parseString(response);
 
 		if (items.size() == 0)
 			throw new RuntimeException("No count returned");
 		else
-			return items.iterator().next().getCount();
+			return items.iterator().next();
 	}
 /*
 	public long getAllMessagesCount(Token token)
@@ -917,19 +919,19 @@ public class WebClient
 			return items.iterator().next();
 	}
 	// возвращает кол-во сообщений доступных для показа в ActionBar 
-	public long getShowMessagesCount(Token token)
+	public MessageCountResult getShowMessagesCount(Token token)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("token", token);
 
 		String response = request("message/shownewcount", args, true);
-		Collection<CountResultEntity> items = new CountResultParser()
+		Collection<MessageCountResult> items = new MessageCountParser()
 				.parseString(response);
 
 		if (items.size() == 0)
 			throw new RuntimeException("No count returned");
 		else
-			return items.iterator().next().getCount();
+			return items.iterator().next();
 	}
 
 	public Collection<Discount> getDiscounts(Token token)

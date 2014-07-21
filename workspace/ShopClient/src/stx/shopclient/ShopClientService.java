@@ -120,8 +120,8 @@ public class ShopClientService extends Service
 
 	void checkMessages(WebClient client)
 	{
-		long count = client.getNewMessagesCount(Token.getCurrent());
-		long showCount = client.getShowMessagesCount(Token.getCurrent());
+		long count = client.getNewMessagesCount(Token.getCurrent()).getCount();
+		long showCount = client.getShowMessagesCount(Token.getCurrent()).getCount();
 
 		Intent countIntent = new Intent(
 				ShopClientApplication.BROADCAST_ACTION_MESSAGE_COUNT);
