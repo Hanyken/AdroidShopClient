@@ -181,7 +181,7 @@ public class RegisterActivity extends Activity
 						middleName, lastName, phoneNumber, simNumber, birthday,
 						"userAgent", displayMetrics.widthPixels,
 						displayMetrics.heightPixels, null, null, null, null,
-						null);
+						null, null);
 				return token;
 			}
 			catch (Throwable ex)

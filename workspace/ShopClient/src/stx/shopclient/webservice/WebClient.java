@@ -208,11 +208,12 @@ public class WebClient
 		}
 	}
 	
+	// Gender - пол M или W
 	public Token register(String login, String password, String firstName,
 			String middleName, String lastName, String phone, String simId,
 			Date birthday, String userAgent, int screenWidth, int screenHeight,
 			String operationSystem, String device, String latitude,
-			String longitude, String accuracy)
+			String longitude, String accuracy, String gender)
 	{
 		HttpArgs args = new HttpArgs();
 		args.addParam("login", login);
@@ -243,6 +244,8 @@ public class WebClient
 			args.addParam("Longitude", longitude);
 		if (!StringUtils.isBlank(accuracy))
 			args.addParam("Accuracy", accuracy);
+		if (StringUtils.isBlank(gender))
+			args.addParam("Gender", gender);
 
 		String response = request("account/signin", args, false);
 		TokenParser parser = new TokenParser();
