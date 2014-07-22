@@ -3,6 +3,7 @@ package stx.shopclient;
 import java.util.Collection;
 
 import stx.shopclient.entity.Message;
+import stx.shopclient.entity.MessageCountResult;
 import stx.shopclient.entity.Token;
 import stx.shopclient.mainactivity.MainActivity;
 import stx.shopclient.messagesactivity.MessageActivity;
@@ -16,6 +17,7 @@ import android.app.Service;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -30,11 +32,10 @@ import android.widget.Toast;
 public class ShopClientService extends Service
 {
 	public static final int MESSAGE_NOTIF_ID = 1;
+	static final String MESSAGE_COUNT_PREF_NAME = "ServerSettings";
 
 	Thread _pullingThread;
-	boolean _threadRunning = true;
-	long _lastMessageCount = 0;
-	ShopClientLocationListener _locationListener = new ShopClientLocationListener();
+	boolean _threadRunning = true;	
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId)
@@ -50,14 +51,7 @@ public class ShopClientService extends Service
 			}
 		});
 		_pullingThread.start();
-
-		LocationManager locMan = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		locMan.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000,
-				1000, _locationListener);
-		// locMan.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000,
-		// 1000,
-		// _locationListener);
-
+			
 		Log.d("StxService", "Service started");
 
 		return START_STICKY;
@@ -100,7 +94,7 @@ public class ShopClientService extends Service
 					checkMessages(client);
 				}
 
-				Thread.sleep(10000);
+				Thread.sleep(60000);
 			}
 			catch (Throwable ex)
 			{
@@ -108,7 +102,7 @@ public class ShopClientService extends Service
 
 				try
 				{
-					Thread.sleep(10000);
+					Thread.sleep(60000);
 				}
 				catch (InterruptedException e)
 				{
@@ -121,7 +115,8 @@ public class ShopClientService extends Service
 	void checkMessages(WebClient client)
 	{
 		long count = client.getNewMessagesCount(Token.getCurrent()).getCount();
-		long showCount = client.getShowMessagesCount(Token.getCurrent()).getCount();
+		MessageCountResult showCountResult = client.getShowMessagesCount(Token
+				.getCurrent());
 
 		Intent countIntent = new Intent(
 				ShopClientApplication.BROADCAST_ACTION_MESSAGE_COUNT);
@@ -131,10 +126,10 @@ public class ShopClientService extends Service
 						count);
 		sendBroadcast(countIntent);
 
-		if (showCount > _lastMessageCount /*
-										 * showCount != _lastMessageCount &&
-										 * showCount > 0
-										 */)
+		LastCountInfo lastCount = loadLastMessageCount();
+
+		if (showCountResult.getCount() > 0
+				&& showCountResult.getLastId() != lastCount.lastId)
 		{
 			NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(
 					this);
@@ -146,7 +141,7 @@ public class ShopClientService extends Service
 					ShopClientApplication.BROADCAST_ACTION_NEW_MESSAGES);
 			sendBroadcast(newMessagesIntent);
 
-			if (showCount == 1)
+			if (showCountResult.getCount() == 1)
 			{
 				Collection<Message> messages = client.getShowMessages(Token
 						.getCurrent());
@@ -175,7 +170,8 @@ public class ShopClientService extends Service
 			{
 				notifBuilder.setContentTitle(String.format("Новые сообщения",
 						count));
-				notifBuilder.setContentText(String.format("%d шт.", showCount));
+				notifBuilder.setContentText(String.format("%d шт.",
+						showCountResult.getCount()));
 				Intent mainIntent = new Intent(this, MainActivity.class);
 
 				Intent intent = new Intent(this, MessagesListActivity.class);
@@ -206,58 +202,33 @@ public class ShopClientService extends Service
 				Log.d("StxService", "pendingIntent is null");
 		}
 
-		_lastMessageCount = showCount;
+		saveLastMessageCount(showCountResult.getCount(),
+				showCountResult.getLastId());
 	}
 
-	void updateLocation(Location location, WebClient client)
+	LastCountInfo loadLastMessageCount()
 	{
-		client.updateGeoPosition(Token.getCurrent(),
-				Double.toString(location.getLatitude()),
-				Double.toString(location.getLongitude()),
-				Float.toString(location.getAccuracy()));
+		SharedPreferences pref = getSharedPreferences(MESSAGE_COUNT_PREF_NAME,
+				Activity.MODE_PRIVATE);
+		LastCountInfo info = new LastCountInfo();
+		info.count = pref.getLong("count", 0);
+		info.lastId = pref.getLong("id", 0);
+		return info;
 	}
 
-	class ShopClientLocationListener implements LocationListener
+	void saveLastMessageCount(long count, long lastId)
 	{
-		@Override
-		public void onLocationChanged(Location location)
-		{
-			final Location loc = location;
+		SharedPreferences pref = getSharedPreferences(MESSAGE_COUNT_PREF_NAME,
+				Activity.MODE_PRIVATE);
+		SharedPreferences.Editor editor = pref.edit();
+		editor.putLong("count", count);
+		editor.putLong("id", lastId);
+		editor.commit();
+	}
 
-			new Thread(new Runnable()
-			{
-				@Override
-				public void run()
-				{					
-					try
-					{
-						WebClient client = new WebClient(ShopClientService.this);
-						updateLocation(loc, client);
-					}
-					catch (Throwable ex)
-					{
-
-					}
-				}
-			}).start();
-		}
-
-		@Override
-		public void onProviderDisabled(String arg0)
-		{
-
-		}
-
-		@Override
-		public void onProviderEnabled(String arg0)
-		{
-
-		}
-
-		@Override
-		public void onStatusChanged(String arg0, int arg1, Bundle arg2)
-		{
-
-		}
+	class LastCountInfo
+	{
+		public long count;
+		public long lastId;
 	}
 }
