@@ -1,18 +1,10 @@
 package stx.shopclient.utils;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.HashMap;
-import java.util.Map;
-
 import stx.shopclient.entity.Token;
 import stx.shopclient.webservice.WebClient;
 import android.app.ActionBar;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.widget.ImageView;
@@ -24,7 +16,7 @@ public class ImageDownloadTask extends AsyncTask<Void, Void, Bitmap>
 	Context _context;
 	ActionBar _actionBar;
 
-	static Map<String, Bitmap> Cache = new HashMap<String, Bitmap>();
+	public static ImageCache Cache = null;
 
 	public ImageDownloadTask(ImageView view, Context context, String key)
 	{
@@ -44,9 +36,10 @@ public class ImageDownloadTask extends AsyncTask<Void, Void, Bitmap>
 	{
 		synchronized (Cache)
 		{
-			if (Cache.containsKey(key))
+			Bitmap bmp = Cache.getImage(key);
+			if (bmp != null)
 			{
-				view.setImageBitmap(Cache.get(key));
+				view.setImageBitmap(bmp);
 				return;
 			}
 		}
@@ -58,10 +51,11 @@ public class ImageDownloadTask extends AsyncTask<Void, Void, Bitmap>
 	{
 		synchronized (Cache)
 		{
-			if (Cache.containsKey(key))
+			Bitmap bmp = Cache.getImage(key);
+			if (bmp != null)
 			{
 				actionBar.setIcon(new BitmapDrawable(context.getResources(),
-						Cache.get(key)));
+						bmp));
 				return;
 			}
 		}
@@ -74,8 +68,9 @@ public class ImageDownloadTask extends AsyncTask<Void, Void, Bitmap>
 	{
 		synchronized (Cache)
 		{
-			if (Cache.containsKey(_key))
-				return Cache.get(_key);
+			Bitmap bmp = Cache.getImage(_key);
+			if (bmp != null)
+				return bmp;
 		}
 
 		try
@@ -87,7 +82,7 @@ public class ImageDownloadTask extends AsyncTask<Void, Void, Bitmap>
 			{
 				synchronized (Cache)
 				{
-					Cache.put(_key, result);
+					Cache.putImage(_key, result);
 				}
 			}
 

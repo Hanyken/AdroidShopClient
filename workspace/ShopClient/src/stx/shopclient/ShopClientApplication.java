@@ -8,6 +8,8 @@ import stx.shopclient.entity.Token;
 import stx.shopclient.entity.UpdateResultEntity;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.settings.ServerSettings;
+import stx.shopclient.utils.ImageCache;
+import stx.shopclient.utils.ImageDownloadTask;
 import stx.shopclient.webservice.WebClient;
 import android.app.Application;
 import android.content.BroadcastReceiver;
@@ -32,13 +34,16 @@ public class ShopClientApplication extends Application
 	boolean _settingsLoaded = false;
 
 	MessageCountBroadcastReceiver _msgCountReceiver = new MessageCountBroadcastReceiver();
-	
+
 	ShopClientLocationListener _locationListener = new ShopClientLocationListener();
 
 	@Override
 	public void onCreate()
 	{
 		super.onCreate();
+
+		ImageDownloadTask.Cache = new ImageCache(this);
+		ImageDownloadTask.Cache.clear();
 
 		Repository.loadSelectedCatalogId(this);
 
@@ -54,8 +59,8 @@ public class ShopClientApplication extends Application
 
 		IntentFilter messageCountFilter = new IntentFilter(
 				BROADCAST_ACTION_MESSAGE_COUNT);
-		registerReceiver(_msgCountReceiver, messageCountFilter);	
-		
+		registerReceiver(_msgCountReceiver, messageCountFilter);
+
 		LocationManager locMan = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		locMan.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000,
 				1000, _locationListener);
@@ -138,7 +143,7 @@ public class ShopClientApplication extends Application
 					.setUnreadMessageCount(count);
 		}
 	}
-	
+
 	class ShopClientLocationListener implements LocationListener
 	{
 		@Override
@@ -153,17 +158,18 @@ public class ShopClientApplication extends Application
 				{
 					try
 					{
-						WebClient client = new WebClient(ShopClientApplication.this);
+						WebClient client = new WebClient(
+								ShopClientApplication.this);
 						updateLocation(loc, client);
 					}
 					catch (Throwable ex)
 					{
-						Log.e("StxApplication", ex.getLocalizedMessage());
+						//Log.e("StxApplication", ex.getLocalizedMessage());
 					}
 				}
 			}).start();
 		}
-		
+
 		void updateLocation(Location location, WebClient client)
 		{
 			client.updateGeoPosition(Token.getCurrent(),
