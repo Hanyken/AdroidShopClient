@@ -244,7 +244,7 @@ public class WebClient
 			args.addParam("Longitude", longitude);
 		if (!StringUtils.isBlank(accuracy))
 			args.addParam("Accuracy", accuracy);
-		if (StringUtils.isBlank(gender))
+		if (!StringUtils.isBlank(gender))
 			args.addParam("Gender", gender);
 
 		String response = request("account/signin", args, false);

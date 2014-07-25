@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 public class RegisterActivity extends Activity
@@ -39,6 +40,7 @@ public class RegisterActivity extends Activity
 	EditText _firstNameEditText;
 	EditText _middleNameEditText;
 	StxDatePicker _birthdayPicker;
+	RadioGroup _genderRadioGroup;
 
 	ProgressDialog dialog;
 
@@ -62,6 +64,9 @@ public class RegisterActivity extends Activity
 		_lastNameEditText = (EditText) findViewById(R.id.lastNameEditText);
 		_firstNameEditText = (EditText) findViewById(R.id.firstNameEditText);
 		_middleNameEditText = (EditText) findViewById(R.id.middleNameEditText);
+		_genderRadioGroup = (RadioGroup) findViewById(R.id.genderRadioGroup);
+		
+		_genderRadioGroup.check(R.id.genderMaleRadioButton);
 
 		Button registerButton = (Button) findViewById(R.id.registerButton);
 		registerButton.setOnClickListener(new View.OnClickListener()
@@ -124,8 +129,8 @@ public class RegisterActivity extends Activity
 			return;
 		}
 
-		dialog = ProgressDialog.show(RegisterActivity.this, "Загрузка", "Выполняется регистрация",
-				true);
+		dialog = ProgressDialog.show(RegisterActivity.this, "Загрузка",
+				"Выполняется регистрация", true);
 
 		RegisterTask task = new RegisterTask();
 		task.login = _loginEdit.getText().toString();
@@ -135,6 +140,8 @@ public class RegisterActivity extends Activity
 		task.middleName = _middleNameEditText.getText().toString();
 		task.phoneNumber = _phoneNumberEditText.getText().toString();
 		task.birthday = _birthdayPicker.getDate().getTime();
+		task.gender = _genderRadioGroup.getCheckedRadioButtonId() == R.id.genderMaleRadioButton ? "M"
+				: "W";
 		task.execute();
 	}
 
@@ -148,7 +155,8 @@ public class RegisterActivity extends Activity
 						{
 							public void onClick(DialogInterface dialog,
 									int which)
-							{}
+							{
+							}
 						}).show();
 	}
 
@@ -161,6 +169,7 @@ public class RegisterActivity extends Activity
 		public String firstName;
 		public String middleName;
 		public Date birthday;
+		public String gender;
 
 		@Override
 		protected Token doInBackground(Void... params)
@@ -169,7 +178,7 @@ public class RegisterActivity extends Activity
 			{
 				DisplayMetrics displayMetrics = getResources()
 						.getDisplayMetrics();
-				
+
 				TelephonyManager mTelephonyMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 				String simNumber = mTelephonyMgr.getSimSerialNumber();
 				if (StringUtils.isBlank(simNumber))
@@ -181,7 +190,7 @@ public class RegisterActivity extends Activity
 						middleName, lastName, phoneNumber, simNumber, birthday,
 						"userAgent", displayMetrics.widthPixels,
 						displayMetrics.heightPixels, null, null, null, null,
-						null, null);
+						null, gender);
 				return token;
 			}
 			catch (Throwable ex)
@@ -204,20 +213,17 @@ public class RegisterActivity extends Activity
 						Toast.LENGTH_LONG).show();
 				return;
 			}
-			else
-				if (result.getToken() == null || result.getToken().equals(""))
-				{
-					String error = ServiceResponseCode.getMessage(result
-							.getCode());
+			else if (result.getToken() == null || result.getToken().equals(""))
+			{
+				String error = ServiceResponseCode.getMessage(result.getCode());
 
-					Toast.makeText(RegisterActivity.this, error,
-							Toast.LENGTH_LONG).show();
-					return;
-				}
+				Toast.makeText(RegisterActivity.this, error, Toast.LENGTH_LONG)
+						.show();
+				return;
+			}
 
-			DisplayMetrics displayMetrics = getResources()
-					.getDisplayMetrics();
-			
+			DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+
 			Token.setCurrent(result);
 			UserAccount.setLogin(login);
 			UserAccount.setPassword(password);
