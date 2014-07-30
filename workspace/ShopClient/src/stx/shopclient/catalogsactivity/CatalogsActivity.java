@@ -380,6 +380,8 @@ public class CatalogsActivity extends BaseActivity implements
 		@Override
 		protected void onPostExecute(Void result)
 		{
+			super.onPostExecute(result);
+			
 			if (isDestroyed())
 				return;
 			

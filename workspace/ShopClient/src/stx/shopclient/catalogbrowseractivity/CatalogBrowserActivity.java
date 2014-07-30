@@ -11,7 +11,10 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RoundRectShape;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -298,6 +301,7 @@ public class CatalogBrowserActivity extends BaseActivity implements
 			nameTextView.setText(node.getName());
 
 			ImageView imgView = (ImageView) view.findViewById(R.id.imageView);
+			imgView.setBackground(getNodeIconBackground());
 			if (node.getIcon() != null)
 				ImageDownloadTask.startNew(imgView,
 						CatalogBrowserActivity.this, node.getIcon());
@@ -310,6 +314,20 @@ public class CatalogBrowserActivity extends BaseActivity implements
 			String description = String.format("%d товаров от %d рублей",
 					node.getCount(), (int) node.getMinPrice());
 			return description;
+		}
+
+		public Drawable getNodeIconBackground()
+		{
+			float radius = 20.0f;
+			float[] rads = new float[]
+			{ radius, radius, radius, radius, radius, radius, radius, radius };
+			RoundRectShape shape = new RoundRectShape(rads, null, null);
+			ShapeDrawable drawable = new ShapeDrawable(shape);
+			drawable.getPaint().setColor(
+					Repository.get(null).getCatalogManager().getSettings()
+							.getBackground());
+
+			return drawable;
 		}
 
 		@Override
