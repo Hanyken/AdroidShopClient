@@ -7,7 +7,8 @@
 	<RelativeLayout
 	    android:id="@+id/rlButtonPanel"
 	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content" >
+	    android:layout_height="@dimen/itempanel_price_height"
+		android:background="@color/itempanelColor">
 	
 	    <RatingBar
 	        android:id="@+id/rtgRating"
@@ -31,8 +32,8 @@
 	        
 	        <Button
 	            android:id="@+id/btnFavorits"
-	            android:layout_width="35dp"
-	            android:layout_height="35dp"
+	            android:layout_width="30dp"
+	            android:layout_height="30dp"
 	            />
 	        
 	        
@@ -47,8 +48,8 @@
 	        
 	        <Button
 	            android:id="@+id/btnOverview"
-	            android:layout_width="35dp"
-	            android:layout_height="35dp"
+	            android:layout_width="30dp"
+	            android:layout_height="30dp"
 	            android:layout_marginLeft="@dimen/buttonbar_margion_small"/>
 	
 	        
@@ -63,8 +64,8 @@
 	        
 	        <Button
 	            android:id="@+id/btnShare"
-	            android:layout_width="35dp"
-	            android:layout_height="35dp"
+	            android:layout_width="30dp"
+	            android:layout_height="30dp"
 	            android:layout_marginLeft="@dimen/buttonbar_margion_small"
 	            android:layout_marginRight="@dimen/buttonbar_margion_big"/>
 	        
@@ -87,7 +88,7 @@
 	        android:id="@+id/lblPrice"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:textSize="20sp"
+	        android:textSize="24sp"
 	        android:layout_marginLeft="@dimen/buttonbar_margion_big"
 	        android:layout_alignParentLeft="true"
 	        android:layout_centerVertical="true"/>

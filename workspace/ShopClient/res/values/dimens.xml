@@ -14,6 +14,8 @@
     
     <dimen name="analog_title_width">35dp</dimen>
     <dimen name="analog_separate_width">1dp</dimen>
+    <dimen name="analog_bottom_margion">10dp</dimen>
     
+    <dimen name="itempanel_price_height">78dp</dimen>
     
 </resources>
