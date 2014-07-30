@@ -27,7 +27,7 @@ public class Repository
 {
 	static final String PREF_NAME = "Repository";
 	static final String CATALOG_ID_PREF_KEY = "CatalogId";
-	public static long CatalogId = 1;
+	public static long CatalogId = 0;
 	public static boolean _loadSettings = false;
 
 	private static Repository _intent;
@@ -259,6 +259,7 @@ public class Repository
 		{
 			_loadSettings =  true;
 			ServerSettings.save(context);
+			saveSelectedCatalogId(context);
 		}
 		
 		String catalogFile = "catalog_" + Long.toString(CatalogId);
@@ -280,7 +281,10 @@ public class Repository
 		if (settings == null) return false;
 		ServerSettings.setUrl(settings.getFirstServerUri());
 		ServerSettings.setUrlReserve(settings.getLastServerUri());
-		Repository.CatalogId = settings.getDefaultCatalog();
+		if (CatalogId == 0)
+		{
+			Repository.CatalogId = settings.getDefaultCatalog();
+		}
 		
 		return true;
 	}
