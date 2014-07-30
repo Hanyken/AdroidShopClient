@@ -17,9 +17,9 @@ public class CatalogParser extends BaseParser<Catalog>
 	public final String LOGO_NAME = "Logo";
 	public final String LAST_MODIFICATION_NAME = "LastModification";
 	public final String NODE_COUNT_NAME = "NodeCount";
-	private final String NODES_NAME= "Nodes";
-	private final String NODE_NAME= "Node";
-	private final String ORDER_COUNT_NAME= "OrderCount";
+	private final String NODES_NAME = "Nodes";
+	private final String NODE_NAME = "Node";
+	private final String ORDER_COUNT_NAME = "OrderCount";
 	
 	
 	public CatalogParser()

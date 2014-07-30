@@ -25,6 +25,7 @@ public class NodeParser extends BaseParser<CatalogNode>
 	private final String DESCRIPTION_NAME = "Description";
 	private final String SEARCH_PROPERTIES_NAME = "SearchProperties";
 	private final String PROPERTY_NAME = "Property";
+	private final String PARENT_ID_NAME = "ParentId";
 	
 	public NodeParser()
 	{
@@ -38,6 +39,9 @@ public class NodeParser extends BaseParser<CatalogNode>
 		item.setRowNumber(super.getValueInt(e, NUMBER_NAME));
 		item.setId(super.getValueLong(e, ID_NAME));
 		item.setCatalogId(super.getValueLong(e, CATALOG_ID_NAME));
+		Long parentId = super.getValueLong(e, PARENT_ID_NAME);
+		if (parentId != 0)
+			item.setParentId(parentId);
 		item.setName(super.getValue(e, NAME_NAME));
 		item.setMajor(super.getValueBool(e, IS_MAJOR_NAME));
 		item.setIcon(super.getValue(e, ICON_NAME));
