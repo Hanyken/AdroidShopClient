@@ -155,6 +155,9 @@ public class OrderActivity extends BaseActivity implements OnClickListener
 		@Override
 		protected void onPostExecute(Void result)
 		{
+			if (isDestroyed())
+				return;
+			
 			dialog.dismiss();
 
 			if (exception != null)

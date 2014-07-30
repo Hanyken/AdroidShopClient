@@ -2,6 +2,7 @@ package stx.shopclient.utils;
 
 import org.apache.commons.lang3.StringUtils;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -60,6 +61,9 @@ public class ProgressDialogAsyncTask<TResult> extends
 	@Override
 	protected void onPostExecute(Void result)
 	{
+		if (context instanceof Activity && ((Activity) context).isDestroyed())
+			return;
+
 		if (showProgressDialog)
 			dialog.dismiss();
 

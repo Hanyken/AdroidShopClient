@@ -105,7 +105,8 @@ public class MainItemsTabFragment extends Fragment
 		@Override
 		protected void onPostExecute(Void result)
 		{
-			super.onPostExecute(result);
+			if (getActivity().isDestroyed())
+				return;
 
 			if (popularItems != null)
 				_popular.setItems(popularItems);

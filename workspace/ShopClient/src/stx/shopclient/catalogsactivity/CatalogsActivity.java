@@ -346,7 +346,7 @@ public class CatalogsActivity extends BaseActivity implements
 
 		@Override
 		protected void onPostExecuteNoError(Collection<ActionType> result)
-		{
+		{			
 			_actionTypes = result;
 
 			initPropList();
@@ -380,9 +380,10 @@ public class CatalogsActivity extends BaseActivity implements
 		@Override
 		protected void onPostExecute(Void result)
 		{
+			if (isDestroyed())
+				return;
+			
 			_listView.onRefreshComplete();
-
-			super.onPostExecute(result);
 		}
 
 		@Override

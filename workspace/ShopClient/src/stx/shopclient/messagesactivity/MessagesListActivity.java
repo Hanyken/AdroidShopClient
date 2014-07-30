@@ -154,6 +154,9 @@ public class MessagesListActivity extends BaseActivity implements
 		@Override
 		protected void onPostExecute(Void result)
 		{
+			if (isDestroyed())
+				return;
+			
 			if (isFirstLoad)
 				dialog.dismiss();
 			else

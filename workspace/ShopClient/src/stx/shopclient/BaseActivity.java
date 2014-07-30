@@ -69,7 +69,7 @@ public class BaseActivity extends FragmentActivity
 		super.onCreate(savedInstanceState);
 
 		Intent serviceIntent = new Intent(this, ShopClientService.class);
-		startService(serviceIntent);		
+		startService(serviceIntent);
 
 		UserAccount.load(this);
 		if (UserAccount.getLogin() == null || UserAccount.getLogin().equals(""))
@@ -90,14 +90,6 @@ public class BaseActivity extends FragmentActivity
 		_destroyed = false;
 
 		new GetOrderCatalogsTask().execute();
-	}
-
-	@Override
-	protected void onDestroy()
-	{
-		super.onDestroy();
-
-		_destroyed = true;
 	}
 
 	void loadUI()
@@ -268,7 +260,8 @@ public class BaseActivity extends FragmentActivity
 		@Override
 		protected void onPostExecute(Token result)
 		{
-			super.onPostExecute(result);
+			if (isDestroyed())
+				return;
 
 			if (_progressDialog != null)
 				_progressDialog.dismiss();
@@ -491,10 +484,8 @@ public class BaseActivity extends FragmentActivity
 		@Override
 		protected void onPostExecute(Void result)
 		{
-			super.onPostExecute(result);
-
-			if (_destroyed)
-				return;
+			if (isDestroyed())
+				return;			
 
 			_progressDialog.dismiss();
 

@@ -306,6 +306,9 @@ public class OverviewActivity extends BaseActivity implements OnClickListener
 		@Override
 		protected void onPostExecute(Void result)
 		{
+			if (isDestroyed())
+				return;
+			
 			_progressDialog.dismiss();
 
 			if (exception != null)
@@ -363,6 +366,9 @@ public class OverviewActivity extends BaseActivity implements OnClickListener
 		@Override
 		protected void onPostExecute(Void result)
 		{
+			if (isDestroyed())
+				return;
+			
 			_progressDialog.dismiss();
 
 			if (exception != null)

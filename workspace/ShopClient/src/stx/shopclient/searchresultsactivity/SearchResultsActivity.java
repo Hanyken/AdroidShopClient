@@ -178,6 +178,9 @@ public class SearchResultsActivity extends BaseActivity implements
 		@Override
 		protected void onPostExecute(Void result)
 		{
+			if (isDestroyed())
+				return;
+			
 			if (isFirstRun)
 				progressDialog.dismiss();
 			else

@@ -332,6 +332,9 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 		@Override
 		protected void onPostExecute(Void result)
 		{
+			if (isDestroyed())
+				return;
+
 			dialog.dismiss();
 
 			if (exception != null)
@@ -375,6 +378,9 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 		@Override
 		protected void onPostExecute(Void result)
 		{
+			if (isDestroyed())
+				return;
+			
 			dialog.dismiss();
 
 			if (exception != null)
@@ -433,6 +439,9 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 		@Override
 		protected void onPostExecute(Void result)
 		{
+			if (isDestroyed())
+				return;
+			
 			dialog.dismiss();
 
 			if (exception != null)

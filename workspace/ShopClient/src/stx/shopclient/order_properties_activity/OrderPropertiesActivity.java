@@ -127,6 +127,9 @@ public class OrderPropertiesActivity extends BaseActivity
 		@Override
 		protected void onPostExecute(Void result)
 		{
+			if (isDestroyed())
+				return;
+			
 			dialog.dismiss();
 
 			if (exception != null)

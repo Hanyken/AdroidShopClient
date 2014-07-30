@@ -157,6 +157,9 @@ public class PaymentListActivity extends BaseActivity implements
 		@Override
 		protected void onPostExecute(Void result)
 		{
+			if (isDestroyed())
+				return;
+			
 			dialog.dismiss();
 
 			if (exception != null)

@@ -144,7 +144,8 @@ public class LoginActivity extends Activity
 		@Override
 		protected void onPostExecute(Token result)
 		{
-			super.onPostExecute(result);
+			if (isDestroyed())
+				return;
 
 			dialog.dismiss();
 
@@ -215,7 +216,8 @@ public class LoginActivity extends Activity
 		@Override
 		protected void onPostExecute(Token result)
 		{
-			super.onPostExecute(result);
+			if (isDestroyed())
+				return;
 
 			dialog.dismiss();
 

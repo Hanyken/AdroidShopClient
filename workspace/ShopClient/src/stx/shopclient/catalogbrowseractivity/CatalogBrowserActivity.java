@@ -60,7 +60,7 @@ public class CatalogBrowserActivity extends BaseActivity implements
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
-	{	
+	{
 		Intent intent = getIntent();
 
 		_rootNodeId = intent.getLongExtra(NODE_ID_EXTRA_KEY, 0);
@@ -109,7 +109,7 @@ public class CatalogBrowserActivity extends BaseActivity implements
 
 		return view;
 	}
-	
+
 	public boolean initMainMenuItem(MainMenuItem item)
 	{
 		if (item.getId() == MainMenuItem.SEARCH_MENU_ITEM_ID)
@@ -117,7 +117,6 @@ public class CatalogBrowserActivity extends BaseActivity implements
 		else
 			return super.initMainMenuItem(item);
 	}
-
 
 	@Override
 	protected long getSearchActivityNodeId()
@@ -193,6 +192,9 @@ public class CatalogBrowserActivity extends BaseActivity implements
 		@Override
 		protected void onPostExecute(Void result)
 		{
+			if (isDestroyed())
+				return;
+
 			if (isFirstLoad)
 				_progressDialog.dismiss();
 			else

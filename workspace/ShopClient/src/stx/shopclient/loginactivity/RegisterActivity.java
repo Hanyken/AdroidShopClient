@@ -203,8 +203,9 @@ public class RegisterActivity extends Activity
 		@Override
 		protected void onPostExecute(Token result)
 		{
-			super.onPostExecute(result);
-
+			if (isDestroyed())
+				return;
+			
 			dialog.dismiss();
 
 			if (result == null)
