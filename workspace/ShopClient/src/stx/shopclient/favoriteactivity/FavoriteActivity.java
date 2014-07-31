@@ -18,6 +18,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import stx.shopclient.BaseActivity;
@@ -88,7 +89,15 @@ public class FavoriteActivity extends BaseActivity implements
 
 			TextView nameTextView = (TextView) view
 					.findViewById(R.id.nameTextView);
+			TextView descriptionTextView = (TextView) view
+					.findViewById(R.id.descriptionTextView);
+			RatingBar ratingBar = (RatingBar) view
+					.findViewById(R.id.ratingBar);
+			
 			nameTextView.setText(item.getName());
+			descriptionTextView.setText(Double.toString(item.getPrice())
+					+ " рублей");
+			ratingBar.setRating((float) item.getRating());
 
 			ImageView imgView = (ImageView) view.findViewById(R.id.imageView);
 
