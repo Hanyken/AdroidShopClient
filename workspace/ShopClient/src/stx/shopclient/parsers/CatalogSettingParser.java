@@ -16,6 +16,7 @@ public class CatalogSettingParser extends BaseParser<CatalogSettings>
 	private static final String ITEM_PANEL_COLOR_NAME = "ItemPanelColor";
 	private static final String PRESSED_COLOR_NAME = "PressedColor";
 	private static final String RATING_COLOR_NAME = "RatingColor";
+	private static final String ACTIVITY_FON_COLOR_NAME = "ActivityFonColor";
 	private static final String COMMENT_IMG_NAME = "CommentImg";
 	private static final String COMMENT_IMG_PRESS_NAME = "CommentImgPress";
 	private static final String FAVORITE_IMG_NAME = "FavoriteImg";
@@ -52,47 +53,51 @@ public class CatalogSettingParser extends BaseParser<CatalogSettings>
 			}
 			else if (name.equals(DISABLE_COLOR_NAME))
 			{
-			item.setDisableColor(super.getValueColor(e, VALUE_NAME));
+				item.setDisableColor(super.getValueColor(e, VALUE_NAME));
 			}
 			else if (name.equals(FOREGROUND_COLOR_NAME))
 			{
-			item.setForegroundColor(super.getValueColor(e, VALUE_NAME));
+				item.setForegroundColor(super.getValueColor(e, VALUE_NAME));
 			}
 			else if (name.equals(ITEM_PANEL_COLOR_NAME))
 			{
-			item.setItemPanelColor(super.getValueColor(e, VALUE_NAME));
+				item.setItemPanelColor(super.getValueColor(e, VALUE_NAME));
 			}
 			else if (name.equals(PRESSED_COLOR_NAME))
 			{
-			item.setPressedColor(super.getValueColor(e, VALUE_NAME));
+				item.setPressedColor(super.getValueColor(e, VALUE_NAME));
 			}
 			else if (name.equals(RATING_COLOR_NAME))
 			{
-			item.setRatingColor(super.getValueColor(e, VALUE_NAME));
+				item.setRatingColor(super.getValueColor(e, VALUE_NAME));
+			}
+			else if (name.equals(ACTIVITY_FON_COLOR_NAME))
+			{
+				item.setActivityFonColor(super.getValueColor(e, VALUE_NAME));
 			}
 			else if (name.equals(COMMENT_IMG_NAME))
 			{
-			item.setCommentImgKey(super.getValue(e, VALUE_NAME));
+				item.setCommentImgKey(super.getValue(e, VALUE_NAME));
 			}
 			else if (name.equals(COMMENT_IMG_PRESS_NAME))
 			{
-			item.setCommentImgPressKey(super.getValue(e, VALUE_NAME));
+				item.setCommentImgPressKey(super.getValue(e, VALUE_NAME));
 			}
 			else if (name.equals(FAVORITE_IMG_NAME))
 			{
-			item.setFavoriteImgKey(super.getValue(e, VALUE_NAME));
+				item.setFavoriteImgKey(super.getValue(e, VALUE_NAME));
 			}
 			else if (name.equals(FAVORITE_IMG_PRESS_NAME))
 			{
-			item.setFavoriteImgPressKey(super.getValue(e, VALUE_NAME));
+				item.setFavoriteImgPressKey(super.getValue(e, VALUE_NAME));
 			}
 			else if (name.equals(SHARE_IMG_NAME))
 			{
-			item.setShareImgKey(super.getValue(e, VALUE_NAME));
+				item.setShareImgKey(super.getValue(e, VALUE_NAME));
 			}
 			else if (name.equals(SHARE_IMG_PRESS_NAME))
 			{
-			item.setShareImgPressKey(super.getValue(e, VALUE_NAME));
+				item.setShareImgPressKey(super.getValue(e, VALUE_NAME));
 			}
 		}
 		return item;
