@@ -11,14 +11,26 @@ public class CatalogSettings
 	public static final String IMG_KEY_SHARE = "Share";
 	public static final String IMG_KEY_FAVOTITS = "Favorits";
 	
+	// ÷вет основных частей активити, акшинбара
 	private int _background;
+	// ÷вет панели с кнопками в карточке тавара и цвет разделител€ между группами аналогов
 	private int _itemPanelColor;
+	// цвет звездачек рейтинга
 	private int _ratingColor;
+	// ÷вет текста
 	private int _foregroundColor;
+	// ÷вет нажатой кнопки (в нормальном состо€нии кнопки имеют цвет background)
 	private int _pressedColor;
+	// ÷вет неактивной кнопки
 	private int _disableColor;
+	// цвет текста цифр около кнопок избранное, кол-во коментариев...
 	private int _countButtonLableColor;
-	private Bitmap _shareImg;
+	// ÷вет фона активити
+	private int _activityFonColor;
+	
+	// иконка кнопки расшарить
+	private Bitmap _shareImg;	
+	// иконка кнопки расшарить
 	private String _shareImgKey;
 	private Bitmap _shareImgPress;
 	private String _shareImgPressKey;
@@ -84,6 +96,16 @@ public class CatalogSettings
 	public int getDisableColor()
 	{
 		return _disableColor;
+	}
+
+	public void setActivityFonColor(int activityFonColor)
+	{
+		_activityFonColor = activityFonColor;
+	}
+	
+	public int getActivityFonColor()
+	{
+		return _activityFonColor;
 	}
 
 	public void setDisableColor(int disableColor)
