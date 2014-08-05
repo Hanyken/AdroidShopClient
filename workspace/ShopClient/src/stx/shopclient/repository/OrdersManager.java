@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 
 import stx.shopclient.entity.Catalog;
@@ -20,110 +21,57 @@ import stx.shopclient.entity.properties.StringPropertyDescriptor;
 
 public class OrdersManager
 {
-	private ArrayList<Order> _Orders;
-	private ArrayList<OrderProperty> _Properties;
+	private HashMap<Long, Order> _Orders = new HashMap<Long, Order>();
 	private ArrayList<Catalog> _Catalogs;
 
 	public OrdersManager()
 	{
-		_Orders = new ArrayList<Order>();
-		_Properties = new ArrayList<OrderProperty>();
 		_Catalogs = new ArrayList<Catalog>();
-	}
-
-	public void addOrderItem(long itemId, Collection<OrderProperty> properties)
-	{
-		Order item = new Order();
-
-		item.setId(_Orders.size() + 1);
-		item.setItemId(itemId);
-
-		for (OrderProperty el : properties)
-		{
-			el.setOrderId(item.getId());
-			_Properties.add(el);
-		}
-
-		_Orders.add(item);
 	}
 
 	public void addOrder(Order item)
 	{
-		for (OrderProperty el : item.getProperties())
-		{
-			_Properties.add(el);
-		}
-
-		_Orders.add(item);
+		_Orders.put(item.getId(), item);
 	}
 
 	public void removeOrderItem(long orderId)
 	{
-		for (Order order : _Orders)
-		{
-			if (order.getId() == orderId)
-			{
-				_Orders.remove(order);
-				break;
-			}
-		}
+		_Orders.remove(orderId);
 	}
 
 	public Collection<Order> getOrderItems(long catalogId)
 	{
-		return _Orders;
+		return _Orders.values();
 	}
 
 	public int getOrderItemsCount()
 	{
 		return _Orders.size();
 	}
-	
+
 	public Collection<Catalog> getOrderCatalogs()
 	{
 		return _Catalogs;
 	}
+
 	public void setOrderCatalogs(Collection<Catalog> catalogs)
 	{
 		_Catalogs.clear();
 		_Catalogs.addAll(catalogs);
 	}
 
-	public boolean existsItem(long itemId)
-	{
-		boolean flag = false;
-		for (Order el : _Orders)
-		{
-			if (el.getItemId() == itemId)
-			{
-				flag = true;
-				break;
-			}
-		}
-		return flag;
-	}
-
 	public Order getOrderById(long id)
 	{
-		for (Order order : _Orders)
-		{
-			if (order.getId() == id)
-				return order;
-		}
-		return null;
+		return _Orders.get(id);
 	}
 
 	public Collection<OrderProperty> getOrderProperties(long orderId)
 	{
-		ArrayList<OrderProperty> items = new ArrayList<OrderProperty>();
-		for (OrderProperty el : _Properties)
-		{
-			if (el.getOrderId() == orderId)
-			{
-				items.add(el);
-			}
-		}
-		return items;
+		Order order = _Orders.get(orderId);
+		if (order != null)
+			return order.getProperties();
+		
+		return new ArrayList<OrderProperty>();
 	}
 
 	public Collection<PropertyDescriptor> getOrderPropertiesAsDescriptiors(

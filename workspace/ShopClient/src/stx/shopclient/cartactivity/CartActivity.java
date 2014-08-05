@@ -583,9 +583,6 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 				WebClient client = createWebClient();
 				client.editOrder(Token.getCurrent(), order.getId(),
 						order.getProperties());
-				
-				//Order cachedOrder = Repository.get(null).getOrderManager().getOrderById(order.getId());
-				//cachedOrder.setProperties(order.getProperties());
 			}
 			catch (Throwable ex)
 			{
