@@ -17,6 +17,7 @@ import stx.shopclient.mainactivity.MainActivity;
 import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.mainmenu.MainMenuListAdapter;
 import stx.shopclient.messagesactivity.MessagesListActivity;
+import stx.shopclient.repository.CatalogManager;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.searchactivity.SearchActivity;
 import stx.shopclient.settings.UserAccount;
@@ -62,6 +63,7 @@ public class BaseActivity extends FragmentActivity
 	MainMenuListAdapter _mainMenuListAdapter;
 	ProgressDialog _progressDialog;
 	boolean _destroyed = false;
+	View _mainView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -139,11 +141,11 @@ public class BaseActivity extends FragmentActivity
 
 		_mainViewContainer = (LinearLayout) findViewById(R.id.mainViewContainer);
 
-		View mainView = createMainView(_mainViewContainer);
+		_mainView = createMainView(_mainViewContainer);
 
-		if (mainView != null)
+		if (_mainView != null)
 		{
-			_mainViewContainer.addView(mainView);
+			_mainViewContainer.addView(_mainView);
 		}
 
 		ListView _menuList = (ListView) findViewById(R.id.mainMenuList);
@@ -156,6 +158,11 @@ public class BaseActivity extends FragmentActivity
 		_mainMenuListAdapter = new MainMenuListAdapter(this);
 		_menuList.setAdapter(_mainMenuListAdapter);
 		_menuList.setOnItemClickListener(new MainMenuOnClickListener());
+	}
+	
+	protected void setActivityBackgroundFromSettings()
+	{		
+		_mainViewContainer.getRootView().setBackgroundColor(Repository.get(null).getCatalogManager().getSettings().getActivityFonColor());
 	}
 
 	public boolean initMainMenuItem(MainMenuItem item)

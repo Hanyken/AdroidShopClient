@@ -1,8 +1,11 @@
 package stx.shopclient.cartactivity;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
@@ -41,7 +44,9 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -74,6 +79,8 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 		_list.setAdapter(_adapter);
 
 		registerForContextMenu(_list);
+
+		// setActivityBackgroundFromSettings();
 
 		new LoadTask().execute();
 
@@ -169,12 +176,21 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 		public View getView(int index, View arg1, ViewGroup container)
 		{
 
-			Order order = _cartItems.get(index);
+			final Order order = _cartItems.get(index);
 
 			final View view = getLayoutInflater().inflate(
 					R.layout.cart_activity_item, container, false);
 
 			view.setTag(order);
+
+			ImageButton plusButton = (ImageButton) view
+					.findViewById(R.id.plusButton);
+			ImageButton minusButton = (ImageButton) view
+					.findViewById(R.id.minusButton);
+			LinearLayout llCount = (LinearLayout) view
+					.findViewById(R.id.llCount);
+			TextView countTextView = (TextView) view
+					.findViewById(R.id.countTextView);
 
 			TextView nameTextView = (TextView) view
 					.findViewById(R.id.nameTextView);
@@ -182,14 +198,35 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 
 			TextView descrTextView = (TextView) view
 					.findViewById(R.id.descriptionTextView);
-			descrTextView.setText(getOrderDescription(order.getProperties(),
-					order.getItem().getOrderProperties()));
+
+			DecimalFormat format = new DecimalFormat("#,###,###,##0.00");
+			String description = "÷ена: "
+					+ format.format(order.getItem().getPrice()) + " руб.";
+			// String propsDescription =
+			// getOrderDescription(order.getProperties(),
+			// order.getItem().getOrderProperties());
+			// if(StringUtils.isNoneBlank(propsDescription))
+			// description += ", " + propsDescription;
+
+			descrTextView.setText(description);
 
 			ImageView imgView = (ImageView) view.findViewById(R.id.imageView);
 
 			if (order.getItem().getIco() != null)
 				ImageDownloadTask.startNew(imgView, CartActivity.this, order
 						.getItem().getIco());
+
+			llCount.setVisibility(View.GONE);
+			for (OrderProperty prop : order.getProperties())
+			{
+				if (prop.getName().toLowerCase().equals("count"))
+				{
+					llCount.setVisibility(View.VISIBLE);
+					int count = (int) Double.parseDouble(prop.getValue());
+					countTextView.setText(Integer.toString(count));
+					break;
+				}
+			}
 
 			Button menuButton = (Button) view.findViewById(R.id.menuButton);
 
@@ -204,9 +241,68 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 				}
 			});
 
+			plusButton.setOnClickListener(new View.OnClickListener()
+			{
+
+				@Override
+				public void onClick(View v)
+				{
+					incrementCountClick(order);
+				}
+			});
+			minusButton.setOnClickListener(new View.OnClickListener()
+			{
+
+				@Override
+				public void onClick(View v)
+				{
+					decrementCountClick(order);
+				}
+			});
+
 			return view;
 		}
 
+	}
+
+	void incrementCountClick(Order order)
+	{
+		if (addCount(order, 1))
+		{
+			EditOrderTask task = new EditOrderTask();
+			task.order = order;
+			task.execute();
+		}
+	}
+
+	void decrementCountClick(Order order)
+	{
+		if (addCount(order, -1))
+		{
+			EditOrderTask task = new EditOrderTask();
+			task.order = order;
+			task.execute();
+		}
+	}
+
+	boolean addCount(Order order, int count)
+	{
+		for (OrderProperty prop : order.getProperties())
+		{
+			if (prop.getName().toLowerCase().equals("count"))
+			{
+				int count_ = (int) Double.parseDouble(prop.getValue());
+
+				if ((count_ + count) <= 0)
+					return false;
+
+				count_ += count;
+				prop.setValue(Integer.toString(count_));
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	public static String getOrderDescription(
@@ -380,7 +476,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 		{
 			if (isDestroyed())
 				return;
-			
+
 			dialog.dismiss();
 
 			if (exception != null)
@@ -441,7 +537,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 		{
 			if (isDestroyed())
 				return;
-			
+
 			dialog.dismiss();
 
 			if (exception != null)
@@ -470,6 +566,48 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 							PaymentListActivity.class);
 					startActivity(intent);
 				}
+			}
+		}
+	}
+
+	class EditOrderTask extends AsyncTask<Void, Void, Void>
+	{
+		Throwable exception;
+		public Order order;
+
+		@Override
+		protected Void doInBackground(Void... params)
+		{
+			try
+			{
+				WebClient client = createWebClient();
+				client.editOrder(Token.getCurrent(), order.getId(),
+						order.getProperties());
+				
+				//Order cachedOrder = Repository.get(null).getOrderManager().getOrderById(order.getId());
+				//cachedOrder.setProperties(order.getProperties());
+			}
+			catch (Throwable ex)
+			{
+				exception = ex;
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result)
+		{
+			if (isDestroyed())
+				return;
+
+			if (exception != null)
+				Toast.makeText(CartActivity.this,
+						exception.getLocalizedMessage(), Toast.LENGTH_LONG)
+						.show();
+			else
+			{
+				_adapter.notifyDataSetChanged();
 			}
 		}
 	}

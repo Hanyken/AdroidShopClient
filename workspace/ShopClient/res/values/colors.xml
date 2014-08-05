@@ -5,5 +5,5 @@
     <color name="mainBackground">#FF7595B3</color>
     <color name="mainTextColor">#FFFFFFFF</color>
     <color name="itempanelColor">#FFEBEBEB</color>
-    
+    <color name="white">#FFFFFFFF</color>
 </resources>

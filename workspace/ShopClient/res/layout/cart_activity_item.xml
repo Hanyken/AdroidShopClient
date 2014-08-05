@@ -2,102 +2,116 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
     android:paddingTop="8dp" >
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:background="@drawable/img_shadow"
+        android:paddingRight="1dp" android:paddingTop="1dp"
+        android:paddingLeft="1dp" android:paddingBottom="4dp" >
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="20dp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:background="@color/white" >
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/menuButton"
-            android:layout_toRightOf="@+id/imageView"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/nameTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Товар 1"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/descriptionTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Описание"
-                android:textColor="#9E9E9E"
-                android:textSize="12sp" />
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="20dp" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/menuButton"
+                android:layout_toRightOf="@+id/imageView"
+                android:orientation="vertical" >
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/nameTextView"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="Кол-во:"
+                    android:text="Товар 1"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/descriptionTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Описание"
                     android:textColor="#9E9E9E"
-                    android:textSize="12sp" android:layout_marginRight="10dp" />
+                    android:textSize="12sp" />
 
-                <ImageButton
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center_vertical"
-                    android:padding="5dp"
-                    android:scaleType="fitCenter"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:src="@drawable/img_minus" />
-
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/llCount"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:text="1" />
+                    android:orientation="horizontal" >
 
-                <ImageButton
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center_vertical"
-                    android:padding="5dp"
-                    android:scaleType="fitCenter"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:src="@drawable/img_plus" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="10dp"
+                        android:text="Кол-во:"
+                        android:textColor="#9E9E9E"
+                        android:textSize="12sp" />
+
+                    <ImageButton
+                        android:id="@+id/minusButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center_vertical"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:padding="5dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/img_minus" />
+
+                    <TextView
+                        android:id="@+id/countTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:text="1" />
+
+                    <ImageButton
+                        android:id="@+id/plusButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center_vertical"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:padding="5dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/img_plus" />
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
 
-        <Button
-            android:id="@+id/menuButton"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/img_action_overflow"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:padding="10dp" />
-    </RelativeLayout>
+            <Button
+                android:id="@+id/menuButton"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/img_action_overflow"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:padding="10dp" />
+        </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>
