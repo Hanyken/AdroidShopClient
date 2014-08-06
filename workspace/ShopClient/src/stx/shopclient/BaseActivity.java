@@ -50,6 +50,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -159,10 +160,12 @@ public class BaseActivity extends FragmentActivity
 		_menuList.setAdapter(_mainMenuListAdapter);
 		_menuList.setOnItemClickListener(new MainMenuOnClickListener());
 	}
-	
+
 	protected void setActivityBackgroundFromSettings()
-	{		
-		_mainViewContainer.getRootView().setBackgroundColor(Repository.get(null).getCatalogManager().getSettings().getActivityFonColor());
+	{
+		_mainViewContainer.getRootView().setBackgroundColor(
+				Repository.get(null).getCatalogManager().getSettings()
+						.getActivityFonColor());
 	}
 
 	public boolean initMainMenuItem(MainMenuItem item)
@@ -444,6 +447,22 @@ public class BaseActivity extends FragmentActivity
 		ImageDownloadTask.startNew(view, this, key);
 	}
 
+	public static Drawable getButtonDrawable()
+	{
+		CatalogSettings settings = Repository.get(null).getCatalogManager()
+				.getSettings();
+		return getButtonDrawable(settings);
+	}
+	
+	public static void setButtonStyle(Button button)
+	{
+		CatalogSettings settings = Repository.get(null).getCatalogManager()
+				.getSettings();
+		
+		button.setBackground(getButtonDrawable(settings));
+		button.setTextColor(settings.getForegroundColor());
+	}
+
 	public static Drawable getButtonDrawable(CatalogSettings settings)
 	{
 		StateListDrawable drawable = new StateListDrawable();
@@ -492,7 +511,7 @@ public class BaseActivity extends FragmentActivity
 		protected void onPostExecute(Void result)
 		{
 			if (isDestroyed())
-				return;			
+				return;
 
 			_progressDialog.dismiss();
 
