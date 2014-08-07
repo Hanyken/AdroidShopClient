@@ -39,8 +39,7 @@ public class MainActivity extends BaseActivity implements
 
 		scrollView.fullScroll(ScrollView.FOCUS_UP);
 
-//		parent.getRootView().setBackgroundResource(
-//				R.drawable.catalog_background_test);
+		setActivityBackgroundFromSettings();
 
 		return view;
 	}

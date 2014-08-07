@@ -163,9 +163,9 @@ public class BaseActivity extends FragmentActivity
 
 	protected void setActivityBackgroundFromSettings()
 	{
-		_mainViewContainer.getRootView().setBackgroundColor(
-				Repository.get(null).getCatalogManager().getSettings()
-						.getActivityFonColor());
+//		_mainViewContainer.getRootView().setBackgroundColor(
+//				Repository.get(null).getCatalogManager().getSettings()
+//						.getActivityFonColor());
 	}
 
 	public boolean initMainMenuItem(MainMenuItem item)

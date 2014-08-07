@@ -98,7 +98,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 
 		registerForContextMenu(_list);
 
-		// setActivityBackgroundFromSettings();
+		setActivityBackgroundFromSettings();
 
 		new LoadTask().execute();
 
