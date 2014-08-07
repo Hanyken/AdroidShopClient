@@ -48,6 +48,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,6 +60,9 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 	ListView _list;
 	CartListAdapter _adapter;
 	Long _CatalogId;
+	Button _buttonOrder;
+	TextView _summaryTextView;
+	RelativeLayout _summaryLayout;
 
 	List<Order> _cartItems = new ArrayList<Order>();
 
@@ -70,6 +74,20 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 		View view = getLayoutInflater().inflate(R.layout.cart_activity, parent,
 				false);
 
+		_buttonOrder = (Button) view.findViewById(R.id.buttonOrder);
+		_summaryTextView = (TextView) view.findViewById(R.id.summaryTextView);
+		_summaryLayout = (RelativeLayout) view.findViewById(R.id.summaryLayout);
+
+		_buttonOrder.setOnClickListener(new View.OnClickListener()
+		{
+			@Override
+			public void onClick(View v)
+			{
+				showPaymentDialog();
+			}
+		});
+		setButtonStyle(_buttonOrder);		
+
 		_CatalogId = getIntent().getLongExtra(CARD_ID_NAME, 0);
 		_list = (ListView) view.findViewById(R.id.listView);
 		_list.setOnItemClickListener(this);
@@ -80,7 +98,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 
 		registerForContextMenu(_list);
 
-		// setActivityBackgroundFromSettings();
+		setActivityBackgroundFromSettings();
 
 		new LoadTask().execute();
 
@@ -119,10 +137,20 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 	public boolean onPrepareOptionsMenu(Menu menu)
 	{
 		menu.clear();
-		MenuItem paymentItem = menu.add(0, MENU_PAYMENT, 0, "ќплатить");
+		MenuItem paymentItem = menu.add(0, MENU_PAYMENT, 0, "ќформить заказ");
 		paymentItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
 		return super.onPrepareOptionsMenu(menu);
+	}
+
+	void showPaymentDialog()
+	{
+		if (_cartItems.size() > 0)
+		{
+			DialogFragment wd = PaymentDescriptionFragment.get(!Token
+					.getCurrent().getAuthorize());
+			wd.show(getFragmentManager(), "Comment");
+		}
 	}
 
 	@Override
@@ -131,12 +159,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 		switch (item.getItemId())
 		{
 		case MENU_PAYMENT:
-			if (_cartItems.size() > 0)
-			{
-				DialogFragment wd = PaymentDescriptionFragment.get(!Token
-						.getCurrent().getAuthorize());
-				wd.show(getFragmentManager(), "Comment");
-			}
+			showPaymentDialog();
 			break;
 		}
 		return super.onMenuItemSelected(featureId, item);
@@ -151,6 +174,42 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 
 	class CartListAdapter extends BaseAdapter
 	{
+		@Override
+		public void notifyDataSetChanged()
+		{
+			super.notifyDataSetChanged();
+
+			double totalPrice = 0;
+
+			for (Order order : _cartItems)
+			{
+				for (OrderProperty prop : order.getProperties())
+				{
+					if (prop.getName()
+							.equals(OrderProperty.COUNT_PROPERTY_NAME))
+					{
+						int count = (int) Double.parseDouble(prop.getValue());
+
+						totalPrice += order.getItem().getPrice() * count;
+
+						break;
+					}
+				}
+
+			}
+
+			if (_cartItems.size() > 0)
+			{
+				_summaryLayout.setVisibility(View.VISIBLE);
+				DecimalFormat format = new DecimalFormat("#,###,###,##0.00");
+				_summaryTextView.setText("»того: " + format.format(totalPrice)
+						+ " руб.");
+			}
+			else
+			{
+				_summaryLayout.setVisibility(View.GONE);
+			}
+		}
 
 		@Override
 		public int getCount()
@@ -219,7 +278,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 			llCount.setVisibility(View.GONE);
 			for (OrderProperty prop : order.getProperties())
 			{
-				if (prop.getName().toLowerCase().equals("count"))
+				if (prop.getName().equals(OrderProperty.COUNT_PROPERTY_NAME))
 				{
 					llCount.setVisibility(View.VISIBLE);
 					int count = (int) Double.parseDouble(prop.getValue());
@@ -289,7 +348,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 	{
 		for (OrderProperty prop : order.getProperties())
 		{
-			if (prop.getName().toLowerCase().equals("count"))
+			if (prop.getName().equals(OrderProperty.COUNT_PROPERTY_NAME))
 			{
 				int count_ = (int) Double.parseDouble(prop.getValue());
 

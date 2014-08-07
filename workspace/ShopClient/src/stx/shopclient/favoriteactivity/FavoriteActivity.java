@@ -10,9 +10,13 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -24,8 +28,11 @@ import android.widget.Toast;
 import stx.shopclient.BaseActivity;
 import stx.shopclient.R;
 import stx.shopclient.entity.CatalogItem;
+import stx.shopclient.entity.Order;
 import stx.shopclient.entity.Token;
 import stx.shopclient.itemactivity.ItemActivity;
+import stx.shopclient.order_properties_activity.OrderPropertiesActivity;
+import stx.shopclient.orderactivity.OrderActivity;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.utils.ImageDownloadTask;
 import stx.shopclient.webservice.WebClient;
@@ -33,26 +40,64 @@ import stx.shopclient.webservice.WebClient;
 public class FavoriteActivity extends BaseActivity implements
 		OnItemClickListener
 {
-	PullToRefreshListView _list;
+	ListView _list;
 	List<CatalogItem> _items = new ArrayList<CatalogItem>();
 	FavoriteAdapter _adapter;
+	
+	final int ADD_TO_CART_MENU_ID = 1;
+	final int REMOVE_MENU_ID = 2;
 
 	@Override
 	protected View createMainView(ViewGroup parent)
 	{
 		getActionBar().setTitle("Избранное");
-
+ 
 		View view = getLayoutInflater().inflate(R.layout.favorite_activity,
 				parent, false);
-		_list = (PullToRefreshListView) view.findViewById(R.id.list);
-		_list.setMode(Mode.DISABLED);
+		_list = (ListView) view.findViewById(R.id.list);
 		_adapter = new FavoriteAdapter();
 		_list.setAdapter(_adapter);
 		_list.setOnItemClickListener(this);
+		
+		registerForContextMenu(_list);		
 
 		new LoadTask().execute();
 
 		return view;
+	}
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo)
+	{
+
+		super.onCreateContextMenu(menu, v, menuInfo);
+		
+		menu.add(0, ADD_TO_CART_MENU_ID, 0, "В корзину");
+		menu.add(0, REMOVE_MENU_ID, 0, "Убрать из избранных");	
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item)
+	{
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
+				.getMenuInfo();
+		
+		CatalogItem favItem = (CatalogItem) info.targetView.getTag();
+
+		if (item.getItemId() == ADD_TO_CART_MENU_ID)
+		{
+			Intent orderIntent = new Intent(this, OrderActivity.class);
+			orderIntent.putExtra(ItemActivity.ITEM_ID_EXTRA_KEY, favItem.getId());
+			orderIntent.putExtra("ItemTitle", favItem.getName());
+			startActivity(orderIntent);
+		}
+		else if (item.getItemId() == REMOVE_MENU_ID)
+		{
+			deleteButtonClick(favItem);
+		}
+
+		return true;
 	}
 
 	class FavoriteAdapter extends BaseAdapter
@@ -82,7 +127,7 @@ public class FavoriteActivity extends BaseActivity implements
 		public View getView(int index, View arg1, ViewGroup root)
 		{
 			final CatalogItem item = _items.get(index);
-			View view = getLayoutInflater().inflate(
+			final View view = getLayoutInflater().inflate(
 					R.layout.favorite_activity_item, root, false);
 
 			view.setTag(item);
@@ -91,13 +136,10 @@ public class FavoriteActivity extends BaseActivity implements
 					.findViewById(R.id.nameTextView);
 			TextView descriptionTextView = (TextView) view
 					.findViewById(R.id.descriptionTextView);
-			RatingBar ratingBar = (RatingBar) view
-					.findViewById(R.id.ratingBar);
 			
 			nameTextView.setText(item.getName());
 			descriptionTextView.setText(Double.toString(item.getPrice())
 					+ " рублей");
-			ratingBar.setRating((float) item.getRating());
 
 			ImageView imgView = (ImageView) view.findViewById(R.id.imageView);
 
@@ -105,14 +147,14 @@ public class FavoriteActivity extends BaseActivity implements
 				ImageDownloadTask.startNew(imgView, FavoriteActivity.this,
 						item.getIco());
 
-			Button deleteButton = (Button) view.findViewById(R.id.deleteButton);
-			deleteButton.setOnClickListener(new View.OnClickListener()
+			Button menuButton = (Button) view.findViewById(R.id.menuButton);
+			menuButton.setOnClickListener(new View.OnClickListener()
 			{
 
 				@Override
 				public void onClick(View v)
 				{
-					deleteButtonClick(item);
+					openContextMenu(view);
 				}
 			});
 
