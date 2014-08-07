@@ -29,8 +29,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="18dp"
-            android:text="Итого: 0 руб." android:textSize="15sp" />
+            android:layout_marginLeft="18dp"            
+            android:layout_toLeftOf="@+id/buttonOrder"
+            android:text="Итого: 0 руб."
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/buttonOrder"
@@ -38,7 +40,8 @@
             android:layout_height="36dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="15dp"
+            android:layout_marginRight="15dp"     
+            android:layout_marginLeft="5dp"       
             android:text="Оформить заказ"
             android:textSize="13sp" />
     </RelativeLayout>

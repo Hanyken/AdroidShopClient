@@ -4,10 +4,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <com.handmark.pulltorefresh.library.PullToRefreshListView
+    <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </com.handmark.pulltorefresh.library.PullToRefreshListView>
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:listSelector="@android:color/transparent" >
+    </ListView>
 
 </LinearLayout>

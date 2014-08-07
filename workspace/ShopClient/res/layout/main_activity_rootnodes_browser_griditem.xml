@@ -10,8 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="130dp"
         android:background="@color/shadow"
-        android:paddingBottom="3dp"
-        android:paddingLeft="3px"
+        android:paddingBottom="2px"
+        android:paddingLeft="2px"
         android:paddingRight="1px"
         android:paddingTop="1px" >
 
