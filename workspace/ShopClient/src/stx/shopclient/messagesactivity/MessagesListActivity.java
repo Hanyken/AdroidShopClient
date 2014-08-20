@@ -45,8 +45,8 @@ public class MessagesListActivity extends BaseActivity implements
 	List<Message> _messages = new ArrayList<Message>();
 	MessageListAdapter _adapter = new MessageListAdapter();
 	NewMessagesBroadcastReceiver _newMessagesReceiver = new NewMessagesBroadcastReceiver();
-	static SimpleDateFormat dateFormat = new SimpleDateFormat(
-			"dd.MM.yyyy HH:mm");
+	static SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+	static SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 
 	public static Message SelectedMessage;
 
@@ -78,6 +78,8 @@ public class MessagesListActivity extends BaseActivity implements
 
 		View view = getLayoutInflater().inflate(R.layout.message_list_activity,
 				parent, false);
+
+		setActivityBackgroundFromSettings();
 
 		_listView = (PullToRefreshListView) view.findViewById(R.id.listView);
 		_listView.setOnItemClickListener(this);
@@ -156,7 +158,7 @@ public class MessagesListActivity extends BaseActivity implements
 		{
 			if (isDestroyed())
 				return;
-			
+
 			if (isFirstLoad)
 				dialog.dismiss();
 			else
@@ -208,6 +210,7 @@ public class MessagesListActivity extends BaseActivity implements
 
 			TextView title = (TextView) view.findViewById(R.id.titleTextView);
 			TextView time = (TextView) view.findViewById(R.id.timeTextView);
+			TextView date = (TextView) view.findViewById(R.id.dateTextView);
 			ImageView image = (ImageView) view.findViewById(R.id.imageView);
 
 			title.setText(message.getTitle());
@@ -215,7 +218,8 @@ public class MessagesListActivity extends BaseActivity implements
 			if (!message.isRead())
 				title.setTypeface(title.getTypeface(), Typeface.BOLD);
 
-			time.setText(dateFormat.format(message.getCreateDate().getTime()));
+			time.setText(timeFormat.format(message.getCreateDate().getTime()));
+			date.setText(dateFormat.format(message.getCreateDate().getTime()));
 
 			if (StringUtils.isNoneBlank(message.getImage()))
 				setImage(image, message.getImage());
