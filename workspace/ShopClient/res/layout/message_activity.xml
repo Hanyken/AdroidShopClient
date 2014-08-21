@@ -4,6 +4,42 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp" >
+
+        <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/dateTextView"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/dateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/timeTextView"
+            android:paddingRight="10dp"
+            android:text="01.10.2014"
+            android:textColor="#9E9E9E"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/timeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="10:31"
+            android:textSize="10sp" />
+    </RelativeLayout>
+
     <WebView
         android:id="@+id/webView"
         android:layout_width="match_parent"

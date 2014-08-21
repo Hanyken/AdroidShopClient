@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:divider="@null"
         android:dividerHeight="0dp"
-        android:listSelector="@android:color/transparent" >
+        android:listSelector="@android:color/transparent" android:paddingBottom="5dp" >
     </com.handmark.pulltorefresh.library.PullToRefreshListView>
 
 </LinearLayout>
