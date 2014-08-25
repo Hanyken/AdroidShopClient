@@ -142,7 +142,7 @@ public class MessagesListActivity extends BaseActivity implements
 									: _messages.size());
 				else
 					messages = client.getAllMessages(Token.getCurrent(),
-							_messages.size(), 30);
+							_messages.size() + 1, 30);
 			}
 			catch (Throwable ex)
 			{
