@@ -1,5 +1,7 @@
 package stx.shopclient.historyactivity;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -33,6 +35,7 @@ public class PaymentListActivity extends BaseActivity implements
 	List<Payment> _paymentItems = new ArrayList<Payment>();
 	PaymentListAdapter _adapter;
 	Long _CatalogId;
+	SimpleDateFormat _dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 
 	@Override
 	protected View createMainView(ViewGroup parent)
@@ -107,14 +110,28 @@ public class PaymentListActivity extends BaseActivity implements
 							false);
 
 			TextView lblNumber = (TextView) view.findViewById(R.id.lblNumber);
+			TextView countTextView = (TextView) view
+					.findViewById(R.id.countTextView);
+			TextView priceTextView = (TextView) view
+					.findViewById(R.id.priceTextView);
+			TextView stateTextView = (TextView) view
+					.findViewById(R.id.stateTextView);
+			TextView dateTextView = (TextView) view
+					.findViewById(R.id.dateTextView);
 
-			lblNumber.setText("Номер заказа: "
-					+ Long.toString(item.getNumber()) + "\nКол-во элементов:"
-					+ Integer.toString(item.getOrderCount())
-					+ "\nДата заказа: "
-					+ BaseParser.dateParser.format(item.getCreateDate())
-					+ "\nСумма заказа: " + Double.toString(item.getSum())
-					+ "\nСтатус заказа: " + Integer.toString(item.getState()));
+			lblNumber.setText("ЗАКАЗ № " + Long.toString(item.getNumber()));
+			countTextView.setText(Integer.toString(item.getOrderCount()));
+
+			DecimalFormat format = new DecimalFormat("#,###,###,##0.00");
+			String price = format.format(item.getSum()) + " руб.";
+			priceTextView.setText(price);
+
+			String state = "";
+			if (item.getState() == Payment.STATE_ACCEPTED)
+				state = "Заказ принят";
+			stateTextView.setText(state);
+			
+			dateTextView.setText(_dateFormat.format(item.getCreateDate()));
 
 			view.setTag(item);
 
@@ -159,7 +176,7 @@ public class PaymentListActivity extends BaseActivity implements
 		{
 			if (isDestroyed())
 				return;
-			
+
 			dialog.dismiss();
 
 			if (exception != null)

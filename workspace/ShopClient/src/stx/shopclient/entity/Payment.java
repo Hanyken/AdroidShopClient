@@ -4,6 +4,8 @@ import java.util.Date;
 
 public class Payment
 {
+	public static final int STATE_ACCEPTED = 1;
+	
 	private long _id;
 	private long _number;
 	private Date _createDate;

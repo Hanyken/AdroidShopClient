@@ -1,5 +1,6 @@
 package stx.shopclient.messagesactivity;
 
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 
 import stx.shopclient.BaseActivity;
@@ -15,10 +16,14 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.TextView;
 
 public class MessageActivity extends BaseActivity
 {
 	public static String MESSAGE_ID_EXTRA_KEY = "messageId";
+	
+	static SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+	static SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 
 	long _messageId;
 
@@ -51,9 +56,17 @@ public class MessageActivity extends BaseActivity
 
 	void loadMessageUI()
 	{
-		getActionBar().setTitle(_message.getTitle());
+		getActionBar().setTitle("Сообщения");
 
 		WebView webView = (WebView) _mainView.findViewById(R.id.webView);
+		TextView title = (TextView) _mainView.findViewById(R.id.titleTextView);
+		TextView time = (TextView) _mainView.findViewById(R.id.timeTextView);
+		TextView date = (TextView) _mainView.findViewById(R.id.dateTextView);
+		
+		title.setText(_message.getTitle());
+		time.setText(timeFormat.format(_message.getCreateDate().getTime()));
+		date.setText(dateFormat.format(_message.getCreateDate().getTime()));
+		
 		webView.loadData(_message.getText(), "text/html; charset=utf-8",
 				"UTF-8");
 

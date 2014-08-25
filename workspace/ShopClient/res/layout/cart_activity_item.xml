@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:background="@color/shadow"
         android:paddingRight="1px" android:paddingTop="1px"
-        android:paddingLeft="1px" android:paddingBottom="2px" >
+        android:paddingLeft="1px" android:paddingBottom="1px" >
 
         <RelativeLayout
             android:layout_width="match_parent"

@@ -2,70 +2,83 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:orientation="vertical" >
 
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margion_big"
         android:layout_marginLeft="@dimen/margion_big"
-        android:layout_marginRight="@dimen/margion_big"
-        android:layout_marginBottom="@dimen/margion_big">
-        
+        android:layout_marginRight="@dimen/margion_big" >
+
         <TextView
-            android:id="@+id/lblItemName" 
+            android:id="@+id/lblItemName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@android:string/unknownName"
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"/>
-        
-        <ImageView 
+            android:layout_centerVertical="true"
+            android:text="@android:string/unknownName" />
+
+        <ImageView
             android:id="@+id/imgIco"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
-            android:src="@drawable/ic_launcher"
-            android:contentDescription="@android:string/unknownName"/>
-        
+            android:contentDescription="@android:string/unknownName"
+            android:src="@drawable/ic_launcher" />
     </RelativeLayout>
-    
-    <LinearLayout 
+
+    <LinearLayout
         android:id="@+id/llCountable"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="right"
+        android:layout_marginRight="@dimen/margion_big"
         android:layout_marginTop="@dimen/margion_big"
-        android:layout_marginRight="@dimen/margion_big">
-        
-        <TextView 
+        android:gravity="right"
+        android:orientation="horizontal" >
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/count"/>
-        
-        <EditText 
+            android:text="@string/count" />
+
+        <EditText
             android:id="@+id/txtCount"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margion_big"
-            android:inputType="numberSigned"/>
-        
+            android:inputType="numberSigned" />
     </LinearLayout>
-    
-    
-	    <stx.shopclient.ui.common.properties.PropertiesList
-	        android:id="@+id/plProperties"
-	        android:layout_width="fill_parent"
-	        android:layout_height="0dp"
-        	android:layout_weight="1" />
-    
 
-    <Button
-        android:id="@+id/btnOrder" 
+    <stx.shopclient.ui.common.properties.PropertiesList
+        android:id="@+id/plProperties"
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:layout_weight="0"
-        android:text="@string/order_button"/>
-    
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2" >
+
+        <Button
+            android:id="@+id/btnOrder"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="fill"
+            android:text="@string/order_button"
+            android:layout_margin="2px"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/btnAddPayment"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="fill"
+            android:text="Оформить заказ"
+            android:layout_margin="2px"
+            android:textSize="14sp" />
+    </GridLayout>
+
 </LinearLayout>
