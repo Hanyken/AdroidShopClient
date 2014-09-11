@@ -55,6 +55,7 @@ public class MainMenuListAdapter extends BaseAdapter
 		item.setId(MainMenuItem.HOME_MENU_ITEM_ID);
 		item.setName("Главная");
 		item.setHasIcon(true);
+		item.setIconId(R.drawable.dark_home_page);
 		_menuItems.add(item);
 
 		item = new MainMenuItem();
@@ -68,7 +69,7 @@ public class MainMenuListAdapter extends BaseAdapter
 		_cartMenuItem.setId(MainMenuItem.CART_MENU_ITEM_ID);
 		_cartMenuItem.setName("Корзина");
 		_cartMenuItem.setHasIcon(true);
-		_cartMenuItem.setIconId(R.drawable.img_shopping_cart);
+		_cartMenuItem.setIconId(R.drawable.dark_bascket);
 		_cartMenuItem.setNotClickable(true);
 		_menuItems.add(_cartMenuItem);
 
@@ -76,46 +77,51 @@ public class MainMenuListAdapter extends BaseAdapter
 		item.setId(MainMenuItem.DISCOUNT_CARDS_MENU_ITEM_ID);
 		item.setName("Скидочные карты");
 		item.setHasIcon(true);
-		item.setIconId(R.drawable.img_discount);
+		item.setIconId(R.drawable.dark_card);
 		_menuItems.add(item);
 
 		_messagesMenuItem = new MainMenuItem();
 		_messagesMenuItem.setId(MainMenuItem.MESSAGES_MENU_ITEM);
 		_messagesMenuItem.setName("Сообщения");
 		_messagesMenuItem.setHasIcon(true);
+		_messagesMenuItem.setIconId(R.drawable.dark_comment);
 		_menuItems.add(_messagesMenuItem);
 
 		item = new MainMenuItem();
 		item.setId(MainMenuItem.SETTINGS_MENU_ITEM_ID);
 		item.setName("Настройки");
 		item.setHasIcon(true);
+		item.setIconId(R.drawable.dark_options);
 		_menuItems.add(item);
-		
+
 		item = new MainMenuItem();
 		item.setId(MainMenuItem.HISTORY_MENU_ITEM);
 		item.setName("История");
 		item.setHasIcon(true);
+		item.setIconId(R.drawable.dark_history);
 		_menuItems.add(item);
-		
+
 		item = new MainMenuItem();
 		item.setId(MainMenuItem.FAVORITE_MENU_ITEM);
 		item.setName("Избранное");
 		item.setHasIcon(true);
+		item.setIconId(R.drawable.dark_favorite);
 		_menuItems.add(item);
-		
+
 		item = new MainMenuItem();
 		item.setId(MainMenuItem.CATALOGS_MENU_ITEM);
 		item.setName("Каталоги");
 		item.setHasIcon(true);
+		item.setIconId(R.drawable.dark_catalogs);
 		_menuItems.add(item);
 	}
-	
+
 	public void addOrderCatalogs(Collection<Catalog> catalogs)
 	{
 		List<MainMenuItem> additems = new ArrayList<MainMenuItem>();
 		List<MainMenuItem> delitems = new ArrayList<MainMenuItem>();
-		
-		for(MainMenuItem el : _menuItems)
+
+		for (MainMenuItem el : _menuItems)
 		{
 			if (el.getId() >= MainMenuItem.CART_MENU_ITEM_ID)
 			{
@@ -123,7 +129,8 @@ public class MainMenuListAdapter extends BaseAdapter
 				{
 					additems.add(el);
 				}
-				else if (el.getId() == MainMenuItem.CART_MENU_ITEM_ID && el.getRowId() == 0)
+				else if (el.getId() == MainMenuItem.CART_MENU_ITEM_ID
+						&& el.getRowId() == 0)
 				{
 					continue;
 				}
@@ -131,7 +138,7 @@ public class MainMenuListAdapter extends BaseAdapter
 			}
 		}
 		_menuItems.removeAll(delitems);
-		for(Catalog el : catalogs)
+		for (Catalog el : catalogs)
 		{
 			MainMenuItem item = new MainMenuItem();
 			item.setId(MainMenuItem.CART_MENU_ITEM_ID);
@@ -190,23 +197,25 @@ public class MainMenuListAdapter extends BaseAdapter
 		}
 
 		nameTextView.setText(item.getName());
-		nameTextView.setTextColor(Color.WHITE);
-		nameTextView.setTextSize(18);
+		nameTextView.setTextColor(_context.getResources().getColor(
+				R.color.menuText));
+		nameTextView.setTextSize(16);
 
 		TextView counterTextView = (TextView) itemView
 				.findViewById(R.id.counterTextView);
 
 		itemView.setClickable(item.isNotClickable());
-		
+
 		if (item.getCount() == 0)
 			counterTextView.setVisibility(View.GONE);
 		else
 		{
 			counterTextView.setVisibility(View.VISIBLE);
-			counterTextView.setText("(" + item.getCount() + ")");
+			counterTextView.setText(Integer.toString(item.getCount()));
 
-			counterTextView.setTextColor(Color.WHITE);
-			counterTextView.setTextSize(19);
+			counterTextView.setTextColor(_context.getResources().getColor(
+					R.color.menuCounter));
+			counterTextView.setTextSize(16);
 		}
 
 		return itemView;
