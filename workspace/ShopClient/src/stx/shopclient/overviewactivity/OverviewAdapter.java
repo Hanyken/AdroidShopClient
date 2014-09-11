@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.PorterDuff;
@@ -24,6 +25,7 @@ import stx.shopclient.entity.Overview;
 import stx.shopclient.entity.Token;
 import stx.shopclient.repository.OverviewsManager;
 import stx.shopclient.repository.Repository;
+import stx.shopclient.utils.ProgressDlgUtil;
 import stx.shopclient.webservice.WebClient;
 
 public class OverviewAdapter extends BaseAdapter
@@ -128,8 +130,11 @@ public class OverviewAdapter extends BaseAdapter
 				return;
 
 			if (isFirstLoad)
+			{
 				_progressDialog = ProgressDialog.show(_Context, "Загрузка",
 						"Выполняется загрузка отзывов");
+				ProgressDlgUtil.setCancellable(_progressDialog, (Activity)_Context);
+			}
 		}
 
 		@Override

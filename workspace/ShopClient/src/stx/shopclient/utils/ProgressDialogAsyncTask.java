@@ -40,7 +40,11 @@ public class ProgressDialogAsyncTask<TResult> extends
 	protected void onPreExecute()
 	{
 		if (showProgressDialog)
+		{
 			dialog = ProgressDialog.show(context, "Загрузка", dialogMessage);
+			if (context instanceof Activity)
+				ProgressDlgUtil.setCancellable(dialog, (Activity) context);
+		}
 	}
 
 	@Override

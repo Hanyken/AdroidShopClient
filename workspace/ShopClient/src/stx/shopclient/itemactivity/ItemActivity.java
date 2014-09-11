@@ -16,8 +16,10 @@ import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.orderactivity.OrderActivity;
 import stx.shopclient.overviewactivity.OverviewActivity;
 import stx.shopclient.repository.Repository;
+import stx.shopclient.utils.ProgressDlgUtil;
 import stx.shopclient.webservice.WebClient;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -208,6 +210,7 @@ public class ItemActivity extends BaseActivity
 		{
 			dialog = ProgressDialog.show(ItemActivity.this, "Загрузка",
 					"Получение элемента каталога");
+			ProgressDlgUtil.setCancellable(dialog, ItemActivity.this);
 		}
 
 		@Override
@@ -280,6 +283,7 @@ public class ItemActivity extends BaseActivity
 		{
 			dialog = ProgressDialog.show(ItemActivity.this, "Обработка",
 					"Добавить в избранное");
+			ProgressDlgUtil.setCancellable(dialog, ItemActivity.this);
 		}
 
 		@Override

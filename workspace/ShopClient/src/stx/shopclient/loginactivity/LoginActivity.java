@@ -4,6 +4,7 @@ import stx.shopclient.R;
 import stx.shopclient.entity.Token;
 import stx.shopclient.mainactivity.MainActivity;
 import stx.shopclient.settings.UserAccount;
+import stx.shopclient.utils.ProgressDlgUtil;
 import stx.shopclient.webservice.ServiceResponseCode;
 import stx.shopclient.webservice.WebClient;
 import android.app.Activity;
@@ -83,6 +84,7 @@ public class LoginActivity extends Activity
 			imm.hideSoftInputFromWindow(_passwordEdit.getWindowToken(), 0);
 
 			dialog = ProgressDialog.show(LoginActivity.this, "Загрузка", "Выполняется вход", true);
+			ProgressDlgUtil.setCancellable(dialog, this);
 
 			DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 
@@ -102,6 +104,7 @@ public class LoginActivity extends Activity
 	void noRegistrationButtonClick()
 	{
 		dialog = ProgressDialog.show(LoginActivity.this, "Загрузка", "Выполняется вход", true);
+		ProgressDlgUtil.setCancellable(dialog, this);
 
 		DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 

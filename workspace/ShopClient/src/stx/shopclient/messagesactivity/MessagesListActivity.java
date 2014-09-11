@@ -14,6 +14,7 @@ import stx.shopclient.ShopClientService;
 import stx.shopclient.entity.Message;
 import stx.shopclient.entity.Token;
 import stx.shopclient.mainmenu.MainMenuItem;
+import stx.shopclient.utils.ProgressDlgUtil;
 import stx.shopclient.webservice.WebClient;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
@@ -127,8 +128,11 @@ public class MessagesListActivity extends BaseActivity implements
 		protected void onPreExecute()
 		{
 			if (isFirstLoad)
+			{
 				dialog = ProgressDialog.show(MessagesListActivity.this,
 						"Загрузка", "Получение списка сообщений");
+				ProgressDlgUtil.setCancellable(dialog, MessagesListActivity.this);
+			}
 		}
 
 		@Override

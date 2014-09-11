@@ -26,6 +26,7 @@ import stx.shopclient.orderactivity.OrderActivity;
 import stx.shopclient.repository.OrdersManager;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.ui.common.properties.PropertiesList;
+import stx.shopclient.utils.ProgressDlgUtil;
 import stx.shopclient.webservice.WebClient;
 
 public class OrderPropertiesActivity extends BaseActivity
@@ -101,6 +102,7 @@ public class OrderPropertiesActivity extends BaseActivity
 		{
 			dialog = ProgressDialog.show(OrderPropertiesActivity.this,
 					"Загрузка", "Изменение параметров заказа");
+			ProgressDlgUtil.setCancellable(dialog, OrderPropertiesActivity.this);
 		}
 
 		@Override

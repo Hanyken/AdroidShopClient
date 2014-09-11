@@ -42,6 +42,7 @@ import stx.shopclient.repository.Repository;
 import stx.shopclient.styles.ColorButtonDrawable;
 import stx.shopclient.ui.common.properties.PropertiesList;
 import stx.shopclient.utils.ImageDownloadTask;
+import stx.shopclient.utils.ProgressDlgUtil;
 import stx.shopclient.webservice.WebClient;
 
 public class OrderActivity extends BaseActivity implements OnClickListener
@@ -184,6 +185,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener
 		{
 			dialog = ProgressDialog.show(OrderActivity.this, "Загрузка",
 					"Добавление товара в корзину");
+			ProgressDlgUtil.setCancellable(dialog, OrderActivity.this);
 		}
 
 		@Override
@@ -240,6 +242,7 @@ public class OrderActivity extends BaseActivity implements OnClickListener
 		{
 			dialog = ProgressDialog.show(OrderActivity.this, "Загрузка",
 					"Оформирование заказа");
+			ProgressDlgUtil.setCancellable(dialog, OrderActivity.this);
 		}
 
 		@Override

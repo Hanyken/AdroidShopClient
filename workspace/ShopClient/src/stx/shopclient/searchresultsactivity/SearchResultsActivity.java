@@ -34,6 +34,7 @@ import stx.shopclient.itemactivity.ItemActivity;
 import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.utils.ImageDownloadTask;
+import stx.shopclient.utils.ProgressDlgUtil;
 import stx.shopclient.webservice.WebClient;
 
 public class SearchResultsActivity extends BaseActivity implements
@@ -142,9 +143,12 @@ public class SearchResultsActivity extends BaseActivity implements
 		protected void onPreExecute()
 		{
 			if (isFirstRun)
+			{
 				progressDialog = ProgressDialog.show(
 						SearchResultsActivity.this, "Загрузка",
 						"Выполняется поиск элементов");
+				ProgressDlgUtil.setCancellable(progressDialog, SearchResultsActivity.this);
+			}
 		}
 
 		@Override

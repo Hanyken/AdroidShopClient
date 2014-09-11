@@ -35,6 +35,7 @@ import stx.shopclient.order_properties_activity.OrderPropertiesActivity;
 import stx.shopclient.orderactivity.OrderActivity;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.utils.ImageDownloadTask;
+import stx.shopclient.utils.ProgressDlgUtil;
 import stx.shopclient.webservice.WebClient;
 
 public class FavoriteActivity extends BaseActivity implements
@@ -181,6 +182,7 @@ public class FavoriteActivity extends BaseActivity implements
 		{
 			dialog = ProgressDialog.show(FavoriteActivity.this, "Загрузка",
 					"Получение списка избранных");
+			ProgressDlgUtil.setCancellable(dialog, FavoriteActivity.this);
 		}
 
 		@Override
@@ -231,6 +233,7 @@ public class FavoriteActivity extends BaseActivity implements
 		{
 			dialog = ProgressDialog.show(FavoriteActivity.this, "Загрузка",
 					"Удаление элемента из избранного");
+			ProgressDlgUtil.setCancellable(dialog, FavoriteActivity.this);
 		}
 
 		@Override

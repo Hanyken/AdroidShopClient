@@ -17,6 +17,7 @@ import stx.shopclient.mainmenu.MainMenuItem;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.styles.ColorButtonDrawable;
 import stx.shopclient.styles.ImageButtonDrawable;
+import stx.shopclient.utils.ProgressDlgUtil;
 import stx.shopclient.webservice.WebClient;
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
@@ -285,6 +286,7 @@ public class OverviewActivity extends BaseActivity implements OnClickListener
 		{
 			_progressDialog = ProgressDialog.show(OverviewActivity.this,
 					"Загрузка", "Выполняется загрузка отзывов");
+			ProgressDlgUtil.setCancellable(_progressDialog, OverviewActivity.this);
 		}
 
 		@Override
@@ -344,6 +346,7 @@ public class OverviewActivity extends BaseActivity implements OnClickListener
 		{
 			_progressDialog = ProgressDialog.show(OverviewActivity.this,
 					"Загрузка", "Отправка отзыва");
+			ProgressDlgUtil.setCancellable(_progressDialog, OverviewActivity.this);
 		}
 
 		@Override

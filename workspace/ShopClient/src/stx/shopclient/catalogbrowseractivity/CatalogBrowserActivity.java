@@ -42,6 +42,7 @@ import stx.shopclient.repository.Repository;
 import stx.shopclient.searchactivity.SearchActivity;
 import stx.shopclient.ui.common.LoadMoreListAdapter;
 import stx.shopclient.utils.ImageDownloadTask;
+import stx.shopclient.utils.ProgressDlgUtil;
 import stx.shopclient.webservice.WebClient;
 
 public class CatalogBrowserActivity extends BaseActivity implements
@@ -167,9 +168,12 @@ public class CatalogBrowserActivity extends BaseActivity implements
 		protected void onPreExecute()
 		{
 			if (isFirstLoad)
+			{
 				_progressDialog = ProgressDialog.show(
 						CatalogBrowserActivity.this, "Загрузка",
 						"Загрузка элементов категории");
+				ProgressDlgUtil.setCancellable(_progressDialog, CatalogBrowserActivity.this);
+			}
 		}
 
 		@Override

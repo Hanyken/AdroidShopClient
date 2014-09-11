@@ -9,6 +9,7 @@ import stx.shopclient.entity.Token;
 import stx.shopclient.mainactivity.MainActivity;
 import stx.shopclient.settings.UserAccount;
 import stx.shopclient.ui.common.StxDatePicker;
+import stx.shopclient.utils.ProgressDlgUtil;
 import stx.shopclient.webservice.ServiceResponseCode;
 import stx.shopclient.webservice.WebClient;
 import android.app.Activity;
@@ -131,6 +132,7 @@ public class RegisterActivity extends Activity
 
 		dialog = ProgressDialog.show(RegisterActivity.this, "Загрузка",
 				"Выполняется регистрация", true);
+		ProgressDlgUtil.setCancellable(dialog, this);
 
 		RegisterTask task = new RegisterTask();
 		task.login = _loginEdit.getText().toString();

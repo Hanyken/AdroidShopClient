@@ -31,6 +31,7 @@ import stx.shopclient.itemactivity.ItemActivity;
 import stx.shopclient.parsers.BaseParser;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.utils.ImageDownloadTask;
+import stx.shopclient.utils.ProgressDlgUtil;
 import stx.shopclient.webservice.WebClient;
 
 public class PaymentActivity extends BaseActivity
@@ -178,6 +179,7 @@ public class PaymentActivity extends BaseActivity
 		{
 			dialog = ProgressDialog.show(PaymentActivity.this, "Загрузка",
 					"Получение элементов истории заказов");
+			ProgressDlgUtil.setCancellable(dialog, PaymentActivity.this);
 		}
 
 		@Override

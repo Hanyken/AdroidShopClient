@@ -28,6 +28,7 @@ import stx.shopclient.order_properties_activity.OrderPropertiesActivity;
 import stx.shopclient.repository.OrdersManager;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.utils.ImageDownloadTask;
+import stx.shopclient.utils.ProgressDlgUtil;
 import stx.shopclient.webservice.WebClient;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
@@ -463,6 +464,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 		{
 			dialog = ProgressDialog.show(CartActivity.this, "Загрузка",
 					"Получение элементов корзины");
+			ProgressDlgUtil.setCancellable(dialog, CartActivity.this);
 		}
 
 		@Override
@@ -512,6 +514,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 		{
 			dialog = ProgressDialog.show(CartActivity.this, "Загрузка",
 					"Удаление элемента корзины");
+			ProgressDlgUtil.setCancellable(dialog, CartActivity.this);
 		}
 
 		@Override
@@ -570,6 +573,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 		{
 			dialog = ProgressDialog.show(CartActivity.this, "Загрузка",
 					"Оформирование заказа");
+			ProgressDlgUtil.setCancellable(dialog, CartActivity.this);
 		}
 
 		@Override
