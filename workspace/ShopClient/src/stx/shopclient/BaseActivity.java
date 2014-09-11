@@ -2,7 +2,6 @@ package stx.shopclient;
 
 import java.util.Collection;
 import java.util.GregorianCalendar;
-
 import stx.shopclient.cartactivity.CartActivity;
 import stx.shopclient.catalogsactivity.CatalogsActivity;
 import stx.shopclient.discountactivity.DiscountListActivity;
@@ -26,6 +25,7 @@ import stx.shopclient.styles.ColorButtonDrawable;
 import stx.shopclient.utils.ImageDownloadTask;
 import stx.shopclient.webservice.ServiceResponseCode;
 import stx.shopclient.webservice.WebClient;
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -150,10 +150,11 @@ public class BaseActivity extends FragmentActivity
 		}
 
 		ListView _menuList = (ListView) findViewById(R.id.mainMenuList);
-		_menuList.setBackgroundDrawable(new ColorDrawable(Repository.get(this)
-				.getCatalogManager().getSettings().getBackground()));
-		_menuList.setDivider(new ColorDrawable(Repository.get(this)
-				.getCatalogManager().getSettings().getForegroundColor()));
+		_menuList.setBackgroundColor(getResources().getColor(R.color.menu));
+//		_menuList.setBackgroundDrawable(new ColorDrawable(Repository.get(this)
+//				.getCatalogManager().getSettings().getBackground()));
+	
+		_menuList.setDivider(new ColorDrawable(getResources().getColor(R.color.menuDivider)));
 		_menuList.setDividerHeight(1);
 
 		_mainMenuListAdapter = new MainMenuListAdapter(this);

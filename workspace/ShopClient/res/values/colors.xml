@@ -6,5 +6,9 @@
     <color name="mainTextColor">#FFFFFFFF</color>
     <color name="itempanelColor">#FFEBEBEB</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="shadow">#FFCCCCCC</color>        
+    <color name="shadow">#FFCCCCCC</color>
+    <color name="menu">#F3F3F4</color>
+    <color name="menuDivider">#B7B7B7</color>      
+    <color name="menuText">#3D3D3D</color>  
+    <color name="menuCounter">#7593B3</color>
 </resources>

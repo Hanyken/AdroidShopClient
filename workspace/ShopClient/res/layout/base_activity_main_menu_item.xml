@@ -21,6 +21,7 @@
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@id/mainMenuItemImage"
         android:layout_centerVertical="true"        
+        android:textColor="@color/mainTextColor"
         android:text="TextView" />
 
     <TextView
