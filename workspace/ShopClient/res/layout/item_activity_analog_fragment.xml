@@ -10,7 +10,7 @@
         android:layout_height="@dimen/analog_title_width"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/margion_big" 
-        />
+        android:textSize="12dp"/>
     
     <GridLayout
             android:id="@+id/glList"

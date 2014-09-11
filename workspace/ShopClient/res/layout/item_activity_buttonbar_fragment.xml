@@ -17,8 +17,8 @@
 	        android:layout_height="wrap_content"
 	        android:layout_centerVertical="true"
 	        android:layout_alignParentLeft="true"
-	        android:scaleX="1.3"
-	        android:scaleY="1.3"
+	        android:scaleX="1"
+	        android:scaleY="1"
 	        android:layout_marginLeft="@dimen/buttonbar_margion_big"/>
 	
 	    <LinearLayout
@@ -32,8 +32,8 @@
 	        
 	        <Button
 	            android:id="@+id/btnFavorits"
-	            android:layout_width="30dp"
-	            android:layout_height="30dp"
+	            android:layout_width="25dp"
+	            android:layout_height="25dp"
 	            />
 	        
 	        
@@ -48,8 +48,8 @@
 	        
 	        <Button
 	            android:id="@+id/btnOverview"
-	            android:layout_width="30dp"
-	            android:layout_height="30dp"
+	            android:layout_width="25dp"
+	            android:layout_height="25dp"
 	            android:layout_marginLeft="@dimen/buttonbar_margion_small"/>
 	
 	        
@@ -64,8 +64,8 @@
 	        
 	        <Button
 	            android:id="@+id/btnShare"
-	            android:layout_width="30dp"
-	            android:layout_height="30dp"
+	            android:layout_width="25dp"
+	            android:layout_height="25dp"
 	            android:layout_marginLeft="@dimen/buttonbar_margion_small"
 	            android:layout_marginRight="@dimen/buttonbar_margion_big"/>
 	        
@@ -88,7 +88,7 @@
 	        android:id="@+id/lblPrice"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:textSize="24sp"
+	        android:textSize="20sp"
 	        android:layout_marginLeft="@dimen/buttonbar_margion_big"
 	        android:layout_alignParentLeft="true"
 	        android:layout_centerVertical="true"/>
@@ -97,9 +97,12 @@
 	        android:id="@+id/btnOrder"
 	        android:layout_width="@dimen/btnOrder_width"
 	        android:layout_height="@dimen/btnOrder_height"
+	        android:textSize="14sp"
 	        android:layout_alignParentRight="true"
 	        android:layout_marginRight="@dimen/buttonbar_margion_big"
-	        android:text="@string/order_button"/>
+	        android:text="@string/order_button"
+	        android:paddingTop="0dp"
+	        android:paddingBottom="0dp"/>
 	    
 	</RelativeLayout>
 	

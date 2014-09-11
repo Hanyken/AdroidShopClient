@@ -16,7 +16,7 @@
             android:id="@+id/frgImages"
             android:name="stx.shopclient.itemactivity.ItemImageFragment"
             android:layout_width="fill_parent"
-            android:layout_height="165dp" 
+            android:layout_height="145dp" 
             android:layout_marginTop="@dimen/margion_big"/>
 
         <fragment
