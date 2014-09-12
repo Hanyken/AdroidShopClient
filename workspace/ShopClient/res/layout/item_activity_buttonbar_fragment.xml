@@ -32,8 +32,8 @@
 	        
 	        <Button
 	            android:id="@+id/btnFavorits"
-	            android:layout_width="25dp"
-	            android:layout_height="25dp"
+	            android:layout_width="21.87dp"
+	            android:layout_height="21.87dp"
 	            />
 	        
 	        
@@ -48,8 +48,8 @@
 	        
 	        <Button
 	            android:id="@+id/btnOverview"
-	            android:layout_width="25dp"
-	            android:layout_height="25dp"
+	            android:layout_width="21.87dp"
+	            android:layout_height="21.87dp"
 	            android:layout_marginLeft="@dimen/buttonbar_margion_small"/>
 	
 	        
@@ -64,8 +64,8 @@
 	        
 	        <Button
 	            android:id="@+id/btnShare"
-	            android:layout_width="25dp"
-	            android:layout_height="25dp"
+	            android:layout_width="21.87dp"
+	            android:layout_height="21.87dp"
 	            android:layout_marginLeft="@dimen/buttonbar_margion_small"
 	            android:layout_marginRight="@dimen/buttonbar_margion_big"/>
 	        
@@ -88,7 +88,7 @@
 	        android:id="@+id/lblPrice"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:textSize="20sp"
+	        android:textSize="16sp"
 	        android:layout_marginLeft="@dimen/buttonbar_margion_big"
 	        android:layout_alignParentLeft="true"
 	        android:layout_centerVertical="true"/>

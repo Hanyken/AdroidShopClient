@@ -37,7 +37,7 @@ public class ImageButtonDrawable extends Drawable
 		_width = width;
 		_height = height;
 	}
-	public void setSizeDp(Context context, int width, int height)
+	public void setSizeDp(Context context, float width, float height)
 	{
 		_width = dipToPixels(context, width);
 		_height = dipToPixels(context, height);
@@ -47,7 +47,7 @@ public class ImageButtonDrawable extends Drawable
 		_xPos = x;
 		_yPos = y;
 	}
-	public void setPositionDp(Context context, int x, int y)
+	public void setPositionDp(Context context, float x, float y)
 	{
 		_xPos = dipToPixels(context, x);
 		_yPos = dipToPixels(context, y);
@@ -106,7 +106,7 @@ public class ImageButtonDrawable extends Drawable
 	}
 	
 	
-	public static int dipToPixels(Context context, int dipValue) 
+	public static int dipToPixels(Context context, float dipValue) 
 	{
 	    DisplayMetrics metrics = context.getResources().getDisplayMetrics();
 	    return (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics);

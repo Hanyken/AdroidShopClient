@@ -9,14 +9,17 @@
         android:layout_width="fill_parent"
         android:layout_height="@dimen/analog_title_width"
         android:gravity="center_vertical"
-        android:paddingLeft="@dimen/margion_big" 
-        android:textSize="12dp"/>
+        android:paddingLeft="@dimen/buttonbar_margion_big" 
+        android:textSize="12sp"/>
     
     <GridLayout
             android:id="@+id/glList"
             style="@style/MainRootNodesBrowserGrid"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:layout_marginLeft="@dimen/buttonbar_margion_big"
+            android:layout_marginRight="@dimen/buttonbar_margion_big"
+            android:layout_marginTop="2dp"
             android:columnCount="3" 
             android:background="@android:color/transparent"/>
     

@@ -10,6 +10,7 @@ import stx.shopclient.repository.Repository;
 import stx.shopclient.settings.ServerSettings;
 import stx.shopclient.utils.ImageCache;
 import stx.shopclient.utils.ImageDownloadTask;
+import stx.shopclient.utils.TypefaceUtils;
 import stx.shopclient.webservice.WebClient;
 import android.app.Application;
 import android.content.BroadcastReceiver;
@@ -64,6 +65,8 @@ public class ShopClientApplication extends Application
 		LocationManager locMan = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		locMan.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000,
 				1000, _locationListener);
+		
+		TypefaceUtils.overrideFont(getApplicationContext(), "SERIF", "fonts/MyriadPro-Regular.otf");
 	}
 
 	@Override

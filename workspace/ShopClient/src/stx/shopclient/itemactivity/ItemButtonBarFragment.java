@@ -83,9 +83,9 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 		btnOrder.setTextColor(settings.getForegroundColor());
 		btnOrder.setBackground(BaseActivity.getButtonDrawable(settings));
 
-		btnShare.setBackground(getButtonDrawable("Share", 25, 25));
-		btnOverview.setBackground(getButtonDrawable("Comment", 25, 25));
-		btnFavorits.setBackground(getButtonDrawable("Favorits", 25, 25));
+		btnShare.setBackground(getButtonDrawable("Share", 21.87f, 21.87f));
+		btnOverview.setBackground(getButtonDrawable("Comment", 21.87f, 21.87f));
+		btnFavorits.setBackground(getButtonDrawable("Favorits", 21.87f, 21.87f));
 
 		lblOverview.setTextColor(settings.getCountButtonLableColor());
 		lblRepost.setTextColor(settings.getCountButtonLableColor());
@@ -147,17 +147,15 @@ public class ItemButtonBarFragment extends Fragment implements OnClickListener
 	}
 
 	
-	private Drawable getButtonDrawable(String name, int width, int height)
+	private Drawable getButtonDrawable(String name, float width, float height)
 	{
 		StateListDrawable drawable = new StateListDrawable();
 		Bitmap bmp = settings.getImageFromPath(getResources(), name);
 		ImageButtonDrawable normal = new ImageButtonDrawable(bmp);
 		normal.setSizeDp(getActivity(), width, height);
-		//normal.setSizePx(width, height);
 		Bitmap bmpPress = settings.getImageFromPath(getResources(), name+"Press");
 		ImageButtonDrawable press = new ImageButtonDrawable(bmpPress);
 		press.setSizeDp(getActivity(), width, height);
-		//press.setSizePx(width, height);
 		
 		drawable.addState(new int[]
 		{ android.R.attr.state_pressed }, press);
