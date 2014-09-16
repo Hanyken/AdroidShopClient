@@ -1,5 +1,6 @@
 package stx.shopclient.historyactivity;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -77,22 +78,16 @@ public class PaymentActivity extends BaseActivity
 						.getStringExtra(PAYMENT_PAY_DATE_NAME)));
 			_Item.setOrderCount(intent.getIntExtra(PAYMENT_ORDER_COUNT_NAME, 0));
 		}
-		catch (Exception ex)
-		{
-		}
-		TextView lblNumber = (TextView) mainView.findViewById(R.id.lblNumber);
+		catch (Exception ex){ }
+		
+
 		PullToRefreshListView lstOrders = (PullToRefreshListView) mainView
 				.findViewById(R.id.lstOrders);
 		lstOrders.setMode(Mode.DISABLED);
 
 		_adapter = new OrderListAdapter();
 
-		lblNumber.setText("Номер заказа: " + Long.toString(_Item.getNumber())
-				+ "\nКол-во элементов:"
-				+ Integer.toString(_Item.getOrderCount()) + "\nДата заказа: "
-				+ BaseParser.dateParser.format(_Item.getCreateDate())
-				+ "\nСумма заказа: " + Double.toString(_Item.getSum())
-				+ "\nСтатус заказа: " + Integer.toString(_Item.getState()));
+		setPaymentTitle(mainView, _Item);
 		lstOrders.setAdapter(_adapter);
 		lstOrders.setOnItemClickListener(new OnItemClickListener()
 		{
@@ -114,6 +109,34 @@ public class PaymentActivity extends BaseActivity
 
 		return mainView;
 	}
+	
+	private void setPaymentTitle(View view, Payment item){
+		TextView lblNumber = (TextView) view.findViewById(R.id.lblNumber);
+		TextView countTextView = (TextView) view
+				.findViewById(R.id.countTextView);
+		TextView priceTextView = (TextView) view
+				.findViewById(R.id.priceTextView);
+		TextView stateTextView = (TextView) view
+				.findViewById(R.id.stateTextView);
+		TextView dateTextView = (TextView) view
+				.findViewById(R.id.dateTextView);
+
+		lblNumber.setText("ЗАКАЗ № " + Long.toString(item.getNumber()));
+		countTextView.setText(Integer.toString(item.getOrderCount()));
+
+		DecimalFormat format = new DecimalFormat("#,###,###,##0.00");
+		String price = format.format(item.getSum()) + " руб.";
+		priceTextView.setText(price);
+
+		String state = "";
+		if (item.getState() == Payment.STATE_ACCEPTED)
+			state = "Заказ принят";
+		stateTextView.setText(state);
+		
+		dateTextView.setText(PaymentListActivity._dateFormat.format(item.getCreateDate()));
+	}
+	
+	
 
 	class OrderListAdapter extends BaseAdapter
 	{

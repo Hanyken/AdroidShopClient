@@ -191,7 +191,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 					{
 						int count = (int) Double.parseDouble(prop.getValue());
 
-						totalPrice += order.getItem().getPrice() * count;
+						totalPrice += order.getUnitSum() * count;
 
 						break;
 					}
@@ -261,7 +261,7 @@ public class CartActivity extends BaseActivity implements OnItemClickListener
 
 			DecimalFormat format = new DecimalFormat("#,###,###,##0.00");
 			String description = "Цена: "
-					+ format.format(order.getItem().getPrice()) + " руб.";
+					+ format.format(order.getUnitSum()) + " руб."; /*Использую цену за ед. продукции полученной на сервере. Так как сервер мог применить скидки, или другие коэфициенты*/
 			// String propsDescription =
 			// getOrderDescription(order.getProperties(),
 			// order.getItem().getOrderProperties());

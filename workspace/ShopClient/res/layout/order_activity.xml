@@ -69,7 +69,7 @@
             android:layout_gravity="fill"
             android:text="@string/order_button"
             android:layout_margin="2px"
-            android:textSize="15sp" />
+            android:textSize="14sp" />
 
         <Button
             android:id="@+id/btnAddPayment"

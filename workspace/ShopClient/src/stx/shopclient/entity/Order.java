@@ -11,6 +11,7 @@ public class Order
 	private long _itemId;
 	private List<OrderProperty> _properties = new ArrayList<OrderProperty>();
 	private Date _date;
+	private double _unitSum;
 	private CatalogItem _item;
 	
 	public long getId()
@@ -57,5 +58,14 @@ public class Order
 	public void setItem(CatalogItem item)
 	{
 		_item = item;
+	}
+	
+	public double getUnitSum()
+	{
+		return _unitSum;
+	}
+	public void setUnitSum(double unitSum)
+	{
+		this._unitSum = unitSum;
 	}
 }

@@ -36,7 +36,7 @@ public class PaymentListActivity extends BaseActivity implements
 	List<Payment> _paymentItems = new ArrayList<Payment>();
 	PaymentListAdapter _adapter;
 	Long _CatalogId;
-	SimpleDateFormat _dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+	public static SimpleDateFormat _dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 
 	@Override
 	protected View createMainView(ViewGroup parent)
