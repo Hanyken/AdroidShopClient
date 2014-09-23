@@ -98,7 +98,7 @@ public class ShopClientService extends Service
 			}
 			catch (Throwable ex)
 			{
-				Log.e("StxService", ex.getLocalizedMessage(), ex);
+				//Log.e("StxService", ex.getLocalizedMessage(), ex);
 
 				try
 				{

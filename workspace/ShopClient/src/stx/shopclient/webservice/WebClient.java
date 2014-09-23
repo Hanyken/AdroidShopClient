@@ -8,11 +8,13 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.StopWatch;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import stx.shopclient.Logger;
 import stx.shopclient.entity.ActionType;
 import stx.shopclient.entity.AppSettings;
 import stx.shopclient.entity.Catalog;
@@ -51,6 +53,7 @@ import stx.shopclient.parsers.OverviewParser;
 import stx.shopclient.parsers.PaymentParser;
 import stx.shopclient.parsers.ResultParser;
 import stx.shopclient.parsers.ResultPaymentParser;
+import stx.shopclient.parsers.TimestampParser;
 import stx.shopclient.parsers.TokenParser;
 import stx.shopclient.repository.OrdersManager;
 import stx.shopclient.repository.Repository;
@@ -79,16 +82,22 @@ public class WebClient
 
 	private String request(String relativeUrl, HttpArgs args, boolean isGet)
 	{
+		StopWatch swAll = new StopWatch();
+		StopWatch swRequest = new StopWatch();
+		String outString = "";
 		try
 		{
+			swAll.start();
+			swRequest.start();
 			InputStream stream = requestStream(relativeUrl, args, isGet);
+			swRequest.stop();
 
-			String str = convertStreamToString(stream);
+			outString = convertStreamToString(stream);
 
-			if (str.startsWith("<Result>"))
+			if (outString.startsWith("<Result>"))
 			{
 				ResultParser parser = new ResultParser();
-				Collection<ResultEntity> result = parser.parseString(str);
+				Collection<ResultEntity> result = parser.parseString(outString);
 				if (result.size() > 0)
 				{
 					ResultEntity entity = result.iterator().next();
@@ -100,7 +109,7 @@ public class WebClient
 						args.setToken(Token.getCurrent());
 	
 						stream = requestStream(relativeUrl, args, isGet);
-						str = convertStreamToString(stream);
+						outString = convertStreamToString(stream);
 					}
 					else if (entity.getCode() == ServiceResponseCode.WEB_SERVER_ERROR || entity.getCode() == ServiceResponseCode.SQL_SERVER_ERROR)
 					{
@@ -109,11 +118,22 @@ public class WebClient
 				}
 			}
 
-			return str;
+			return outString;
 		}
 		catch (Throwable ex)
 		{
 			throw new RuntimeException(ex);
+		}
+		finally{
+			swAll.stop();
+			if (outString != null && outString.indexOf(">") > 0){
+				String root =  outString.substring(0, outString.indexOf(">")).replace("<", "").replace(">", "");
+				TimestampParser tsParser = new TimestampParser(root);
+				Collection<Long> times = tsParser.parseString(outString);
+				if (!times.isEmpty()){
+					Logger.write(relativeUrl, "Все время выполнения запроса: "+Long.toString(swAll.getTime())+"; Время получения потока данных: "+Long.toString(swRequest.getTime())+"; Время обработки сервером запроса: "+Long.toString(times.iterator().next()));
+				}
+			}
 		}
 	}
 
@@ -166,20 +186,14 @@ public class WebClient
 				sb.append((line + "\n"));
 			}
 		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		catch (IOException e) { }
 		finally
 		{
 			try
 			{
 				is.close();
 			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-			}
+			catch (IOException e) { }
 		}
 		return sb.toString();
 	}
@@ -410,7 +424,11 @@ public class WebClient
 		args.addParam("filter", "");
 
 		String response = request("item/get", args, true);
+		StopWatch sw = new StopWatch();
+		sw.start();
 		Collection<CatalogItem> items = new ItemParser().parseString(response);
+		sw.stop();
+		Logger.write("Parsing items", "Время парсинга: "+Long.toString(sw.getTime())+"; Кол-во элементов:"+Integer.toString(items.size()));
 		Repository.get(null).getItemsManager().addAll(items);
 		return items;
 	}
@@ -632,6 +650,17 @@ public class WebClient
 		args.addParam("token", token);
 		args.addParam("imgKey", imgKey);
 		args.addParam("isBig", true);
+
+		InputStream stream = requestStream("image/get", args, true);
+		return BitmapFactory.decodeStream(stream);
+	}
+	
+	public Bitmap getIcon(Token token, String imgKey)
+	{
+		HttpArgs args = new HttpArgs();
+		args.addParam("token", token);
+		args.addParam("imgKey", imgKey);
+		args.addParam("isBig", false);
 
 		InputStream stream = requestStream("image/get", args, true);
 		return BitmapFactory.decodeStream(stream);
