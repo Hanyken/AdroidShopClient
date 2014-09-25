@@ -1,11 +1,17 @@
 package stx.shopclient.webservice;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Date;
+import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
@@ -62,6 +68,7 @@ import stx.shopclient.settings.UserAccount;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Base64;
 
 public class WebClient
 {
@@ -174,7 +181,8 @@ public class WebClient
 
 	private static String convertStreamToString(InputStream is)
 	{
-
+		StopWatch sw = new StopWatch();
+		sw.start();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 		StringBuilder sb = new StringBuilder();
 
@@ -195,7 +203,47 @@ public class WebClient
 			}
 			catch (IOException e) { }
 		}
-		return sb.toString();
+		String outString = sb.toString();
+		if (!outString.startsWith("<")){
+			InputStream stream = new ByteArrayInputStream(Base64.decode(outString, Base64.DEFAULT));
+			outString = uncompress(stream);
+			try
+			{
+				stream.close();
+			}
+			catch (IOException e) { }
+			
+		}
+		sw.stop();
+		Logger.write("***Преобразование байтов в строку***", "Время: "+Long.toString(sw.getTime()));
+		return  outString;
+	}
+	
+	public static String uncompress(InputStream stream){
+		Reader reader = null;
+		StringWriter writer = null;
+		String charset = "UTF-8"; // You should determine it based on response header.
+
+		try {
+		    InputStream gzippedResponse = stream;
+		    InputStream ungzippedResponse = new GZIPInputStream(gzippedResponse);
+		    reader = new InputStreamReader(ungzippedResponse, charset);
+		    writer = new StringWriter();
+
+		    char[] buffer = new char[10240];
+		    for (int length = 0; (length = reader.read(buffer)) > 0;) {
+		        writer.write(buffer, 0, length);
+		    }
+		} catch (Throwable ex) {
+			throw new RuntimeException(ex.getMessage());
+		} finally {
+			try{
+			    writer.close();
+			    reader.close();
+			}
+			catch(Throwable ex) {}
+		}
+		return writer.toString();
 	}
 
 	public Token login(String login, String password, int screenWidth,

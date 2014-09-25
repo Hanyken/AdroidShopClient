@@ -1,5 +1,10 @@
 package stx.shopclient;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.GregorianCalendar;
 import stx.shopclient.cartactivity.CartActivity;
@@ -42,6 +47,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -80,7 +86,7 @@ public class BaseActivity extends FragmentActivity
 			redirectToLoginActivity();
 			return;
 		}
-
+		
 		LoginTask task = new LoginTask();
 		task.execute();
 	}
