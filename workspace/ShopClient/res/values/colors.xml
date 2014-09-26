@@ -11,4 +11,6 @@
     <color name="menuDivider">#B7B7B7</color>      
     <color name="menuText">#3D3D3D</color>  
     <color name="menuCounter">#7593B3</color>
+    
+    <color name="registerLineColor">#9E9E9E</color>
 </resources>

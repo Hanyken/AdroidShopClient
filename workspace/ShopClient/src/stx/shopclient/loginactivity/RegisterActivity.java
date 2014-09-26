@@ -5,10 +5,13 @@ import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
 
 import stx.shopclient.R;
+import stx.shopclient.entity.CatalogSettings;
 import stx.shopclient.entity.Token;
 import stx.shopclient.mainactivity.MainActivity;
+import stx.shopclient.repository.Repository;
 import stx.shopclient.settings.UserAccount;
 import stx.shopclient.ui.common.StxDatePicker;
+import stx.shopclient.utils.DisplayUtil;
 import stx.shopclient.utils.ProgressDlgUtil;
 import stx.shopclient.webservice.ServiceResponseCode;
 import stx.shopclient.webservice.WebClient;
@@ -19,6 +22,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -49,6 +53,9 @@ public class RegisterActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		
+		getActionBar().setBackgroundDrawable(new ColorDrawable(Repository.get(this)
+				.getCatalogManager().getSettings().getBackground()));
 
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setContentView(R.layout.register_activity);
@@ -79,6 +86,9 @@ public class RegisterActivity extends Activity
 				registerButtonClick();
 			}
 		});
+		CatalogSettings settings = Repository.get(this).getCatalogManager().getSettings();
+		registerButton.setBackground(DisplayUtil.getButtonDrawable(settings));
+		registerButton.setTextColor(settings.getForegroundColor());
 	}
 
 	void registerButtonClick()

@@ -41,6 +41,7 @@ import stx.shopclient.repository.OrdersManager;
 import stx.shopclient.repository.Repository;
 import stx.shopclient.styles.ColorButtonDrawable;
 import stx.shopclient.ui.common.properties.PropertiesList;
+import stx.shopclient.utils.DisplayUtil;
 import stx.shopclient.utils.ImageDownloadTask;
 import stx.shopclient.utils.ProgressDlgUtil;
 import stx.shopclient.webservice.WebClient;
@@ -82,11 +83,11 @@ public class OrderActivity extends BaseActivity implements OnClickListener
 		lblItemName.setText(_item.getName());
 
 		btnOrder.setOnClickListener(this);
-		btnOrder.setBackground(getButtonDrawable(settings));
+		btnOrder.setBackground(DisplayUtil.getButtonDrawable(settings));
 		btnOrder.setTextColor(settings.getForegroundColor());
 
 		btnAddPayment.setOnClickListener(this);
-		btnAddPayment.setBackground(getButtonDrawable(settings));
+		btnAddPayment.setBackground(DisplayUtil.getButtonDrawable(settings));
 		btnAddPayment.setTextColor(settings.getForegroundColor());
 
 		plProperies.setAllowClear(false);

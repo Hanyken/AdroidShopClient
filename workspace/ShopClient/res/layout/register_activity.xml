@@ -1,47 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/registerButton"
-        android:layout_alignParentTop="true" >
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+    	android:scrollbars="none"
+    	android:overScrollMode="never">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <TextView
+            <!-- ФИО -->
+            <TextView 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:textSize="14sp"
+                android:textColor="@color/registerLineColor"
+                android:text="Ф.И.О."/>
+            
+            <LinearLayout 
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:orientation="horizontal"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:text="Имя пользователя"
-                android:textSize="10sp" />
-
+                android:layout_marginRight="10dp"
+                android:background="@color/registerLineColor"/>
+            
+            <LinearLayout 
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="100dp">
+            
             <EditText
+                android:id="@+id/lastNameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:hint="Фамилия"
+                android:ems="10" />
+            
+            <EditText
+                android:id="@+id/firstNameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:hint="Имя"
+                android:ems="10" />
+            
+            <EditText
+                android:id="@+id/middleNameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:hint="Отчество"
+                android:ems="10" />
+            
+            </LinearLayout>
+            
+            <!-- Пользователь -->
+            <TextView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:textSize="14sp"
+                android:textColor="@color/registerLineColor"
+                android:text="ПОЛЬЗОВАТЕЛЬ"/>
+            
+            <LinearLayout 
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:orientation="horizontal"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/registerLineColor"/>
+            
+            <LinearLayout 
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="100dp">
+            
+                <EditText
                 android:id="@+id/loginEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Имя пользователя" >
-            </EditText>
+                android:layout_marginTop="5dp"
+                android:hint="Пользователь"
+                android:ems="10" />
 
-            <TextView
+            
+            </LinearLayout>
+            
+            <!-- Пароль -->
+            <TextView 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:textSize="14sp"
+                android:textColor="@color/registerLineColor"
+                android:text="ПАРОЛЬ"/>
+            
+            <LinearLayout 
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:orientation="horizontal"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:text="Пароль"
-                android:textSize="10sp" />
+                android:layout_marginRight="10dp"
+                android:background="@color/registerLineColor"/>
+            
+            <LinearLayout 
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="100dp">
 
+            
             <EditText
                 android:id="@+id/passwordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:ems="10"
                 android:hint="Пароль"
                 android:inputType="textPassword" />
@@ -53,117 +146,149 @@
                 android:ems="10"
                 android:hint="Повтор пароля"
                 android:inputType="textPassword" />
-
-            <TextView
+            
+            </LinearLayout>
+            
+            
+            <!-- Личные данные -->
+            <TextView 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:textSize="14sp"
+                android:textColor="@color/registerLineColor"
+                android:text="ЛИЧНЫЕ ДАННЫЕ"/>
+            
+            <LinearLayout 
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:orientation="horizontal"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:text="Номер телефона"
-                android:textSize="10sp" />
+                android:layout_marginRight="10dp"
+                android:background="@color/registerLineColor"/>
+            
+            <LinearLayout 
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp">
 
+                
+                <stx.shopclient.ui.common.StxDatePicker
+	                android:id="@+id/birthdayPicker"
+	                android:layout_width="0dp"
+	                android:layout_height="wrap_content" 
+	                android:layout_weight="1" />
+                
+                <!-- <EditText
+	                android:id="@+id/birthdayPicker"
+	                android:layout_width="0dp"
+	                android:layout_height="wrap_content" 
+	                android:layout_weight="1"/> -->
+                
+                
+                <RadioGroup
+	                android:id="@+id/genderRadioGroup"
+	                android:layout_width="0dp"
+	                android:layout_height="match_parent"
+	                android:layout_weight="1"
+	                android:orientation="horizontal"
+					android:gravity="center">
+	
+	                <RadioButton
+	                    android:id="@+id/genderMaleRadioButton"
+	                    android:layout_width="40dp"
+	                    android:layout_height="40dp"
+	                    android:layout_gravity="center_vertical"
+	                    android:button="@drawable/cbx_male"/>
+	
+	                <RadioButton
+	                    android:id="@+id/genderFemaleRadioButton"
+	                    android:layout_width="40dp"
+	                    android:layout_height="40dp"
+	                    android:layout_marginLeft="20dp"
+	                    android:button="@drawable/cbx_female"/>
+            </RadioGroup>
+            
+            
+            </LinearLayout>
+            
+            
+            <!-- Контактные данные -->
+            <TextView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:textSize="14sp"
+                android:textColor="@color/registerLineColor"
+                android:text="КОНТАКТНЫЕ ДАННЫЕ"/>
+            
+            <LinearLayout 
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:orientation="horizontal"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/registerLineColor"/>
+            
+            <LinearLayout 
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="100dp">
+
+            
             <EditText
                 android:id="@+id/phoneNumberEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
                 android:ems="10"
                 android:hint="Номер телефона"
-                android:inputType="phone" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:text="Пол"
-                android:textSize="10sp" />
-
-            <RadioGroup
-                android:id="@+id/genderRadioGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
-
-                <RadioButton
-                    android:id="@+id/genderMaleRadioButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Мужской" />
-
-                <RadioButton
-                    android:id="@+id/genderFemaleRadioButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Женский" />
-            </RadioGroup>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:text="Фамилия"
-                android:textSize="10sp" />
-
-            <EditText
-                android:id="@+id/lastNameEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Фамилия" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:text="Имя"
-                android:textSize="10sp" />
-
-            <EditText
-                android:id="@+id/firstNameEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Имя" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:text="Отчество"
-                android:textSize="10sp" />
-
-            <EditText
-                android:id="@+id/middleNameEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Отчество" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:text="Дата рождения"
-                android:textSize="10sp" />
-
-            <stx.shopclient.ui.common.StxDatePicker
-                android:id="@+id/birthdayPicker"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-            </stx.shopclient.ui.common.StxDatePicker>
+                android:inputType="textPassword" />
+            
+            </LinearLayout>
+            
+            
         </LinearLayout>
+        
     </ScrollView>
 
-    <Button
-        android:id="@+id/registerButton"
-        android:layout_width="match_parent"
+    <LinearLayout 
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:orientation="horizontal"
+        android:background="@color/registerLineColor"/>
+    
+    <LinearLayout 
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:text="Регистрация" />
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+        
+        <TextView 
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"/>
+        
+	    <Button
+	        android:id="@+id/registerButton"
+	        android:layout_width="0dp"
+	        android:layout_height="35dp"
+	        android:layout_weight="3"
+	        android:textSize="14sp"
+	        android:padding="0dp"
+	        android:text="Зарегистрироваться" />
+        
+    </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>
